@@ -12,6 +12,8 @@
 \newtheorem{remark}{Remark}
 \newtheorem{corollary}{Corollary}
 \DeclareMathOperator{\SSBM}{SSBM}
+\DeclareMathOperator{\SDP}{SDP}
+\DeclareMathOperator{\Tr}{Tr}
 \DeclareMathOperator{\E}{\mathbb{E}}
 \DeclareMathOperator{\diag}{diag}
 \newcommand{\A}{\frac{a \log(n)}{n}}
@@ -39,13 +41,17 @@
 \begin{abstract}
     abs
 \end{abstract}
-Notation: $f(n)\dot{=} g(n) \iff \lim_{n\to \infty} \frac{1}{n} \log \frac{f(n)}{g(n)} = 1$.
+\section{Introduction}
+The following notations are used throughout this paper: 
+the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and edge set $E$;
+$V=\{1,\dots, n\} =: [n]$;
+$\mathcal{X}$ is the alphabet
+of the random variable $X$.
+$f(n)\dot{=} g(n) \iff \lim_{n\to \infty} \frac{1}{n} \log \frac{f(n)}{g(n)} = 1$.
 
-$SBM(2, p, q)$ with $(p_0, p_1)$, $m=\gamma \log n$. $z_{ij}$ Bernoulli random variable, whether there is an edge between node $i$ and $j$.
-$x^{(j)}_{i}$ $j$-th observation at node $i$.
 
-Two cases: $p,q$ are constant and $p=\A, q = \B$.
 
+\section{Related Works}
 \section{Mathematical Models}
 The two-community symmetric stochastical block model (SSBM) is a special case of SBM, and we state
 its definition as
@@ -75,16 +81,21 @@ definite definition is given as follows:
 The node observations can be written concisely as $\{X_{ij} | i \in [n], j \in [m]\}$.
 We can denote the edge observations in a similar way by using $Z_{ij}:=\mathbbm{1}[\{i,j\} \in E(G)]$.
 Using $X_{ij}$ and $Z_{ij}$, the likelihood function for them is
-\begin{equation}
+\begin{equation}\label{eq:lh}
     p(x, z| Y=y) = p(z|y)\prod_{i=1}^n \prod_{j=1}^m p^{y_i}_0(x_{ij})p^{1-y_i}_1(x_{ij}) 
 \end{equation}
 where $p(z|y)$ is the likelihood function for $\SSBM$.
-
+Based on \eqref{eq:lh}, we can use maximum likelihood method to estimate
+$Y$:
+\begin{align}
+    \hat{Y} &= \arg\max_y p(x,z|Y=y) \notag \\
+    s.t.\, & y_i \in \{\pm 1\}, \sum_{i=1}^n y_i=0 \label{eq:mle}
+\end{align}
 Within this paper, we consider the special case $p = a \log n /n$ and $q = b \log n / b$ and study
 the exact recovery problem of SSBM with side information. The joint distribution
 of $Y,Z, X$ is denoted as $\mathcal{F}(n,m,a,b)$.
 The formal definition of exact
-recovery is given as
+recovery is given as:
 \begin{definition}[Exact Recovery for SSBM with side information]
 		Let $(Y,G,X) \sim \mathcal{F}(n,m,a,b)$.
 		We say that exact recovery is solvable if there is an algorithm that takes $(G,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(G,X)$ such that
@@ -99,73 +110,98 @@ is commonly used to estimate the community labels $Y$.
 Without node observations, it is shown in \cite{abbe2015exact}
 that exact recovery is possible if and only if $\sqrt{a} - \sqrt{b} > \sqrt{2}$.
 Without edge observations, the exact recovery is decomposed into $n$
-independent hypothesis testing problems with the global constraint $\sum_{i=1}^n Y_i$. For the latter case, Rényi divergence with order $\frac{1}{2}$
+independent hypothesis testing problems with the global constraint $\sum_{i=1}^n Y_i=0$. For the latter case, Rényi divergence with order $\frac{1}{2}$
 is used to quantify the error exponent of each pair of node observations.
-We general this condition to the case with node observations and summarize
+This information theoretic quantity is defined as:
+\begin{equation}
+    D_{1/2}(p_0 || p_1) = -2\log(\sum_{x \in \mathcal{X}} \sqrt{p_0(x)p_1(x)} )
+\end{equation}
+Below we generalize this condition to the case with node observations and summarize
 our main result in the following theorem:
-\begin{theorem}
-Let $\gamma = \frac{m}{\log n}$, using maximum likelihood estimator, the error probability
+\begin{theorem}\label{thm:Pe}
+Let $\gamma = \frac{\log m}{n}$, using maximum likelihood estimator \eqref{eq:mle}, the error probability
 of exact recovery is bounded by
 \begin{equation}
     P_e \leq n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2-2\right)}
 \end{equation}
 \end{theorem}
-\section{SDP relaxation for Mixture Model}
-Consider ML estimation of SBM$(n,2,p,q)$ while each node has further $m$ observations.
-Then the likelihood function
-$$
-L=\prod_{i=1}^n \prod_{j=1}^m p_0^{\sigma_i}(x_i^{(j)})p_1^{1-\sigma_i}(x_i^{(j)})\prod_{(i,j) \in E} p^{\delta(\sigma_i, \sigma_j)}q^{1-\delta(\sigma_i, \sigma_j)}
-\prod_{(i,j)\not\in E} (1-p)^{\delta(\sigma_i, \sigma_j)}(1-q)^{1-\delta(\sigma_i, \sigma_j)}
-$$
-where $\sigma_i \in \{0,1\}$ and $\delta$ is the indicator function.
-$\max \log L$ is equivalent to (neglecting some constant term for the given graph $G$)
-$$
-\max \sum_{i=1}^n \sum_{j=1}^m \sigma_i \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})}
-+\log\frac{p}{q}\sum_{(i,j) \in E} \delta(\sigma_i, \sigma_j)
-+\log \frac{1-p}{1-q}\sum_{(i,j)\not\in E} \delta(\sigma_i, \sigma_j)
-$$
-Let $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$,
-Then we only need to:
-$$
-\max \frac{1}{\log a/b}\sum_{i=1}^n \sum_{j=1}^m \sigma_i \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})}
-+\sum_{(i,j) \in E} \delta(\sigma_i, \sigma_j)
--\kappa\sum_{(i,j)\not\in E} \delta(\sigma_i, \sigma_j)
-$$
-Let $\delta(\sigma_i, \sigma_j) = \frac{y_i y_j + 1}{2}, \sigma_i = (y_i+1)/2$ where $y_i,y_j \in \{\pm 1 \}$
-We further consider the problem:
-$$
-\max \frac{1}{\log a/b}\sum_{i=1}^n \sum_{j=1}^m y_i \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})}
-+\sum_{(i,j) \in E} y_i y_j
--\kappa\sum_{(i,j)\not\in E} y_i y_j
-$$
-Let $b_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})}$
-and choose $\kappa = 1$.
-The data $x_i^{(j)}$ are sampled from $p_0$ if $\sigma_i = 1 (y_i = 1)$. On the contrary,
-if $y_i = -1$ the data $x_i^{(j)}$ are sampled from $p_1$.
+Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
+decreasing of error probability $P_e$. Besides, since 
+$D_{1/2}(p_0||p_1) > 0$, it is possible to exactly recover $Y$
+for the case $\sqrt{a} + \sqrt{b} < \sqrt{2}$ as long as $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$.
 
-The matrix $B$ is defined as in \cite{abbe}.
-Then the problem is $\max b^T y + y^T B y$.
-Following \cite{wang2019tightness}, we use the relaxation
-technique to get a SDP problem as follows:
+Theorem \ref{thm:Pe} is dealing with the case when $m=O(\log n)$. It has been shown
+that side information cannot improve the phase transition of exact recovery when $m=o(\log n)$ (Theorem 6 in \cite{saad2018community}). When $m=\omega(\log n)$,
+the side information becomes the dominant term, and $P_e$ decreases in a rate $\exp(-m D_{1/2}(p_0||p_1) )$.
+
+\section{SDP Relaxation}
+Though the maximum likelihood estimator in \eqref{eq:mle} can achieve polynomial
+error rate in Theorem \ref{thm:Pe}, the exact solution is NP-hard. In this
+Section, we will use semidefinite programming based relaxation to handle
+the optimization problem in \eqref{eq:mle}. The relaxation method
+can also achieve $P_e\to 0$ as long as the recovery condition
+$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$ is satisfied.
+
+The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
+\begin{align}
+\max_{y}\, & b^T y + y^T B y \notag \\
+s.t.\, & \mathbbm{1}^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
+\end{align}
+where $b$ is an n-dimensional vector with $b_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})}$, and the $n\times n $ matrix $B$ is defined as
+\begin{equation}
+B_{ij} = \begin{cases}
+1 & (i,j)\in E(G) \\
+-\kappa & (i,j) \not\in E(G)
+\end{cases}
+\end{equation}
+Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. However, we find that
+the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log n}{n}$.
+
+To transform \eqref{eq:matrix_mle} to SDP, we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
+to absorb the linear term in object function.
 Let $\tilde{B} = \begin{pmatrix} 0 & b^T \\ b & B \end{pmatrix}$
 Then we have
-\begin{align*}
-\max\, & \tilde{B} \cdot X \\
-s.t.\,& \diag(X) = 1 \\
-& X \succeq 0
-\end{align*}
-We should consider $\tilde{g} = (1,g^T)^T$ as the optimal solution to the above SDP problem.
+\begin{align}
+\max\, & \widetilde{B} \cdot X \notag \\
+s.t.\,& X_{ii}=1 \notag \\
+& X \succeq 0 \label{eq:sdp}
+\end{align}
 
-Following Abbe's approach, we consider the dual problem. Let $Y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
-Then $Y = (b^T g, \diag\{bg^T+Bgg^T\})$
-The condition for $\tilde{g}$ to become the optimal solution is then
+Compared with \eqref{eq:matrix_mle}, in \eqref{eq:sdp} we have removed
+the balanced constraint $\mathbbm{1}^T y = 0$. When $m=0$ and $\kappa=1$,
+the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
+When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
+the same as the one in Theorem 3 of \cite{Hajek16}. Here we consider the
+general case for $m=\gamma \log n$ and $\kappa > b\frac{\log n}{n}$,
+the theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
+in the following theorem:
+\begin{theorem}\label{thm:sdp}
+	Suppose $\hat{Y}_{\SDP}$ is the estimator by solving \eqref{eq:sdp}.
+	If $\kappa > b\frac{\log n}{n}$ and $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$,
+	then the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
+\end{theorem}
+\section{Proofs}
+\begin{proof}[Proof of Theorem \ref{thm:sdp}]
+The dual problem of \eqref{eq:sdp} is
+\begin{align}
+\min\, & \mathbbm{1}^T y \notag \\
+s.t.\,& \diag(y) - \widetilde{B} \succeq 0
+\label{eq:sdp_dual}
+\end{align}
+Let $g$ be the underlining ground truth label, and
+define $\tilde{g} = (1,g^T)^T$.
+Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
+Then $y = (b^T g, \diag\{bg^T+Bgg^T\})$, and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
+Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
 $$
-\diag(Y) - \tilde{B}  = \begin{pmatrix} b^T g & -b^T \\ -b & \diag(bg^T + Bgg^T) - B \end{pmatrix}
+\diag(y) - \tilde{B}  = \begin{pmatrix} b^T g & -b^T \\ -b & \diag(bg^T + Bgg^T) - B \end{pmatrix}
 \succeq 0
 $$
-We first analyze $E[\diag(Y) - \tilde{B}]$, Let $D_1 = \frac{D_{KL}(p_0||p_1)}{\log a/b},
-D_2 = -\frac{D_{KL}(p_1||p_0)}{\log a/b}$. Then the constant matrix $\tilde{C}$ can be written as:
-\begin{equation}
+We first analyze $\widetilde{C}:=\mathbb{E}[\diag(y) - \widetilde{B}]$, Let $D_1 = \frac{D_{KL}(p_0||p_1)}{\log a/b},
+D_2 = -\frac{D_{KL}(p_1||p_0)}{\log a/b}$. Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
+Then the constant matrix $\widetilde{C}$ can be written as:
+{\scriptsize
+\begin{equation*}
 \tilde{C}=\begin{pmatrix}
 \frac{n(D_1 + D_2)}{2} & -D_1 & -D_1& \dots & -D_1 & D_2 & D_2 & \dots & D_2 \\
 -D_1 & D_1 + d & a & \dots & a & b & b & \dots & b \\
@@ -175,7 +211,8 @@ D_2 & b & \dots & b & b & D_2 + d  & a & \dots & a \\
 \vdots & \vdots & \vdots & \vdots & \vdots &\vdots & \vdots & \vdots & \vdots \\
 D_2 & b & \dots & b & b & a & \dots & a & D_2 + d 
 \end{pmatrix}
-\end{equation}
+\end{equation*}
+}
 where $a,b,d$ have the same definition as in \cite{abbe}.
 The eigenvalues of $\tilde{C}$ are $0$ corresponding to $\tilde{g}$, two eigenvalues of order $O(n)$
 all other eigenvalues are $d-a+D_1$ and $d-a+D_2$, which are of order $\log n$ ($d-a=(a-b)\log n$).
@@ -196,14 +233,15 @@ By using the inequality $g(a,b,\epsilon) \geq (\sqrt{a} -\sqrt{b})^2 + \epsilon 
 we can get a lower bound of $\theta^*$: $(\sqrt{a} - \sqrt{b})/2 + \frac{1}{2}\min(D(X_i^{(m)} || p_1) + 
 D(X_i^{(m)} || p_0))$, which is $(\sqrt{a} - \sqrt{b})/2 + \frac{1}{2}D_{1/2}(p_0||p_1)$.
 For $g_i = -1$, we have $\epsilon_i = g_i b_i = \frac{1}{\log a/b}(D(X_i^{(m)} || p_0) - 
-D(X_i^{(m)} || p_1)  )$ and its mean value is positiive($\frac{1}{\log a/b} D(p_1||p_0)$).
+D(X_i^{(m)} || p_1)  )$ and its mean value is positive ($\frac{1}{\log a/b} D(p_1||p_0)$).
 Therefore, we have $P(\epsilon_i + \sum_{i=1}^{n/2} (x_i - z_i) \leq 0) \leq \exp(-\log n \min \theta'^*)$,
 where $\theta'^* = D(X_i^{(m)}||p_1) + \frac{1}{2}g(a,b,2\epsilon_i)$.
-Similarly we have $\theta'^* \geq (\sqrt{a} - \sqrt{b})/2 + \frac{1}{2}D_{1/2}(p_0||p_1)$.
+Similarly, we have $\theta'^* \geq (\sqrt{a} - \sqrt{b})/2 + \frac{1}{2}D_{1/2}(p_0||p_1)$.
 Therefore, for all $i$, $P(g_i b_i + (Bgg^T)_{ii} < 0) \leq n^{-(\sqrt{a} - \sqrt{b})/2 - \frac{1}{2}D_{1/2}(p_0||p_1)}$.
 $P(\diag(bg^T + Bgg^T) \textrm{ is not semidefnite}) \leq n^{1-(\sqrt{a} - \sqrt{b})/2 - \frac{1}{2}D_{1/2}(p_0||p_1)} = o(1)$
 since $(\sqrt{a} - \sqrt{b})/2 + D_{1/2}(p_0||p_1) > 2$.
+\end{proof}
 
-	\bibliographystyle{IEEEtran}
-	\bibliography{exportlist}
+\bibliographystyle{IEEEtran}
+\bibliography{exportlist}
 \end{document}
