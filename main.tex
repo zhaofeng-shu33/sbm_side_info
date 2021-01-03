@@ -44,7 +44,7 @@
 \section{Introduction}
 The following notations are used throughout this paper: 
 the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and edge set $E$;
-$V=\{1,\dots, n\} =: [n]$;
+$V=\{1,\dots, n\} =: [n]$; $\mathbbm{1}_n$ represents the $n$-dimensional all-one vector;
 $\mathcal{X}$ is the alphabet
 of the random variable $X$.
 $f(n)\dot{=} g(n) \iff \lim_{n\to \infty} \frac{1}{n} \log \frac{f(n)}{g(n)} = 1$.
@@ -73,8 +73,8 @@ definite definition is given as follows:
 	whose probability density function $p(x)$ is determined by $Y_i$ as
 	\begin{equation}
 	p(x) = \begin{cases}
-	p_0(x) & Y_i = -1 \\
-	p_1(x) & Y_i = 1
+	p_0(x) & Y_i = 1 \\
+	p_1(x) & Y_i = -1
 	\end{cases}
 	\end{equation}
 \end{definition}
@@ -82,9 +82,9 @@ The node observations can be written concisely as $\{X_{ij} | i \in [n], j \in [
 We can denote the edge observations in a similar way by using $Z_{ij}:=\mathbbm{1}[\{i,j\} \in E(G)]$.
 Using $X_{ij}$ and $Z_{ij}$, the likelihood function for them is
 \begin{equation}\label{eq:lh}
-    p(x, z| Y=y) = p(z|y)\prod_{i=1}^n \prod_{j=1}^m p^{y_i}_0(x_{ij})p^{1-y_i}_1(x_{ij}) 
+    p(x, z| Y=y) = p(z|y)\prod_{i=1}^n \prod_{j=1}^m p^{\sigma_i}_0(x_{ij})p^{1-\sigma_i}_1(x_{ij}) 
 \end{equation}
-where $p(z|y)$ is the likelihood function for $\SSBM$.
+where $p(z|y)$ is the likelihood function for $\SSBM$ and $\sigma_i = (1+y_i)/2$.
 Based on \eqref{eq:lh}, we can use maximum likelihood method to estimate
 $Y$:
 \begin{align}
@@ -144,10 +144,10 @@ $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$ is satisfied.
 
 The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
 \begin{align}
-\max_{y}\, & b^T y + y^T B y \notag \\
-s.t.\, & \mathbbm{1}^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
+\max_{y}\, & h^T y + y^T B y \notag \\
+s.t.\, & \mathbbm{1}_n^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
 \end{align}
-where $b$ is an n-dimensional vector with $b_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})}$, and the $n\times n $ matrix $B$ is defined as
+where $h$ is an n-dimensional vector with $h_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_{ij})}{p_1(x_{ij})}$, and the $n\times n $ matrix $B$ is defined as
 \begin{equation}
 B_{ij} = \begin{cases}
 1 & (i,j)\in E(G) \\
@@ -159,7 +159,7 @@ the maximal solution is unchanged when $\kappa$ takes other values as long as $\
 
 To transform \eqref{eq:matrix_mle} to SDP, we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
 to absorb the linear term in object function.
-Let $\tilde{B} = \begin{pmatrix} 0 & b^T \\ b & B \end{pmatrix}$
+Let $\tilde{B} = \begin{pmatrix} 0 & h^T \\ h & B \end{pmatrix}$
 Then we have
 \begin{align}
 \max\, & \widetilde{B} \cdot X \notag \\
@@ -191,29 +191,32 @@ s.t.\,& \diag(y) - \widetilde{B} \succeq 0
 Let $g$ be the underlining ground truth label, and
 define $\tilde{g} = (1,g^T)^T$.
 Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
-Then $y = (b^T g, \diag\{bg^T+Bgg^T\})$, and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
+Then $y = (h^T g, \diag\{hg^T+Bgg^T\})$, and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
 Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
 $$
-\diag(y) - \tilde{B}  = \begin{pmatrix} b^T g & -b^T \\ -b & \diag(bg^T + Bgg^T) - B \end{pmatrix}
+\diag(y) - \tilde{B}  = \begin{pmatrix} h^T g & -h^T \\ -h & \diag(hg^T + Bgg^T) - B \end{pmatrix}
 \succeq 0
 $$
-We first analyze $\widetilde{C}:=\mathbb{E}[\diag(y) - \widetilde{B}]$, Let $D_1 = \frac{D_{KL}(p_0||p_1)}{\log a/b},
-D_2 = -\frac{D_{KL}(p_1||p_0)}{\log a/b}$. Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
+We first analyze $\widetilde{C}:=\mathbb{E}[\diag(y) - \widetilde{B}]$, Let $D_1 = m\frac{D_{KL}(p_0||p_1)}{\log a/b},
+D_2 = -m\frac{D_{KL}(p_1||p_0)}{\log a/b}, J_n = \mathbbm{1}_n \mathbbm{1}_n^T - I_n$.
+Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
 Then the constant matrix $\widetilde{C}$ can be written as:
 {\scriptsize
 \begin{equation*}
 \tilde{C}=\begin{pmatrix}
-\frac{n(D_1 + D_2)}{2} & -D_1 & -D_1& \dots & -D_1 & D_2 & D_2 & \dots & D_2 \\
--D_1 & D_1 + d & a & \dots & a & b & b & \dots & b \\
-\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
--D_1 & a & \dots & a & D_1 + d & b & b & \dots & b \\
-D_2 & b & \dots & b & b & D_2 + d  & a & \dots & a \\
-\vdots & \vdots & \vdots & \vdots & \vdots &\vdots & \vdots & \vdots & \vdots \\
-D_2 & b & \dots & b & b & a & \dots & a & D_2 + d 
+\frac{n(D_1 + D_2)}{2} & -D_1 \mathbbm{1}_{n/2}^T & D_2 \mathbbm{1}_{n/2}^T \\
+-D_1 \mathbbm{1}_{n/2}^T & (D_1 + d) I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
+D_2 \mathbbm{1}_{n/2}^T & b' J_{n/2} & (D_2 + d) I_{n/2} + a'J_{n/2}  
 \end{pmatrix}
 \end{equation*}
 }
-where $a,b,d$ have the same definition as in \cite{abbe}.
+where $a',b', d$ are defined as:
+\begin{align*}
+a' & = - \frac{2a \log n}{n} + 1 \\
+b' & = - \frac{2b \log n}{n} + 1 \\
+d & = (a-b) \log n - \frac{2a \log n}{n} + 1
+\end{align*}
+
 The eigenvalues of $\tilde{C}$ are $0$ corresponding to $\tilde{g}$, two eigenvalues of order $O(n)$
 all other eigenvalues are $d-a+D_1$ and $d-a+D_2$, which are of order $\log n$ ($d-a=(a-b)\log n$).
 
