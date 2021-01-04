@@ -185,7 +185,7 @@ in the following theorem:
 	then the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
 \end{theorem}
 \section{Proofs}
-\begin{lemma}
+\begin{lemma}\label{lem:zxt}
 	Suppose $m > n, Z \sim Binomial(m, \frac{b\log n}{n}), X\sim Binomial(m, \frac{a\log n}{n})$.
 	For $ t > \frac{m}{n}(b - a)$, we have
 	\begin{equation}
@@ -227,16 +227,23 @@ Then \eqref{eq:ein} is equivalent to
 Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
 \begin{align*}
 P(A_k) &\leq \sum_{P\in P_n} Q^n(T(P))P(\sum_{i=1}^{k(n-2k)} (z_{i1} - z_{i2} \geq \epsilon \log n )) \\
-& \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
-& \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot g(a, b, \frac{n}{k(n-2k)}\epsilon) ) \\
-&\leq |P_n| \exp(-\log n \cdot \theta^*)
+\end{align*}
+Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
+\begin{align*}
+&P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
+& \cdot (1+o(1))\exp(-\log n \frac{k(n-2k)}{n}\cdot g(a, b, \frac{n}{k(n-2k)}\epsilon) ) \\
+&\leq |P_n| \exp(-\log n \cdot \theta^*) 
 \end{align*}
 where
 \begin{align}
 \theta^* &= \min_{\widetilde{X}_1,\widetilde{X}_2} k\gamma (D(\widetilde{X}_1|| p_0) + D(\widetilde{X}_2 || p_1)) \notag \\
 & + \frac{k(n-2k)}{n} g(a,b, \frac{n}{k(n-2k)}\epsilon)
 \end{align}
+We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
+a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$.
 
+Suppose $\theta^*>0$,
+since $|P_n|\leq (km)^{2|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
 \end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:sdp}]
 The dual problem of \eqref{eq:sdp} is
