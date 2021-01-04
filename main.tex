@@ -16,6 +16,10 @@
 \DeclareMathOperator{\Tr}{Tr}
 \DeclareMathOperator{\E}{\mathbb{E}}
 \DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\KL}{KL}
+
 \newcommand{\A}{\frac{a \log(n)}{n}}
 \newcommand{\B}{\frac{b \log(n)}{n}}
 \title{Exact Recovery of Stochastic Block Model with Symmetric Side Information}
@@ -181,6 +185,59 @@ in the following theorem:
 	then the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
 \end{theorem}
 \section{Proofs}
+\begin{lemma}
+	Suppose $m > n, Z \sim Binomial(m, \frac{b\log n}{n}), X\sim Binomial(m, \frac{a\log n}{n})$.
+	For $ t > \frac{m}{n}(b - a)$, we have
+	\begin{equation}
+	P(Z - X \geq t \log n) \leq \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
+	\end{equation}
+	where $g(a,b,\epsilon)$ is defined as
+	\begin{equation}\label{eq:gab}
+	g(a,b,\epsilon) = a + b - \sqrt{\epsilon^2 + 4ab} + \epsilon \log \frac{\epsilon + \sqrt{\epsilon^2 + 4ab}}{2b}
+	\end{equation}
+\end{lemma}
+\begin{proof}[Proof of Theorem \ref{thm:Pe}]
+Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
+then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F^{(k)}$ denotes
+the event $\{\exists y \in \{\pm 1\}^n | \dist(y, y^*)=2k, p(x,z|y) > p(x,z|y^*) \}$. Since
+$y$ is expected to satisfy the constraint $\sum_{i=1}^n y_i=0$, $\dist(y, y^*)$ is only allowed to take even
+values. Taking $\log$ on both sides of $p(x,z|y) > p(x,z|y^*)$ we can get the equivalent inequality:
+\begin{equation}\label{eq:ein}
+\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})}
++\sum_{i=1}^{km} \log \frac{p_0(x_{2i})}{p_1(x_{2i})}
+\geq \log \frac{p(1-q)}{q(1-p)} \sum_{i=1}^{k(n-2k)}(z_{i} - z'_{i})
+\end{equation}
+where $x_{1i}(x_{2i})$ are sampled from $p_0(p_1)$ respectively,
+and $z_{i} \sim \Bern(p), z'_{i} \sim \Bern(q)$.
+Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \sim
+-km D_{\KL}(p_0 || p_1)$, which is of order $O(\log n)$.
+Let $\epsilon$ be defined as follows:
+\begin{equation}
+\epsilon = \gamma k\frac{D(\widetilde{X}_1 || P_1) - D(\widetilde{X}_1 || P_0) + D(\widetilde{X}_2 || P_0) - D(\widetilde{X}_2 || P_1)}{\log a /b}
+\end{equation}
+where $\widetilde{X}_j$ is the empirical distribution of $x_{ji},i=1,\dots,km$
+for $j=1,2$
+\begin{equation*}
+P(\widetilde{X}_j = u) = \frac{1}{km} \sum_{i=1}^{km} \mathbbm{1}[x_{ji} = u]
+\end{equation*}
+Then \eqref{eq:ein} is equivalent to
+\begin{equation}\label{eq:zeps}
+\sum_{i=1}^{k(n-2k)}(z'_{i} - z_{i}) \geq \epsilon \log n
+\end{equation}
+Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
+\begin{align*}
+P(A_k) &\leq \sum_{P\in P_n} Q^n(T(P))P(\sum_{i=1}^{k(n-2k)} (z_{i1} - z_{i2} \geq \epsilon \log n )) \\
+& \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
+& \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot g(a, b, \frac{n}{k(n-2k)}\epsilon) ) \\
+&\leq |P_n| \exp(-\log n \cdot \theta^*)
+\end{align*}
+where
+\begin{align}
+\theta^* &= \min_{\widetilde{X}_1,\widetilde{X}_2} k\gamma (D(\widetilde{X}_1|| p_0) + D(\widetilde{X}_2 || p_1)) \notag \\
+& + \frac{k(n-2k)}{n} g(a,b, \frac{n}{k(n-2k)}\epsilon)
+\end{align}
+
+\end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:sdp}]
 The dual problem of \eqref{eq:sdp} is
 \begin{align}
@@ -197,19 +254,20 @@ $$
 \diag(y) - \tilde{B}  = \begin{pmatrix} h^T g & -h^T \\ -h & \diag(hg^T + Bgg^T) - B \end{pmatrix}
 \succeq 0
 $$
-We first analyze $\widetilde{C}:=\mathbb{E}[\diag(y) - \widetilde{B}]$, Let $D_1 = m\frac{D_{KL}(p_0||p_1)}{\log a/b},
+We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
+If all eigenvalue of $\diag(bg^T + Bgg^T) - B$ is larger than zero, then by
+Cauchy’s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
+Let $C=\mathbb{E}[\diag(bg^T + Bgg^T) - B]$ and $\Gamma = \diag(bg^T + Bgg^T) - B - C$.
+We further define $D_1 = m\frac{D_{KL}(p_0||p_1)}{\log a/b},
 D_2 = -m\frac{D_{KL}(p_1||p_0)}{\log a/b}, J_n = \mathbbm{1}_n \mathbbm{1}_n^T - I_n$.
 Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
-Then the constant matrix $\widetilde{C}$ can be written as:
-{\scriptsize
-\begin{equation*}
-\tilde{C}=\begin{pmatrix}
-\frac{n(D_1 + D_2)}{2} & -D_1 \mathbbm{1}_{n/2}^T & D_2 \mathbbm{1}_{n/2}^T \\
--D_1 \mathbbm{1}_{n/2}^T & (D_1 + d) I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
-D_2 \mathbbm{1}_{n/2}^T & b' J_{n/2} & (D_2 + d) I_{n/2} + a'J_{n/2}  
-\end{pmatrix}
-\end{equation*}
-}
+Then the constant matrix $C$ can be written as:
+	\begin{equation*}
+	C=\begin{pmatrix}
+	 (D_1 + d) I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
+	b' J_{n/2} & (D_2 + d) I_{n/2} + a'J_{n/2}  
+	\end{pmatrix}
+	\end{equation*}
 where $a',b', d$ are defined as:
 \begin{align*}
 a' & = - \frac{2a \log n}{n} + 1 \\
@@ -217,12 +275,9 @@ b' & = - \frac{2b \log n}{n} + 1 \\
 d & = (a-b) \log n - \frac{2a \log n}{n} + 1
 \end{align*}
 
-The eigenvalues of $\tilde{C}$ are $0$ corresponding to $\tilde{g}$, two eigenvalues of order $O(n)$
-all other eigenvalues are $d-a+D_1$ and $d-a+D_2$, which are of order $\log n$ ($d-a=(a-b)\log n$).
 
-We have already known that $\tilde{C}+\tilde{\Gamma}$ has an eigenvalue equal to $0$.
-If all eigenvalue of $\diag(bg^T + Bgg^T) - B$ is larger than zero, then by
-Cauchy’s Interlace Theorem \cite{it} all eigenvalues of $\tilde{C}+\tilde{\Gamma}$ is larger than zero.
+$-B$ is the non-diagonal part of $\diag(bg^T + Bgg^T) - B$, which is further
+equivalent to 
 Compared with original formulation in \cite{abbe}, we add a diagonal matrix $\diag(bg^T)$.
 Therefore, it is equivalent to estimate the probability with one error.
 To be more specific, we consider $g_i = 1$ and in such case
