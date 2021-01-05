@@ -196,6 +196,15 @@ in the following theorem:
 	g(a,b,\epsilon) = a + b - \sqrt{\epsilon^2 + 4ab} + \epsilon \log \frac{\epsilon + \sqrt{\epsilon^2 + 4ab}}{2b}
 	\end{equation}
 \end{lemma}
+\begin{lemma}\label{lem:p0p12}
+	Let $p_0, p_1$ be probability distribution functions defined over $\mathcal{X}$. The minimizer
+	of $D_{\KL}(X||p_0) + D_{\KL}(X||p_1)$ for any discrete random variable $X$ is
+	\begin{equation}\label{eq:p012}
+	p(x)=\frac{1}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}}\sqrt{p_0(x)p_1(x)}
+	\end{equation}
+	and the minimal value is
+	$-2\log \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}$.
+\end{lemma}
 \begin{proof}[Proof of Theorem \ref{thm:Pe}]
 Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
 then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F^{(k)}$ denotes
@@ -237,13 +246,28 @@ Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt}
 where
 \begin{align}
 \theta^* &= \min_{\widetilde{X}_1,\widetilde{X}_2} k\gamma (D(\widetilde{X}_1|| p_0) + D(\widetilde{X}_2 || p_1)) \notag \\
-& + \frac{k(n-2k)}{n} g(a,b, \frac{n}{k(n-2k)}\epsilon)
+& + \frac{k(n-2k)}{n} g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
 \end{align}
 We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
-a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$.
-
-Suppose $\theta^*>0$,
-since $|P_n|\leq (km)^{2|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
+a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$:
+\begin{equation*}
+g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{b} 
+\end{equation*}
+By Lemma \ref{lem:p0p12}, we can get
+{\scriptsize
+\begin{align}
+\theta^* &\geq \frac{k(n-2k)}{n}(\sqrt{a} - \sqrt{b})^2
++ \frac{k \gamma}{2}\min (D(\widetilde{X}_1||p_0) + D(\widetilde{X}_1||p_1)) \notag \\
+&+ \frac{k \gamma}{2}\min (D(\widetilde{X}_2||p_0) + D(\widetilde{X}_2||p_1))\notag \\
+&=  \frac{k(n-2k)}{n}(\sqrt{a} - \sqrt{b})^2 - 2 k\gamma\log(\sum_{x\in\mathcal{X}}\sqrt{p_0(x)p_1(x)}) 
+\label{eq:theta_star_lower_bound}
+\end{align}
+}
+Next, we show that the lower bound is achievable.
+When the pdf of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
+$\epsilon = 0$, and $\theta^*$ in \eqref{eq:theta_star} is exactly the lower bound of \eqref{eq:theta_star_lower_bound}.
+Since $\theta^*>0$,
+and $|P_n|\leq (km)^{2|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
 \end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:sdp}]
 The dual problem of \eqref{eq:sdp} is
