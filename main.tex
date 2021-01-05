@@ -268,6 +268,18 @@ When the pdf of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqre
 $\epsilon = 0$, and $\theta^*$ in \eqref{eq:theta_star} is exactly the lower bound of \eqref{eq:theta_star_lower_bound}.
 Since $\theta^*>0$,
 and $|P_n|\leq (km)^{2|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
+
+Using the union bound, we can control $P(F_k)$ by
+$$
+P(F_k) \leq \binom{n/2}{k}^2 P(A_k)
+$$
+When $k \geq \frac{n}{\sqrt{\log n}}$, using Lemma 8 of \cite{feng2021},
+$P(F_k)$ decreases exponentially. The error probability for $k < \frac{n}{\sqrt{\log n}}$
+can be controlled by:
+\begin{align*}
+P_e &\leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) + \exp(-n) \\
+& \leq \exp(k(-\mu \log n + \frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
+\end{align*}
 \end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:sdp}]
 The dual problem of \eqref{eq:sdp} is
