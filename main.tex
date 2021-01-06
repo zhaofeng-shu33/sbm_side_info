@@ -125,8 +125,8 @@ our main result in the following theorem:
 \begin{theorem}\label{thm:Pe}
 Let $\gamma = \frac{\log m}{n}$, using maximum likelihood estimator \eqref{eq:mle}, the error probability
 of exact recovery is bounded by
-\begin{equation}
-    P_e \leq n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2-2\right)}
+\begin{equation}\label{eq:PeMain}
+    P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2-2\right)}
 \end{equation}
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
@@ -144,7 +144,7 @@ error rate in Theorem \ref{thm:Pe}, the exact solution is NP-hard. In this
 Section, we will use semidefinite programming based relaxation to handle
 the optimization problem in \eqref{eq:mle}. The relaxation method
 can also achieve $P_e\to 0$ as long as the recovery condition
-$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$ is satisfied.
+$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$ is satisfied.
 
 The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
 \begin{align}
@@ -185,6 +185,11 @@ in the following theorem:
 	then the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
 \end{theorem}
 \section{Proofs}
+Some additional notations are necessary in this Section. We use
+$D(p_0||p_1)$ to represent the KL divergence of two discrete distributions. The set of possible types
+for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$. For any $P\in \mathcal{P}_m$, the probability of the type
+class $T(P)$ under $p_i$ is denoted as $Q_i^{m}(T(P))$.
+To save writing spaces in the proof, we will omit high order terms in the inequality.
 \begin{lemma}\label{lem:zxt}
 	Suppose $m > n, Z \sim Binomial(m, \frac{b\log n}{n}), X\sim Binomial(m, \frac{a\log n}{n})$.
 	For $ t > \frac{m}{n}(b - a)$, we have
@@ -198,7 +203,7 @@ in the following theorem:
 \end{lemma}
 \begin{lemma}\label{lem:p0p12}
 	Let $p_0, p_1$ be probability distribution functions defined over $\mathcal{X}$. The minimizer
-	of $D_{\KL}(X||p_0) + D_{\KL}(X||p_1)$ for any discrete random variable $X$ is
+	of $D(X||p_0) + D(X||p_1)$ for any discrete random variable $X$ is
 	\begin{equation}\label{eq:p012}
 	p(x)=\frac{1}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}}\sqrt{p_0(x)p_1(x)}
 	\end{equation}
@@ -219,7 +224,7 @@ values. Taking $\log$ on both sides of $p(x,z|y) > p(x,z|y^*)$ we can get the eq
 where $x_{1i}(x_{2i})$ are sampled from $p_0(p_1)$ respectively,
 and $z_{i} \sim \Bern(p), z'_{i} \sim \Bern(q)$.
 Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \sim
--km D_{\KL}(p_0 || p_1)$, which is of order $O(\log n)$.
+-km D(p_0 || p_1)$, which is of order $O(\log n)$.
 Let $\epsilon$ be defined as follows:
 \begin{equation}
 \epsilon = \gamma k\frac{D(\widetilde{X}_1 || P_1) - D(\widetilde{X}_1 || P_0) + D(\widetilde{X}_2 || P_0) - D(\widetilde{X}_2 || P_1)}{\log a /b}
@@ -235,13 +240,14 @@ Then \eqref{eq:ein} is equivalent to
 \end{equation}
 Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
 \begin{align*}
-P(A_k) &\leq \sum_{P\in P_n} Q^n(T(P))P(\sum_{i=1}^{k(n-2k)} (z_{i1} - z_{i2} \geq \epsilon \log n )) \\
+P(A_k) &\leq \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{km}(T(P^{(2)}))\\
+& \cdot P(\sum_{i=1}^{k(n-2k)} (z_{i1} - z_{i2} \geq \epsilon \log n )) \\
 \end{align*}
 Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
 \begin{align*}
 &P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
 & \cdot (1+o(1))\exp(-\log n \frac{k(n-2k)}{n}\cdot g(a, b, \frac{n}{k(n-2k)}\epsilon) ) \\
-&\leq |P_n| \exp(-\log n \cdot \theta^*) 
+&\leq |\mathcal{P}_{km}|^2 \exp(-\log n \cdot \theta^*) 
 \end{align*}
 where
 \begin{align}
@@ -267,7 +273,7 @@ Next, we show that the lower bound is achievable.
 When the pdf of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
 $\epsilon = 0$, and $\theta^*$ in \eqref{eq:theta_star} is exactly the lower bound of \eqref{eq:theta_star_lower_bound}.
 Since $\theta^*>0$,
-and $|P_n|\leq (km)^{2|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
+and $|\mathcal{P}_{km}|\leq (km)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
 
 Using the union bound, we can control $P(F_k)$ by
 $$
@@ -278,8 +284,20 @@ $P(F_k)$ decreases exponentially. The error probability for $k < \frac{n}{\sqrt{
 can be controlled by:
 \begin{align*}
 P_e &\leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) + \exp(-n) \\
-& \leq \exp(k(-\mu \log n + \frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
+& \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \\
+&\frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
 \end{align*}
+where $\mu = (\sqrt{a} - \sqrt{b})^2-2 + \gamma D_{1/2}(p_0||p_1) > 0$.
+Using the inequality
+$$
+\frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq \frac{\mu}{2} \log n
+$$
+for $1\leq k \leq \frac{n}{\sqrt{\log n}}$ we can obtain
+\begin{align*}
+P_e &\leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
+& = \frac{n^{-\mu / 2}}{1-n^{-\mu / 2}} = (1+o(1))n^{-\mu / 2}
+\end{align*}
+Therefore, \eqref{eq:PeMain} is established.
 \end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:sdp}]
 The dual problem of \eqref{eq:sdp} is
