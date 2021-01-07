@@ -126,13 +126,13 @@ our main result in the following theorem:
 Let $\gamma = \frac{\log m}{n}$, using maximum likelihood estimator \eqref{eq:mle}, the error probability
 of exact recovery is bounded by
 \begin{equation}\label{eq:PeMain}
-    P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2-2\right)}
+    P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
 \end{equation}
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
 decreasing of error probability $P_e$. Besides, since 
 $D_{1/2}(p_0||p_1) > 0$, it is possible to exactly recover $Y$
-for the case $\sqrt{a} + \sqrt{b} < \sqrt{2}$ as long as $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$.
+for the case $\sqrt{a} - \sqrt{b} < \sqrt{2}$ as long as $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
 
 Theorem \ref{thm:Pe} is dealing with the case when $m=O(\log n)$. It has been shown
 that side information cannot improve the phase transition of exact recovery when $m=o(\log n)$ (Theorem 6 in \cite{saad2018community}). When $m=\omega(\log n)$,
@@ -163,7 +163,12 @@ the maximal solution is unchanged when $\kappa$ takes other values as long as $\
 
 To transform \eqref{eq:matrix_mle} to SDP, we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
 to absorb the linear term in object function.
-Let $\tilde{B} = \begin{pmatrix} 0 & h^T \\ h & B \end{pmatrix}$
+Let 
+\begin{equation}
+\tilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & B + \lambda I_n \end{pmatrix}
+\textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
+\end{equation}
+
 Then we have
 \begin{align}
 \max\, & \widetilde{B} \cdot X \notag \\
@@ -309,37 +314,61 @@ s.t.\,& \diag(y) - \widetilde{B} \succeq 0
 Let $g$ be the underlining ground truth label, and
 define $\tilde{g} = (1,g^T)^T$.
 Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
-Then $y = (h^T g, \diag\{hg^T+Bgg^T\})$, and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
+Then $$
+y = (h^T g, \diag\{hg^T+Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
+$$
+and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
 Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
-$$
-\diag(y) - \tilde{B}  = \begin{pmatrix} h^T g & -h^T \\ -h & \diag(hg^T + Bgg^T) - B \end{pmatrix}
-\succeq 0
-$$
+\begin{align}
+\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}^T \\ -h- \lambda \mathbbm{1} & \Xi_n \end{pmatrix}
+\succeq 0 \notag \\
+\textrm{ where }\Xi_n & = \diag(hg^T + Bgg^T + \lambda \mathbbm{1}_ng^T) - B
+\end{align}
 We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
-If all eigenvalue of $\diag(bg^T + Bgg^T) - B$ is larger than zero, then by
+If all eigenvalues of $\Xi_n$ is larger than zero, then by
 Cauchy’s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
-Let $C=\mathbb{E}[\diag(bg^T + Bgg^T) - B]$ and $\Gamma = \diag(bg^T + Bgg^T) - B - C$.
-We further define $D_1 = m\frac{D_{KL}(p_0||p_1)}{\log a/b},
-D_2 = -m\frac{D_{KL}(p_1||p_0)}{\log a/b}, J_n = \mathbbm{1}_n \mathbbm{1}_n^T - I_n$.
+Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
+We further define $D_1 = m\frac{D(p_0||p_1)}{\log a/b},
+D_2 = m\frac{D(p_1||p_0)}{\log a/b}, J_n = \mathbbm{1}_n \mathbbm{1}_n^T - I_n, \bar{D}=\frac{D_1+D_2}{2}$.
 Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
 Then the constant matrix $C$ can be written as:
 	\begin{equation*}
 	C=\begin{pmatrix}
-	 (D_1 + d) I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
-	b' J_{n/2} & (D_2 + d) I_{n/2} + a'J_{n/2}  
+	d I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
+	b' J_{n/2} & d I_{n/2} + a'J_{n/2}  
 	\end{pmatrix}
 	\end{equation*}
 where $a',b', d$ are defined as:
 \begin{align*}
 a' & = - \frac{2a \log n}{n} + 1 \\
 b' & = - \frac{2b \log n}{n} + 1 \\
-d & = (a-b) \log n - \frac{2a \log n}{n} + 1
+d & = \bar{D}+(a-b) \log n - \frac{2a \log n}{n} + 1
 \end{align*}
 
-
-$-B$ is the non-diagonal part of $\diag(bg^T + Bgg^T) - B$, which is further
-equivalent to 
-Compared with original formulation in \cite{abbe}, we add a diagonal matrix $\diag(bg^T)$.
+The eigenvalues of C take three distinct values
+\begin{itemize}
+	\item $\lambda_1=\bar{D}+n-2b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
+	\item $\lambda_2=\bar{D}$ associated to the eigenvector corresponding to  $g$
+	\item $\lambda_3=\bar{D}+(a-b)\log(n)$ associated to all other eigenvectors
+\end{itemize}
+Since $\bar{D}=O(\log n)$ and $a>b$, $\lambda_3$ is the second smallest eigenvalues.
+We can verify $\Xi_n g = 0$, therefore, to show $\Xi_n \preceq 0$, it is equivalent
+to consider the subspace orthogonal to $g$:
+$$
+\min_{x \perp g, x \in \mathbb{R}^n } x^T (C-\Gamma) x \geq 0
+$$
+The error probability for the above event is bounded by
+$P(\lambda_{\max}(\Gamma) \geq \bar{D}+(a-b)\log n)$.
+$\Gamma$ is a random matrix with zero mean, and we can decompose it into diagonal part
+$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=2(A-\mathbb[A])$
+where $A$ is the adjacency matrix of the graph. By Theorem 5.2 of \cite{lei2015consistency},
+with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. By the triangular inequality of the spectral norm, we have
+\begin{align*}
+&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+(a-b)\log n)
+\leq n^{-r}  \\
+& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+(a-b)\log n - c\sqrt{\log n})
+\end{align*}
+$\Gamma_1$ is a diagonal matrix, and we can control each of its element respectively.
 Therefore, it is equivalent to estimate the probability with one error.
 To be more specific, we consider $g_i = 1$ and in such case
 $b_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})} = \frac{1}{\log a/b}(D(X_i^{(m)} || p_1) - 
