@@ -148,7 +148,7 @@ $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$ is satisfied.
 
 The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
 \begin{align}
-\max_{y}\, & h^T y + y^T B y \notag \\
+\max_{y}\, & h^T y + \frac{1}{2}y^T B y \notag \\
 s.t.\, & \mathbbm{1}_n^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
 \end{align}
 where $h$ is an n-dimensional vector with $h_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_{ij})}{p_1(x_{ij})}$, and the $n\times n $ matrix $B$ is defined as
@@ -368,26 +368,23 @@ with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for 
 \leq n^{-r}  \\
 & + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+(a-b)\log n - c\sqrt{\log n})
 \end{align*}
-$\Gamma_1$ is a diagonal matrix, and we can control each of its element respectively.
-Therefore, it is equivalent to estimate the probability with one error.
-To be more specific, we consider $g_i = 1$ and in such case
-$b_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_i^{(j)})}{p_1(x_i^{(j)})} = \frac{1}{\log a/b}(D(X_i^{(m)} || p_1) - 
-D(X_i^{(m)} || p_0)  ))
-$, whose mean value is positive ($\frac{1}{\log a/b}D(p_0||p_1)$).
-Therefore, we need to consider to control the following probability:
-$P(b_i + \sum_{i=1}^{n/2} (x_i - z_i) \leq 0) \leq \exp(-\log n \min \theta^*)$ 
-where $\theta^* = D(X_i^{(m)} || p_0) + \frac{1}{2} g(a,b,2b_i)$.
-By using the inequality $g(a,b,\epsilon) \geq (\sqrt{a} -\sqrt{b})^2 + \epsilon \frac{\log a/b}{2}$
-we can get a lower bound of $\theta^*$: $(\sqrt{a} - \sqrt{b})/2 + \frac{1}{2}\min(D(X_i^{(m)} || p_1) + 
-D(X_i^{(m)} || p_0))$, which is $(\sqrt{a} - \sqrt{b})/2 + \frac{1}{2}D_{1/2}(p_0||p_1)$.
-For $g_i = -1$, we have $\epsilon_i = g_i b_i = \frac{1}{\log a/b}(D(X_i^{(m)} || p_0) - 
-D(X_i^{(m)} || p_1)  )$ and its mean value is positive ($\frac{1}{\log a/b} D(p_1||p_0)$).
-Therefore, we have $P(\epsilon_i + \sum_{i=1}^{n/2} (x_i - z_i) \leq 0) \leq \exp(-\log n \min \theta'^*)$,
-where $\theta'^* = D(X_i^{(m)}||p_1) + \frac{1}{2}g(a,b,2\epsilon_i)$.
-Similarly, we have $\theta'^* \geq (\sqrt{a} - \sqrt{b})/2 + \frac{1}{2}D_{1/2}(p_0||p_1)$.
-Therefore, for all $i$, $P(g_i b_i + (Bgg^T)_{ii} < 0) \leq n^{-(\sqrt{a} - \sqrt{b})/2 - \frac{1}{2}D_{1/2}(p_0||p_1)}$.
-$P(\diag(bg^T + Bgg^T) \textrm{ is not semidefnite}) \leq n^{1-(\sqrt{a} - \sqrt{b})/2 - \frac{1}{2}D_{1/2}(p_0||p_1)} = o(1)$
-since $(\sqrt{a} - \sqrt{b})/2 + D_{1/2}(p_0||p_1) > 2$.
+$\Gamma_1$ is a diagonal matrix, and $\lambda_{\max}(\Gamma_1) = \max_{1\leq i \leq n} \Gamma_{ii}$.
+By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
+\begin{align*}
+&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+(a-b)\log n - c\sqrt{\log n})\leq \\
+&P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
+\end{align*}
+Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
+$\sum_{j=1}^{n/2} (z_j - z'_j) + h_i + \lambda \leq 0$ if $g_i=1$ and
+$\sum_{j=1}^{n/2} (z_j - z'_j) - h_i - \lambda \leq 0$ if $g_i = -1$.
+Therefore, we can pair the inequality and get the following estimation (suppose $g_1=1, g_2=-1$)
+$$
+P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
+\leq \frac{n}{2} P(h_1 - h_2 + \sum_{j=1}^n (z_j - z'_j) \leq 0)
+$$
+which has the same form as \eqref{eq:ein}. Therefore, the error probability converges to 0
+if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$.
+
 \end{proof}
 
 \bibliographystyle{IEEEtran}
