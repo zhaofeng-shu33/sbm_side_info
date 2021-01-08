@@ -43,7 +43,13 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-    abs
+    Side information improves the accuracy in community detection problems.
+    While experimental results demonstrates the superior performance of detection
+    based on both the node attributes and graph structure, theoretical exploration
+    remains open.
+    In this paper, we obtain an information theoretic bound of the 
+    exact recovery error probability for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features. In addition,
+	a semi-definite programming algorithm is proposed to achieve the exact recovery of our model.
 \end{abstract}
 \section{Introduction}
 The following notations are used throughout this paper: 
@@ -51,13 +57,12 @@ the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and e
 $V=\{1,\dots, n\} =: [n]$; $\mathbbm{1}_n$ represents the $n$-dimensional all-one vector;
 $\mathcal{X}$ is the alphabet
 of the random variable $X$.
-$f(n)\dot{=} g(n) \iff \lim_{n\to \infty} \frac{1}{n} \log \frac{f(n)}{g(n)} = 1$.
 
 
 
 \section{Related Works}
 \section{Mathematical Models}
-The two-community symmetric stochastical block model (SSBM) is a special case of SBM, and we state
+The two-community symmetric stochastic block model (SSBM) is a special case of SBM, and we state
 its definition as
 \begin{definition}[SSBM]
 	Let $0\leq q<p\leq 1$ and $V=[n]$. The random vector $Y=(Y_1,\dots,Y_n)\in \{\pm 1\}^n$ and random graph $G$ are drawn under $\SSBM(n,p,q)$ if
