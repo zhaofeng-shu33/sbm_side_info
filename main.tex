@@ -186,7 +186,7 @@ the theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarize
 in the following theorem:
 \begin{theorem}\label{thm:sdp}
 	Suppose $\hat{Y}_{\SDP}$ is the estimator by solving \eqref{eq:sdp}.
-	If $\kappa > b\frac{\log n}{n}$ and $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$,
+	If $\kappa > b\frac{\log n}{n}$ and $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$,
 	then the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
 \end{theorem}
 \section{Proofs}
@@ -383,7 +383,7 @@ P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
 \leq \frac{n}{2} P(h_1 - h_2 + \sum_{j=1}^n (z_j - z'_j) \leq 0)
 $$
 which has the same form as \eqref{eq:ein}. Therefore, the error probability converges to 0
-if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} + \sqrt{b})^2 > 2$.
+if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
 
 \end{proof}
 
