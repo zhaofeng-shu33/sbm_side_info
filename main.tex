@@ -158,8 +158,9 @@ B_{ij} = \begin{cases}
 -\kappa & (i,j) \not\in E(G)
 \end{cases}
 \end{equation}
-Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. However, we find that
-the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log n}{n}$.
+Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. 
+%However, we find that
+%the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
 
 To transform \eqref{eq:matrix_mle} to SDP, we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
 to absorb the linear term in object function.
@@ -186,7 +187,9 @@ the theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarize
 in the following theorem:
 \begin{theorem}\label{thm:sdp}
 	Suppose $\hat{Y}_{\SDP}$ is the estimator by solving \eqref{eq:sdp}.
-	If $\kappa > b\frac{\log n}{n}$ and $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$,
+	%If $\kappa > b\frac{\log n}{n}$
+	If $\kappa = 1$,
+	and $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$,
 	then the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
 \end{theorem}
 \section{Proofs}
