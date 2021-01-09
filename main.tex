@@ -53,10 +53,15 @@
 \end{abstract}
 \section{Introduction}
 In network analysis, community detection assigns discrete labels to each node of the graph based on the observation of graph edges.
-In addition to Extra observations are often available in real-world applications.
-	% first paragraph: short intro to SBM and Ising model
-Stochastic Block Model (SBM) is a commonly used random graph model, in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic, Abbe17}. For SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. 
+In addition to edge information, extra node features are often available in real-world applications such as graph signal \cite{dong2020graph},
+noisy labels \cite{mossel2016local}, and
+feature vectors \cite{zhang2016community}. Combining the edge and node information, it is expected to achieve better
+accuracy for community detection problems. Within this context, a central problem 
+is to investigate how much extra information contributes to the detection, compared to the case when only edge observation is available.
 
+	% first paragraph: short intro to SBM and Ising model
+To get some insight into such problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the soly presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. With the presence of extra node information, the condition of exact recovery is improved
+and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exact quantify the contribution of side information and graph information, and this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors.
 
 In this paper, we  investigate SIBM on multiple communities and focus on the problem of exactly recovery of the node label.
 We  compute the feasible regime of parameters and the sample complexity for exact recovery. Besides, the relationship between SIBM and the modularity maximization method
