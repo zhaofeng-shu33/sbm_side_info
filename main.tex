@@ -52,6 +52,16 @@
 	a semi-definite programming algorithm is proposed to achieve the exact recovery of our model.
 \end{abstract}
 \section{Introduction}
+In network analysis, community detection assigns discrete labels to each node of the graph based on the observation of graph edges.
+In addition to Extra observations are often available in real-world applications.
+	% first paragraph: short intro to SBM and Ising model
+Stochastic Block Model (SBM) is a commonly used random graph model, in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic, Abbe17}. For SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. 
+
+
+In this paper, we  investigate SIBM on multiple communities and focus on the problem of exactly recovery of the node label.
+We  compute the feasible regime of parameters and the sample complexity for exact recovery. Besides, the relationship between SIBM and the modularity maximization method
+is also discussed. 
+
 The following notations are used throughout this paper: 
 the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and edge set $E$;
 $V=\{1,\dots, n\} =: [n]$; $\mathbbm{1}_n$ represents the $n$-dimensional all-one vector;
@@ -167,11 +177,12 @@ Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a
 %However, we find that
 %the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
 
-To transform \eqref{eq:matrix_mle} to SDP, we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
+To transform \eqref{eq:matrix_mle} to SDP,
+we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
 to absorb the linear term in object function.
 Let 
 \begin{equation}
-\tilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & B + \lambda I_n \end{pmatrix}
+\widetilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & \frac{1}{2}B + \lambda I_n \end{pmatrix}
 \textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
 \end{equation}
 
@@ -187,7 +198,10 @@ the balanced constraint $\mathbbm{1}^T y = 0$. When $m=0$ and $\kappa=1$,
 the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
 When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
 the same as the one in Theorem 3 of \cite{Hajek16}. Here we consider the
-general case for $m=\gamma \log n$ and $\kappa > b\frac{\log n}{n}$,
+general case for $m=\gamma \log n$ and $\kappa = 1$. The case $\kappa=1$
+is empirically justified by consider the transformation $B'=2B-J_n$ where
+$J_n=\mathbbm{1}_n \mathbbm{1}_n^T- I_n$. Then $B'_{ij} = -1 +\frac{a-b}{\log a/b}\frac{\log n}{n} \approx -1$
+for $(i,j)\not\in E(G)$, whereas $y^T J y^T$ is a constant for $\mathbbm{1}^T y = 0$.
 the theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
 in the following theorem:
 \begin{theorem}\label{thm:sdp}
@@ -323,21 +337,21 @@ Let $g$ be the underlining ground truth label, and
 define $\tilde{g} = (1,g^T)^T$.
 Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
 Then $$
-y = (h^T g, \diag\{hg^T+Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
+y = (h^T g, \diag\{hg^T+\frac{1}{2}Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
 $$
 and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
 Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
 \begin{align}
-\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}^T \\ -h- \lambda \mathbbm{1} & \Xi_n \end{pmatrix}
+\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}_n^T \\ -h- \lambda \mathbbm{1}_n & \Xi_n \end{pmatrix}
 \succeq 0 \notag \\
-\textrm{ where }\Xi_n & = \diag(hg^T + Bgg^T + \lambda \mathbbm{1}_ng^T) - B
+\textrm{ where }\Xi_n & = \diag(hg^T + \frac{1}{2}Bgg^T + \lambda \mathbbm{1}_ng^T) - \frac{1}{2}B
 \end{align}
 We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
 If all eigenvalues of $\Xi_n$ is larger than zero, then by
 Cauchy’s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
 Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
 We further define $D_1 = m\frac{D(p_0||p_1)}{\log a/b},
-D_2 = m\frac{D(p_1||p_0)}{\log a/b}, J_n = \mathbbm{1}_n \mathbbm{1}_n^T - I_n, \bar{D}=\frac{D_1+D_2}{2}$.
+D_2 = m\frac{D(p_1||p_0)}{\log a/b}, \bar{D}=\frac{D_1+D_2}{2}$.
 Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
 Then the constant matrix $C$ can be written as:
 	\begin{equation*}
@@ -348,16 +362,16 @@ Then the constant matrix $C$ can be written as:
 	\end{equation*}
 where $a',b', d$ are defined as:
 \begin{align*}
-a' & = - \frac{2a \log n}{n} + 1 \\
-b' & = - \frac{2b \log n}{n} + 1 \\
-d & = \bar{D}+(a-b) \log n - \frac{2a \log n}{n} + 1
+a' & = - \frac{a \log n}{n} + \frac{1}{2} \\
+b' & = - \frac{b \log n}{n} + \frac{1}{2} \\
+d & = \bar{D}+\frac{1}{2}(a-b) \log n - \frac{a \log n}{n} + \frac{1}{2}
 \end{align*}
 
 The eigenvalues of C take three distinct values
 \begin{itemize}
-	\item $\lambda_1=\bar{D}+n-2b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
+	\item $\lambda_1=\bar{D}+\frac{n}{2}-b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
 	\item $\lambda_2=\bar{D}$ associated to the eigenvector corresponding to  $g$
-	\item $\lambda_3=\bar{D}+(a-b)\log(n)$ associated to all other eigenvectors
+	\item $\lambda_3=\bar{D}+\frac{1}{2}(a-b)\log(n)$ associated to all other eigenvectors
 \end{itemize}
 Since $\bar{D}=O(\log n)$ and $a>b$, $\lambda_3$ is the second smallest eigenvalues.
 We can verify $\Xi_n g = 0$, therefore, to show $\Xi_n \preceq 0$, it is equivalent
@@ -366,20 +380,20 @@ $$
 \min_{x \perp g, x \in \mathbb{R}^n } x^T (C-\Gamma) x \geq 0
 $$
 The error probability for the above event is bounded by
-$P(\lambda_{\max}(\Gamma) \geq \bar{D}+(a-b)\log n)$.
+$P(\lambda_{\max}(\Gamma) \geq \bar{D}+\frac{a-b}{2}\log n)$.
 $\Gamma$ is a random matrix with zero mean, and we can decompose it into diagonal part
-$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=2(A-\mathbb[A])$
+$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=A-\mathbb[A]$
 where $A$ is the adjacency matrix of the graph. By Theorem 5.2 of \cite{lei2015consistency},
 with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. By the triangular inequality of the spectral norm, we have
 \begin{align*}
-&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+(a-b)\log n)
+&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+\frac{a-b}{2}\log n)
 \leq n^{-r}  \\
-& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+(a-b)\log n - c\sqrt{\log n})
+& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})
 \end{align*}
 $\Gamma_1$ is a diagonal matrix, and $\lambda_{\max}(\Gamma_1) = \max_{1\leq i \leq n} \Gamma_{ii}$.
 By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
 \begin{align*}
-&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+(a-b)\log n - c\sqrt{\log n})\leq \\
+&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})\leq \\
 &P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
 \end{align*}
 Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
