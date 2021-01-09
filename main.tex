@@ -18,6 +18,7 @@
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\dist}{dist}
 \DeclareMathOperator{\Bern}{Bern}
+\DeclareMathOperator{\Binom}{Binom}
 \DeclareMathOperator{\KL}{KL}
 
 \newcommand{\A}{\frac{a \log(n)}{n}}
@@ -60,19 +61,25 @@ accuracy for community detection problems. Within this context, a central proble
 is to investigate how much extra information contributes to the detection, compared to the case when only edge observation is available.
 
 	% first paragraph: short intro to SBM and Ising model
-To get some insight into such problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the soly presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. With the presence of extra node information, the condition of exact recovery is improved
-and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exact quantify the contribution of side information and graph information, and this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors.
+To get some insight into such problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the soly presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For two community,
+the condition is summarized as $\sqrt{a} - \sqrt{b} > \sqrt{2}$.
 
-In this paper, we  investigate SIBM on multiple communities and focus on the problem of exactly recovery of the node label.
-We  compute the feasible regime of parameters and the sample complexity for exact recovery. Besides, the relationship between SIBM and the modularity maximization method
-is also discussed. 
+With the presence of extra node information, the condition of exact recovery is improved
+and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the contribution of side information and graph information, and this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. Our result generalizes
+the exact recovery threshold to a condition $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$
+where the contribution of side information is coded with Renyi divergence.
+
+To achieve the exact recovery condition of SBM, semi-definite programming (SDP) is often utilized \cite{Hajek16}.
+SDP relaxation can also be used for SBM with side information, and in this paper we show that the exact recovery condition
+of our model is achievable by such method.
 
 The following notations are used throughout this paper: 
 the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and edge set $E$;
 $V=\{1,\dots, n\} =: [n]$; $\mathbbm{1}_n$ represents the $n$-dimensional all-one vector;
 $\mathcal{X}$ is the alphabet
-of the random variable $X$.
-
+of the random variable $X$; $\Bern(p)$ and $\Binom(n,p)$ represent Bernoulli
+and Binomial distribution respectively; $f(n)=\omega(g(n))$ means that $\lim_{n\to \infty}\frac{f(n)}{g(n)} = \infty$;
+$I_n$ is the identity matrix with dimension $n$; $|A|$ is the cardinality of the set $A$.
 
 
 \section{Related Works}
@@ -116,8 +123,7 @@ $Y$:
     s.t.\, & y_i \in \{\pm 1\}, \sum_{i=1}^n y_i=0 \label{eq:mle}
 \end{align}
 Within this paper, we consider the special case $p = a \log n /n$ and $q = b \log n / b$ and study
-the exact recovery problem of SSBM with side information. The joint distribution
-of $Y,Z, X$ is denoted as $\mathcal{F}(n,m,a,b)$.
+the exact recovery problem of SSBM with side information.
 The formal definition of exact
 recovery is given as:
 \begin{definition}[Exact Recovery for SSBM with side information]
@@ -206,16 +212,18 @@ the same as the one in Theorem 3 of \cite{Hajek16}. Here we consider the
 general case for $m=\gamma \log n$ and $\kappa = 1$. The case $\kappa=1$
 is empirically justified by consider the transformation $B'=2B-J_n$ where
 $J_n=\mathbbm{1}_n \mathbbm{1}_n^T- I_n$. Then $B'_{ij} = -1 +\frac{a-b}{\log a/b}\frac{\log n}{n} \approx -1$
-for $(i,j)\not\in E(G)$, whereas $y^T J y^T$ is a constant for $\mathbbm{1}^T y = 0$.
-the theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
+for $(i,j)\not\in E(G)$, whereas $y^T J_n y$ is a constant for $\mathbbm{1}^T_n y = 0$.
+The theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
 in the following theorem:
 \begin{theorem}\label{thm:sdp}
 	Suppose $\hat{Y}_{\SDP}$ is the estimator by solving \eqref{eq:sdp}.
 	%If $\kappa > b\frac{\log n}{n}$
 	If $\kappa = 1$,
 	and $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$,
-	then the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
+	then $P(\hat{Y}_{\SDP} \neq \pm Y) = o(1)$.
 \end{theorem}
+Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$.
+\section{Conclusion}
 \section{Proofs}
 Some additional notations are necessary in this Section. We use
 $D(p_0||p_1)$ to represent the KL divergence of two discrete distributions. The set of possible types
@@ -223,7 +231,7 @@ for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$. For a
 class $T(P)$ under $p_i$ is denoted as $Q_i^{m}(T(P))$.
 To save writing spaces in the proof, we will omit high order terms in the inequality.
 \begin{lemma}\label{lem:zxt}
-	Suppose $m > n, Z \sim Binomial(m, \frac{b\log n}{n}), X\sim Binomial(m, \frac{a\log n}{n})$.
+	Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
 	For $ t > \frac{m}{n}(b - a)$, we have
 	\begin{equation}
 	P(Z - X \geq t \log n) \leq \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
