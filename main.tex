@@ -49,8 +49,7 @@
     based on both the node attributes and graph structure, theoretical exploration
     remains open.
     In this paper, we obtain an information theoretic bound of the 
-    exact recovery error probability for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features. In addition,
-	a semi-definite programming algorithm is proposed to achieve the exact recovery of our model.
+    exact recovery error probability for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
 \end{abstract}
 \section{Introduction}
 In network analysis, community detection assigns discrete labels to each node of the graph based on the observation of graph edges.
@@ -68,10 +67,6 @@ With the presence of extra node information, the condition of exact recovery is 
 and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the contribution of side information and graph information, and this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. Our result generalizes
 the exact recovery threshold to a condition $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$
 where the contribution of side information is coded with Renyi divergence.
-
-To achieve the exact recovery condition of SBM, semi-definite programming (SDP) is often utilized \cite{Hajek16}.
-SDP relaxation can also be used for SBM with side information, and in this paper we show that the exact recovery condition
-of our model is achievable by such method.
 
 The following notations are used throughout this paper: 
 the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and edge set $E$;
@@ -182,7 +177,7 @@ To save writing spaces in the proof, we will omit high order terms in the inequa
 \begin{lemma}\label{lem:zxt}
 	Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
 	For $ t > \frac{m}{n}(b - a)$, we have
-	\begin{equation}
+	\begin{equation}\label{eq:estimation}
 	P(Z - X \geq t \log n) \leq \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
 	\end{equation}
 	where $g(a,b,\epsilon)$ is defined as
@@ -192,9 +187,25 @@ To save writing spaces in the proof, we will omit high order terms in the inequa
 \end{lemma}
 \begin{proof}
     The moment generating function of $Z-X$ is
-    \begin{equation}
-    \mathbb{E}[]
+    \begin{align*}
+    &\mathbb{E}[e^{s(Z-X)}]  = 
+    \Big(1-q+q e^s \Big)^{m}
+    \Big(1-p+pe^{-s} \Big)^{m}  \\
+    & = 
+    \exp\Big(\frac{m\log(n)}{n} \Big( a e^{-s}+b e^s-a-b + O\big(\frac{\log(n)}{n}\big) \Big)\Big)
+    \end{align*}
+    where we use the Taylor expansion $\log(1+x)=x+O(x^2)$ to obtain the second equality.
+    By Chernoff bound, for any $s\ge 0$, we have
+    \begin{equation} \label{eq:mmd}
+    \begin{aligned}
+    & P(Z-X \geq t\log(n))\leq
+    \frac{\mathbb{E}[e^{s(Z-X)}]}{e^{st\log(n)}}  \\
+    \le & \exp\Big(\frac{m\log(n)}{n} \Big( a e^{-s}+b e^s -\frac{n}{m}st -a-b + O\big(\frac{\log(n)}{n}\big) \Big)\Big)
+    \end{aligned}
     \end{equation}
+    Let $f(s):=a e^{-s}+be^s-\mu st$ where $\mu=\frac{n}{m}$. We want to find $\min_{s\ge 0}f(s)$ to plug into the above upper bound. Since 
+    $f'(s)=-ae^{-s}+be^s-\mu t$ and 
+    $f''(s)=ae^{-s}+be^s>0$, $f(s)$ is a convex function and takes global minimum at $s^\ast$ such that $f'(s^\ast)=0$. Next we show that $s^\ast\ge 0$ for all $t\ge \frac{1}{\mu}(b-a)$, so $\min_{s\ge 0}f(s)=f(s^\ast)$. Indeed, this follows directly from the facts that $f'(0)=b-a-\mu t\le 0=f'(s^\ast)$ and that $f'(s)$ is an increasing function. Taking $s^\ast=\log(\sqrt{\mu^2 t^2+4ab}+\mu t)-\log(2b)$ into \eqref{eq:mmd}, we obtain \eqref{eq:estimation} for all $t \geq \frac{m}{n}(b-a) $ and large enough $n$.
 \end{proof}
 \begin{lemma}\label{lem:p0p12}
 	Let $p_0, p_1$ be probability distribution functions defined over $\mathcal{X}$. The minimizer
@@ -306,81 +317,7 @@ P_e &\leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
 \end{align*}
 Therefore, \eqref{eq:PeMain} is established.
 \end{proof}
-\begin{proof}[Proof of Theorem \ref{thm:sdp}]
-The dual problem of \eqref{eq:sdp} is
-\begin{align}
-\min\, & \mathbbm{1}^T y \notag \\
-s.t.\,& \diag(y) - \widetilde{B} \succeq 0
-\label{eq:sdp_dual}
-\end{align}
-Let $g$ be the underlining ground truth label, and
-define $\tilde{g} = (1,g^T)^T$.
-Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
-Then $$
-y = (h^T g, \diag\{hg^T+\frac{1}{2}Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
-$$
-and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
-Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
-\begin{align}
-\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}_n^T \\ -h- \lambda \mathbbm{1}_n & \Xi_n \end{pmatrix}
-\succeq 0 \notag \\
-\textrm{ where }\Xi_n & = \diag(hg^T + \frac{1}{2}Bgg^T + \lambda \mathbbm{1}_ng^T) - \frac{1}{2}B
-\end{align}
-We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
-If all eigenvalues of $\Xi_n$ is larger than zero, then by
-Cauchy’s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
-Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
-We further define $D_1 = m\frac{D(p_0||p_1)}{\log a/b},
-D_2 = m\frac{D(p_1||p_0)}{\log a/b}, \bar{D}=\frac{D_1+D_2}{2}$.
-Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
-Then the constant matrix $C$ can be written as:
-	\begin{equation*}
-	C=\begin{pmatrix}
-	d I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
-	b' J_{n/2} & d I_{n/2} + a'J_{n/2}  
-	\end{pmatrix}
-	\end{equation*}
-where $a',b', d$ are defined as:
-\begin{align*}
-a' & = - \frac{a \log n}{n} + \frac{1}{2} \\
-b' & = - \frac{b \log n}{n} + \frac{1}{2} \\
-d & = \bar{D}+\frac{1}{2}(a-b) \log n - \frac{a \log n}{n} + \frac{1}{2}
-\end{align*}
 
-The eigenvalues of C take three distinct values
-\begin{itemize}
-	\item $\lambda_1=\bar{D}+\frac{n}{2}-b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
-	\item $\lambda_2=\bar{D}$ associated to the eigenvector corresponding to  $g$
-	\item $\lambda_3=\bar{D}+\frac{1}{2}(a-b)\log(n)$ associated to all other eigenvectors
-\end{itemize}
-Since $\bar{D}=O(\log n)$ and $a>b$, $\lambda_3$ is the second smallest eigenvalues.
-We can verify $\Xi_n g = 0$, therefore, to show $\Xi_n \preceq 0$, it is equivalent
-to consider the subspace orthogonal to $g$:
-$$
-\min_{x \perp g, x \in \mathbb{R}^n } x^T (C-\Gamma) x \geq 0
-$$
-The error probability for the above event is bounded by
-$P(\lambda_{\max}(\Gamma) \geq \bar{D}+\frac{a-b}{2}\log n)$.
-$\Gamma$ is a random matrix with zero mean, and we can decompose it into diagonal part
-$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=A-\mathbb[A]$
-where $A$ is the adjacency matrix of the graph. By Theorem 5.2 of \cite{lei2015consistency},
-with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. By the triangular inequality of the spectral norm, we have
-\begin{align*}
-&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+\frac{a-b}{2}\log n)
-\leq n^{-r}  \\
-& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})
-\end{align*}
-$\Gamma_1$ is a diagonal matrix, and $\lambda_{\max}(\Gamma_1) = \max_{1\leq i \leq n} \Gamma_{ii}$.
-By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
-\begin{align*}
-&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})\leq \\
-&P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)
-\end{align*}
-Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
-$\sum_{j=1}^{n/2} (z_j - z'_j) + h_i + \lambda \leq 0$ if $g_i=1$ and
-$\sum_{j=1}^{n/2} (z_j - z'_j) - h_i - \lambda \leq 0$ if $g_i = -1$.
-
-\end{proof}
 
 \bibliographystyle{IEEEtran}
 \bibliography{exportlist}
