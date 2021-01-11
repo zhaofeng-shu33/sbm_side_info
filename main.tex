@@ -84,10 +84,20 @@ for each node. The sample distribution depends on the node labels. The exact sam
 this paper has been studied in Section V-B of \cite{saad2018community}. However,
 \cite{saad2018community} only got a weak conclusion, which says the sample complexity
 $m=O(\log n)$ is necessary for side information to be useful. In this paper, we obtain
-a closed-form condition for  
+a closed-form condition for exact recovery when $m=\gamma \log n$.
+
+A general case of side information is studies
+in \cite{abbe17sideinfo}. We emphasize that the model setting is slightly in Theorem 4 of \cite{abbe17sideinfo}
+assumes that the node labels are generated independently from $\Bern(\frac{1}{2})$ while the model
+in this paper requires uniform distribution over the space $\sum_{i=1}^n Y_i = 0$. Though these two models are equivalent in
+SBM model when $n$ is large, we observe that it differs when side information is available.
+
+Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the partial recovery error bound. This
+divergence appears when some symmetric condition is satisfied. Therefore, we also use it within this paper to characterize
+the contribution of side information to exact recovery error bound.
 \section{Mathematical Models}
 The two-community symmetric stochastic block model (SSBM) is a special case of SBM, and we state
-its definition as
+its definition as:
 \begin{definition}[SSBM]
 	Let $0\leq q<p\leq 1$ and $V=[n]$. The random vector $Y=(Y_1,\dots,Y_n)\in \{\pm 1\}^n$ and random graph $G$ are drawn under $\SSBM(n,p,q)$ if
 	\begin{enumerate}
@@ -168,6 +178,9 @@ the side information becomes the dominant term, and $P_e$ decreases in a rate $\
 
 
 \section{Conclusion}
+In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
+shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the error within a given level,
+our result shares insight on sample complexities of node features.
 \section{Proofs}
 Some additional notations are necessary in this Section. We use
 $D(p_0||p_1)$ to represent the KL divergence of two discrete distributions. The set of possible types
