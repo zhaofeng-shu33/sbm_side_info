@@ -60,20 +60,21 @@ accuracy for community detection problems. Within this context, a central proble
 is to investigate how much extra information contributes to the detection, compared to the case when only edge observation is available.
 
 	% first paragraph: short intro to SBM and Ising model
-To get some insight into such problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the soly presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For two community,
+To get some insight into such problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the solely presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For two community,
 the condition is summarized as $\sqrt{a} - \sqrt{b} > \sqrt{2}$.
 
 With the presence of extra node information, the condition of exact recovery is improved
 and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the contribution of side information and graph information, and this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. Our result generalizes
 the exact recovery threshold to a condition $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$
-where the contribution of side information is coded with Renyi divergence.
+where the contribution of side information is coded in Renyi divergence.
 
 The following notations are used throughout this paper: 
 the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and edge set $E$;
 $V=\{1,\dots, n\} =: [n]$; $\mathbbm{1}_n$ represents the $n$-dimensional all-one vector;
 $\mathcal{X}$ is the alphabet
-of the random variable $X$; $\Bern(p)$ and $\Binom(n,p)$ represent Bernoulli
-and Binomial distribution respectively; $f(n)=\omega(g(n))$ means that $\lim_{n\to \infty}\frac{f(n)}{g(n)} = \infty$;
+of the random variable $X$; $m$ is the number of samples generated at each node;
+$\Bern(p)$ and $\Binom(n,p)$ represent Bernoulli
+and Binomial distribution respectively; $f(n)=\omega(g(n))$ means that $\lim_{n\to \infty} f(n) / g(n) = \infty$;
 $I_n$ is the identity matrix with dimension $n$; $|A|$ is the cardinality of the set $A$;
 $D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$.
 
