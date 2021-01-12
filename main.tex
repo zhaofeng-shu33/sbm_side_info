@@ -162,11 +162,18 @@ This information theoretic quantity is defined as:
 Below we generalize this condition to the case with node observations and summarize
 our main result in the following theorem:
 \begin{theorem}\label{thm:Pe}
-Let $\gamma = \frac{\log m}{n}$, using maximum likelihood estimator \eqref{eq:mle}, the error probability
+Let $\gamma = \frac{\log m}{n}$, using maximum likelihood estimator \eqref{eq:mle},
+if
+\begin{equation}\label{eq:positive_condition}
+\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 > 0
+\end{equation}
+then the error probability
 of exact recovery is bounded by
 \begin{equation}\label{eq:PeMain}
     P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
 \end{equation}
+On the other hand, if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 < 0$,
+then $P_e \to 1$.
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
 decreasing of error probability $P_e$. Besides, since 
@@ -177,7 +184,9 @@ Theorem \ref{thm:Pe} is dealing with the case when $m=O(\log n)$. It has been sh
 that side information cannot improve the phase transition of exact recovery when $m=o(\log n)$ (Theorem 6 in \cite{saad2018community}). When $m=\omega(\log n)$,
 the side information becomes the dominant term, and $P_e$ decreases in a rate $\exp(-m D_{1/2}(p_0||p_1) )$.
 
-
+When \eqref{eq:positive_condition} does not hold, Theorem \ref{thm:Pe} says that exact recovery is impossible by ML estimator.
+Therefore, the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2$ fully characterizes the 
+phase transition behavior of our model in asymptotic case such that $P_e$ jumps from $1$ to $0$ when this quantity varies in a neighborhood of $2$.
 \section{Conclusion}
 In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the error within a given level,
@@ -330,6 +339,52 @@ P_e &\leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
 & = \frac{n^{-\mu / 2}}{1-n^{-\mu / 2}} = (1+o(1))n^{-\mu / 2}
 \end{align*}
 Therefore, \eqref{eq:PeMain} is established.
+
+Below we detail with the case $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 < 0$.
+Let $E(i, H)$ be the number of edges between node $i$ and node set $H$. $S_1:=\{i | y^*_i = +1 \}$
+and $S_2:=\{i | y^*_i = -1 \}$. Without loss of generality, we assume $\{1\}\subset S_1$
+and $\{2\} \subset S_2$.
+We consider the event when $y$ differs from $y^*$ at position $i \in S_1$ and $j \in S_2$.
+\begin{align}
+&\sum_{r=1}^{m} \log \frac{p_1(x_{ir})}{p_0(x_{ir})}
++\sum_{r=1}^{m} \log \frac{p_0(x_{jr})}{p_1(x_{jr})}
+\geq\log \frac{p(1-q)}{q(1-p)} \notag\\
+& (E(i, S_1 \backslash \{i\}) + E(j, S_2 \backslash \{j\})
+- E(i, S_2 \backslash \{j\}) - E(j, S_1 \backslash \{i\})) \label{eq:F1ij}
+\end{align}
+which is the same as \eqref{eq:ein} when $k=1$.
+
+To show $P_F = 1 - o(1)$, we consider $P(F_1)$ where
+$F_1: \exists y$ such that $p(x,z|y) > p(x,z|y^*)$ where $\dist(y,y^*)=2$.
+Then $P(F) \geq P(F_1)$.
+
+Let $F_1(i,j)$ represent the event when \eqref{eq:F1ij} holds. Then $F_1 = \cup_{i \in S_1,j \in S_2}F_1(i,j)$.
+
+Consider $F_1^c = \cap_{i\in S_1, j\in S_2} F_1^c(i,j)$.
+Let $H_1\subseteq S_1, H_2 \subseteq S_2$ such that $|H_1| = |H_2| = \frac{n}{\log^3 n}$.
+
+To upper bound $P(F_1^c)$ we restrict $i \in H_1, j \in H_2$ and consider
+$G_1(i,j)$:
+\begin{align}
+&\sum_{r=1}^{m} \log \frac{p_1(x_{ir})}{p_0(x_{ir})}
++\sum_{r=1}^{m} \log \frac{p_0(x_{jr})}{p_1(x_{jr})}
+\geq\log \frac{p(1-q)}{q(1-p)} (2\delta(n) + \notag\\
+& E(i, S_1 \backslash H_1) + E(j, S_2 \backslash H_2)
+- E(i, S_2 \backslash \{j\}) - E(j, S_1 \backslash \{i\})) \label{eq:G1ij}
+\end{align}
+$E(i, B \backslash \{j\}) + E(j, A \backslash \{i\}) \geq E(i, A \backslash H_1) + E(j, B \backslash H_2) + 2\delta(n)$
+where $\delta(n) = \frac{\log n}{\log \log n}$.
+The advantage of considering $G_1(i,j)$ is that $G_1(i,j)$ and $G_1(i', j')$ are independent.
+Let the event $\Delta_i$ represents all nodes in $H_i$ are connected to less than $\delta(n)$ other nodes in $H_i$ for $i=1,2$.
+
+Then we have $F_1^c \Rightarrow \Delta_1^c \cup \Delta_2^c \cup \cap_{i\in S_1, j\in S_2}G^c_1(i,j)$
+
+Therefore, we have $P(F_1^c) \leq P(\Delta_1^c) + P(\Delta_2^c) + P(\cap_{i\in A, j\in B}G^c_1(i,j))$.
+We can show that $P(\Delta_1^c) = o(1)$ from Lemma 10 of \cite{abbe2015exact}.
+Similar to the analysis in Lemma 4 of \cite{abbe2015exact}, we have $P(G_1(i,j)) > n^{-(\sqrt{a} - \sqrt{b})^2}$
+and $P(\cap_{i\in A, j\in B}G^c_1(i,j)) = (1 - P(G_1(i,j)))^{|H_1|^2} \sim \exp(-n^{2 - (\sqrt{a} - \sqrt{b})^2}/\log^6 n) \to 0$.
+We get the conclusion that $P(F_1^c) \to 0$ and $P(F) \to 1$.
+
 \end{proof}
 
 
