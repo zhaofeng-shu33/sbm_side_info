@@ -201,7 +201,7 @@ To save writing spaces in the proof, we will omit high order terms in the inequa
 	Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
 	For $ t > \frac{m}{n}(b - a)$, we have
 	\begin{equation}\label{eq:estimation}
-	P(Z - X \geq t \log n) \leq \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
+	P(Z - X \geq t \log n) = \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
 	\end{equation}
 	where $g(a,b,\epsilon)$ is defined as
 	\begin{equation}\label{eq:gab}
@@ -280,10 +280,10 @@ Then \eqref{eq:ein} is equivalent to
 \sum_{i=1}^{k(n-2k)}(z'_{i} - z_{i}) \geq \epsilon \log n
 \end{equation}
 Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
-\begin{align*}
-P(A_k) &\leq \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{km}(T(P^{(2)}))\\
-& \cdot P(\sum_{i=1}^{k(n-2k)} (z'_{i} - z_{i} \geq \epsilon \log n )) \\
-\end{align*}
+\begin{align}
+P(A_k) & =  \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{km}(T(P^{(2)}))\notag \\
+& \cdot P(\sum_{i=1}^{k(n-2k)} (z'_{i} - z_{i} \geq \epsilon(P^{(1)}, P^{(2)})  \log n ))\label{eq:decomp} \\
+\end{align}
 Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
 \begin{align*}
 &P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
@@ -381,9 +381,27 @@ Then we have $F_1^c \Rightarrow \Delta_1^c \cup \Delta_2^c \cup \cap_{i\in S_1, 
 
 Therefore, we have $P(F_1^c) \leq P(\Delta_1^c) + P(\Delta_2^c) + P(\cap_{i\in A, j\in B}G^c_1(i,j))$.
 We can show that $P(\Delta_1^c) = o(1)$ from Lemma 10 of \cite{abbe2015exact}.
-Similar to the analysis in Lemma 4 of \cite{abbe2015exact}, we have $P(G_1(i,j)) > n^{-(\sqrt{a} - \sqrt{b})^2}$
-and $P(\cap_{i\in A, j\in B}G^c_1(i,j)) = (1 - P(G_1(i,j)))^{|H_1|^2} \sim \exp(-n^{2 - (\sqrt{a} - \sqrt{b})^2}/\log^6 n) \to 0$.
-We get the conclusion that $P(F_1^c) \to 0$ and $P(F) \to 1$.
+Using the decomposition in \eqref{eq:decomp}, we can get a lower bound on $P(G_1(i,j))$ as:
+\begin{align*}
+&P(G_1(i,j)) = P(\sum_{r=1}^{n} (z'_r - z_r) \geq  \epsilon \log n) \\
+& \geq Q^m_0 (T(P^{(1)})) Q^m_1 (T(P^{(2)})) 
+ P(\sum_{r=1}^{n} (z'_r - z_r) \geq \epsilon(P^{(1)}, P^{(2)}) \log n) \\
+ & \geq \frac{1}{|\mathcal{P}_{m}|^2} \exp(-m(D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))
+ \exp(- \log n (g(a, b, \epsilon))) \\
+ & = \exp(-\log n (\tilde{\theta} + o(1)))
+\end{align*}
+where we choose $P^{(1)}=P^{(2)}$, specified by \eqref{eq:p012} such that the exponent $\tilde{\theta}$
+is reached:
+\begin{equation*}
+\tilde{\theta} = \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2
+\end{equation*}
+and 
+\begin{align*}
+& P(\cap_{i\in S_1, j\in S_2} G^c_1(i,j)) = (1 - P(G_1(i,j)))^{|H_1|^2} \\
+& \leq (1-n^{-\tilde{\theta}})^{n^2/\log^6 n} \\
+& \leq \exp(-n^{2 - \tilde{\theta}}/\log^6 n) \to 0
+\end{align*}
+We get the conclusion that $P(F_1^c) \to 0$ and $P_F \to 1$.
 
 \end{proof}
 
