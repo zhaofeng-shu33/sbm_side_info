@@ -135,12 +135,12 @@ $Y$:
     \hat{Y} &= \arg\max_y p(x,z|Y=y) \notag \\
     s.t.\, & y_i \in \{\pm 1\}, \sum_{i=1}^n y_i=0 \label{eq:mle}
 \end{align}
-Within this paper, we consider the special case $p = a \log n /n$ and $q = b \log n / b$ and study
-the exact recovery problem of SSBM with side information.
+The joint distribution
+of $Y,Z, X$ is denoted as $\mathcal{F}(n,m,p,q)$.
 The formal definition of exact
 recovery is given as:
 \begin{definition}[Exact Recovery for SSBM with side information]
-		Let $(Y,G,X) \sim \mathcal{F}(n,m,a,b)$.
+		Let $(Y,G,X) \sim \mathcal{F}(n,m,p,q)$.
 		We say that exact recovery is solvable if there is an algorithm that takes $(G,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(G,X)$ such that
 		$$
 		P(\hat{Y} \neq \pm Y) \to 0
@@ -150,19 +150,40 @@ recovery is given as:
 \end{definition}
 Based on the probabilistic model, the maximum likelihood estimator
 is commonly used to estimate the community labels $Y$.
-Without node observations, it is shown in \cite{abbe2015exact}
-that exact recovery is possible if and only if $\sqrt{a} - \sqrt{b} > \sqrt{2}$.
 Without edge observations, the exact recovery is decomposed into $n$
-independent hypothesis testing problems with the global constraint $\sum_{i=1}^n Y_i=0$. For the latter case, Rényi divergence with order $\frac{1}{2}$
-is used to quantify the error exponent of each pair of node observations.
+independent hypothesis testing problems with the global constraint $\sum_{i=1}^n Y_i=0$. 
+Rényi divergence with order $\frac{1}{2}$
+is used to quantify the error exponent.
 This information theoretic quantity is defined as:
 \begin{equation}
-    D_{1/2}(p_0 || p_1) = -2\log(\sum_{x \in \mathcal{X}} \sqrt{p_0(x)p_1(x)} )
+D_{1/2}(p_0 || p_1) = -2\log(\sum_{x \in \mathcal{X}} \sqrt{p_0(x)p_1(x)} )
 \end{equation}
-Below we generalize this condition to the case with node observations and summarize
-our main result in the following theorem:
+
+With node observations, we divide our discussion between two cases:
+\begin{enumerate}
+\item $p,q$ are constant values
+\item $p = a \log n /n$ and $q = b \log n / b$
+\end{enumerate}
+For the first case, Rényi divergence is also used to quantify the error.
+For the latter case, it is shown in \cite{abbe2015exact}
+that exact recovery is possible if and only if $\sqrt{a} - \sqrt{b} > \sqrt{2}$.
+When node observation and edge observation are both available, the exact error exponent in the first case is given by Theorem \ref{thm:constant}.
+\begin{theorem}\label{thm:constant}
+	Let $\gamma = \frac{m}{n} = O(1)$, if $p,q$ are constant, using maximum likelihood estimator \eqref{eq:mle},
+	\begin{equation}
+	-\frac{1}{n}\lim_{n\to \infty} \log P_e =  \gamma D_{1/2}(p_0 || p_1) + D_{1/2}(\Bern(p)||\Bern(q))
+	\end{equation} 
+\end{theorem}
+From Theorem \ref{thm:constant}, we see that the exact recovery error decreases in exponential rate.
+When $\gamma=0$, Theorem \ref{thm:constant} says $D_{1/2}(\Bern(p)||\Bern(q))$
+is the error exponent for exact recovery. Since weak recovery differs from exact recovery by a polynomial factor, $D_{1/2}(\Bern(p)||\Bern(q))$ is also the exponent for weak recovery, which has been obtained
+in \cite{zhang2016}. Besides, when $p,q$ are constant, for side information to take effects, the sample complexity $m$ should be $O(n)$. When $m=\omega(n)$, the side information dominates and the edge information is neglectable.
+
+For the second case when the graph is sparse, there is phase transition phenomenon. This result
+is summarized
+in the following theorem:
 \begin{theorem}\label{thm:Pe}
-Let $\gamma = \frac{\log m}{n}$, using maximum likelihood estimator \eqref{eq:mle},
+Let $\gamma = \frac{\log m}{n}$, if $p = a \log n /n$ and $q = b \log n / b$, using maximum likelihood estimator \eqref{eq:mle},
 if
 \begin{equation}\label{eq:positive_condition}
 \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 > 0
@@ -197,6 +218,37 @@ $D(p_0||p_1)$ to represent the KL divergence of two discrete distributions. The 
 for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$. For any $P\in \mathcal{P}_m$, the probability of the type
 class $T(P)$ under $p_i$ is denoted as $Q_i^{m}(T(P))$.
 To save writing spaces in the proof, we will omit high order terms in the inequality.
+\begin{proof}[Proof of Theorem \ref{thm:constant}]
+Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
+then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F^{(k)}$ denotes
+the event $\{\exists y \in \{\pm 1\}^n | \dist(y, y^*)=2k, p(x,z|y) > p(x,z|y^*) \}$. Since
+$y$ is expected to satisfy the constraint $\sum_{i=1}^n y_i=0$, $\dist(y, y^*)$ is only allowed to take even
+values. Taking $\log$ on both sides of $p(x,z|y) > p(x,z|y^*)$ we can get the equivalent inequality:
+{\footnotesize
+\begin{equation}\label{eq:ein}
+\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})}
++\sum_{i=1}^{km} \log \frac{p_0(x_{2i})}{p_1(x_{2i})}
+\geq \log \frac{p(1-q)}{q(1-p)} \sum_{i=1}^{k(n-2k)}(z_{i} - z'_{i})
+\end{equation}
+}
+where $x_{1i}(x_{2i})$ are sampled from $p_0(p_1)$ respectively,
+and $z_{i} \sim \Bern(p), z'_{i} \sim \Bern(q)$.
+
+We define several empirical distributions as follows: 
+\begin{align*}
+P(\widetilde{X}_j = u) &= \frac{1}{km} \sum_{i=1}^{km} \mathbbm{1}[x_{ji} = u], u \in \mathcal{X}, j=1,2 \\
+P(\widetilde{Z} = u) &= \frac{1}{k(n-2k)}\sum_{i=1}^{k(n-2k)} \mathbbm{1}[z_i = u], u \in \{0, 1\}
+\end{align*}
+and $\widetilde{Z}'$ is defined similarly. Then
+\eqref{eq:ein} is transformed as
+\begin{align*}
+&m[\sum_{x\in \mathcal{X}}P_{\widetilde{X}_1}(x)\log\frac{p_1(x)}{p_0(x)}
++\sum_{x\in \mathcal{X}}P_{\widetilde{X}_2}(x)\log\frac{p_0(x)}{p_1(x)}] +(n-2k)\\
+&[\sum_{z\in\{0,1\}} P_{\widetilde{Z}}(z) \log \frac{p_{B_q}(z)}{p_{B_p}(z)}
++ \sum_{z\in\{0,1\}} P_{\widetilde{Z}'}(z) \log \frac{p_{B_p}(z)}{p_{B_q}(z)}] \geq 0
+\end{align*}
+\end{proof}
+Two lemmas are needed to prove Theorem \ref{thm:Pe}.
 \begin{lemma}\label{lem:zxt}
 	Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
 	For $ t > \frac{m}{n}(b - a)$, we have
@@ -252,29 +304,14 @@ To save writing spaces in the proof, we will omit high order terms in the inequa
 	By \eqref{eq:norm}, we solve \eqref{eq:gab} out.	
 \end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:Pe}]
-Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
-then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F^{(k)}$ denotes
-the event $\{\exists y \in \{\pm 1\}^n | \dist(y, y^*)=2k, p(x,z|y) > p(x,z|y^*) \}$. Since
-$y$ is expected to satisfy the constraint $\sum_{i=1}^n y_i=0$, $\dist(y, y^*)$ is only allowed to take even
-values. Taking $\log$ on both sides of $p(x,z|y) > p(x,z|y^*)$ we can get the equivalent inequality:
-\begin{equation}\label{eq:ein}
-\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})}
-+\sum_{i=1}^{km} \log \frac{p_0(x_{2i})}{p_1(x_{2i})}
-\geq \log \frac{p(1-q)}{q(1-p)} \sum_{i=1}^{k(n-2k)}(z_{i} - z'_{i})
-\end{equation}
-where $x_{1i}(x_{2i})$ are sampled from $p_0(p_1)$ respectively,
-and $z_{i} \sim \Bern(p), z'_{i} \sim \Bern(q)$.
+We start from \eqref{eq:ein}.
 Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \sim
 -km D(p_0 || p_1)$, which is of order $O(\log n)$.
 Let $\epsilon$ be defined as follows:
 \begin{equation}
 \epsilon = \gamma k\frac{D(\widetilde{X}_1 || P_1) - D(\widetilde{X}_1 || P_0) + D(\widetilde{X}_2 || P_0) - D(\widetilde{X}_2 || P_1)}{\log a /b}
 \end{equation}
-where $\widetilde{X}_j$ is the empirical distribution of $x_{ji},i=1,\dots,km$
-for $j=1,2$
-\begin{equation*}
-P(\widetilde{X}_j = u) = \frac{1}{km} \sum_{i=1}^{km} \mathbbm{1}[x_{ji} = u]
-\end{equation*}
+
 Then \eqref{eq:ein} is equivalent to
 \begin{equation}\label{eq:zeps}
 \sum_{i=1}^{k(n-2k)}(z'_{i} - z_{i}) \geq \epsilon \log n
