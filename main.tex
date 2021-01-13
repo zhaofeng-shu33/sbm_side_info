@@ -241,12 +241,44 @@ P(\widetilde{Z} = u) &= \frac{1}{k(n-2k)}\sum_{i=1}^{k(n-2k)} \mathbbm{1}[z_i = 
 \end{align*}
 and $\widetilde{Z}'$ is defined similarly. Then
 \eqref{eq:ein} is transformed as
-\begin{align*}
+\begin{align}
 &m[\sum_{x\in \mathcal{X}}P_{\widetilde{X}_1}(x)\log\frac{p_1(x)}{p_0(x)}
-+\sum_{x\in \mathcal{X}}P_{\widetilde{X}_2}(x)\log\frac{p_0(x)}{p_1(x)}] +(n-2k)\\
++\sum_{x\in \mathcal{X}}P_{\widetilde{X}_2}(x)\log\frac{p_0(x)}{p_1(x)}] +(n-2k)\notag \\
 &[\sum_{z\in\{0,1\}} P_{\widetilde{Z}}(z) \log \frac{p_{B_q}(z)}{p_{B_p}(z)}
-+ \sum_{z\in\{0,1\}} P_{\widetilde{Z}'}(z) \log \frac{p_{B_p}(z)}{p_{B_q}(z)}] \geq 0
++ \sum_{z\in\{0,1\}} P_{\widetilde{Z}'}(z) \log \frac{p_{B_p}(z)}{p_{B_q}(z)}] \geq 0 \label{eq:mnk}
+\end{align}
+The probability of the event $A_k$ given by \eqref{eq:mnk} can be estimated by Sanov's theorem.
+$-\frac{1}{kn}\log P(A_k) \to \theta^*_k$ where 
+\begin{align*}
+\theta^*_k &= \min \gamma (D(\widetilde{X}_1||p_0) + D(\widetilde{X}_2||p_1)) + \\
+&(1-\frac{2k}{n})D(\widetilde{Z}||\Bern(p)) + D(\widetilde{Z}'||\Bern(q)) 
 \end{align*}
+while \eqref{eq:mnk} is satisfied for these distributions. Using Lagrange multiplier, we can get
+\begin{align*}
+p_{\widetilde{X}_1}(x) = c_1 p_0^{1-\lambda}(x)p_1^{\lambda}(x)\quad & p_{\widetilde{X}_2}(x) = c_2 p_1^{1-\lambda}(x)p_0^{\lambda}(x) \\
+p_{\widetilde{Z}}(z) = c_3 p_{B_p}^{1-\lambda}(x)p_{B_q}^{\lambda}(z)\quad &
+p_{\widetilde{Z}'}(z) = c_4 p_{B_q}^{1-\lambda}(x)p_{B_p}^{\lambda}(z)
+\end{align*}
+where $c_i$ are normalization coefficients for these distributions.
+The parameter $\lambda$ is chosen such that \eqref{eq:mnk} becomes equality, which leads to $\lambda=\frac{1}{2}$.
+Therefore, $\theta^*_k = \gamma D_{1/2}(p_0 || p_1) +(1-\frac{2k}{n}) D_{1/2}(\Bern(p)||\Bern(q))$
+Denoting $C_1=\gamma D_{1/2}(p_0 || p_1), C_2=D_{1/2}(\Bern(p)||\Bern(q))$ for short.
+Then $
+P(A_k) \leq \exp(-knC_1-k(n-2k) C_2)
+$. Using $\binom{n}{k} \leq (ne/k)^k$, we can bound $P_e$ above as follows:
+\begin{align*}
+P_e & \leq \sum_{k=1}^{n/4} (\binom{n/2}{k})^2 P(A_k) \\
+& \leq \sum_{k=1}^{n/4} \exp(-nf(k))
+\end{align*}
+where $f(k) = \frac{2k}{n}\log \frac{2k}{ne} + k(C_1+C_2) - \frac{2k^2}{n}C_2$.
+By computing $f'(x)= \frac{2}{n} \log \frac{2x}{n} + C_1+C_2 - \frac{4C_2x}{n}$, $1\leq x \leq \frac{n}{4}$.
+$f'(1) > 0 , f'(\frac{n}{4}) > 0$. Therefore, $f(x)$ increases in the interval $[1, \frac{n}{4}]$.
+Therefore, $f(k) \geq f(1)$ for $1\leq k \leq \frac{n}{4}$.
+\begin{equation}
+P_e \leq \frac{n}{4}\exp(-nf(1)) = \exp(-n (C_1+C_2+o(1)))
+\end{equation}
+On the other hand $P_e \geq P(A_1) = \exp(-n(C_1+C_2+o(1)))$.
+Finally we have $-\frac{1}{n} \lim_{n \to \infty} \log P_e = C_1+C_2$.
 \end{proof}
 Two lemmas are needed to prove Theorem \ref{thm:Pe}.
 \begin{lemma}\label{lem:zxt}
