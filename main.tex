@@ -201,7 +201,7 @@ To save writing spaces in the proof, we will omit high order terms in the inequa
 	Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
 	For $ t > \frac{m}{n}(b - a)$, we have
 	\begin{equation}\label{eq:estimation}
-	P(Z - X \geq t \log n) = \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
+	P(Z - X \geq t \log n) \leq \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
 	\end{equation}
 	where $g(a,b,\epsilon)$ is defined as
 	\begin{equation}\label{eq:gab}
@@ -386,12 +386,16 @@ Using the decomposition in \eqref{eq:decomp}, we can get a lower bound on $P(G_1
 &P(G_1(i,j)) = P(\sum_{r=1}^{n} (z'_r - z_r) \geq  \epsilon \log n) \\
 & \geq Q^m_0 (T(P^{(1)})) Q^m_1 (T(P^{(2)})) 
  P(\sum_{r=1}^{n} (z'_r - z_r) \geq \epsilon(P^{(1)}, P^{(2)}) \log n) \\
- & \geq \frac{1}{|\mathcal{P}_{m}|^2} \exp(-m(D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))
- \exp(- \log n (g(a, b, \epsilon))) \\
- & = \exp(-\log n (\tilde{\theta} + o(1)))
 \end{align*}
-where we choose $P^{(1)}=P^{(2)}$, specified by \eqref{eq:p012} such that the exponent $\tilde{\theta}$
-is reached:
+where we choose $P^{(1)}=P^{(2)}$, specified by \eqref{eq:p012} such that $\epsilon=\frac{1}{\log \log n} \to 0$.
+Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma 4 of \cite{abbe2015exact} we have
+\begin{align*}
+P(G_1(i,j))& \geq \frac{1}{m^{2|\mathcal{X}|}} \exp(-m(D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1)) \\
+&\cdot\exp(- \log n (g(a, b, \epsilon))) \\
+& = \exp(-\log n (\tilde{\theta} + o(1)))
+\end{align*}
+The error exponent $\tilde{\theta}$
+is:
 \begin{equation*}
 \tilde{\theta} = \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2
 \end{equation*}
