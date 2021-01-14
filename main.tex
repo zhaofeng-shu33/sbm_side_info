@@ -80,7 +80,10 @@ $V=\{1,\dots, n\} =: [n]$;
 $\mathcal{X}$ is the alphabet
 of the random variable $X$; $m$ is the number of samples generated at each node;
 $\Bern(p)$ and $\Binom(n,p)$ represent Bernoulli
-and Binomial distribution respectively; $f(n)=\omega(g(n))$(or $=o(g(n))$) means that $\lim_{n\to \infty} f(n) / g(n) = \infty $(or $=0$).
+and Binomial distribution respectively; $f(n)=\omega(g(n))$(or $=o(g(n))$) means that $\lim_{n\to \infty} f(n) / g(n) = \infty $(or $=0$);
+$\mathbbm{1}[A]$ is the indicator function for the event $A$; $W^n$ is the n-ary Cartesian power of the set $W$;
+The Hamming distance of 
+two $n$-dimensional vectors is written as $\dist(x,y):=\sum_{i=1}^n \mathbbm{1}[x_n\neq y_n]$ for $x,y\in \{\pm 1 \}^n$.
 
 \section{Related Works}\label{s:rw}
 This work extends the model of two-community SBM considered in \cite{abbe2015community}.
@@ -102,8 +105,7 @@ Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the w
 Within this paper, we use Rényi divergence to characterize
 the contribution of side information to exact recovery error bound in these two cases.
 \section{Mathematical Models}\label{s:model}
-The two-community symmetric stochastic block model (SSBM) is a special case of SBM, and we state
-its definition as:
+The two-community symmetric stochastic block model (SSBM) is a special case of SBM, whose formal definition is given by:
 \begin{definition}[SSBM]
 	Let $0\leq q<p\leq 1$ and $V=[n]$. The random vector $Y=(Y_1,\dots,Y_n)\in \{\pm 1\}^n$ and random graph $G$ are drawn under $\SSBM(n,p,q)$ if
 	\begin{enumerate}
@@ -112,11 +114,11 @@ its definition as:
 		\item There is an edge of $G$ between the vertices $i$ and $j$ with probability $p$ if $Y_i=Y_j$ and with probability $q$ if $Y_i \neq Y_j$; the existence of each edge is independent with each other.
 	\end{enumerate}
 \end{definition}
-Sampling from SSBM, the community detection task is to infer $Y$ from $G$.
-For this classical setting, there are only observations of edges. With the help of
-additional observations, determined purely from the label of each node, better recovery
-accuracy can be achieved. The additional node observation is called side information, whose
-definite definition is given as follows:
+Sampling from SSBM, we can get a pair $(Y,G)$ where each label $Y$ has a probability $ 1/ \binom{n}{n/2}$.
+From Bayesian point of view, the community detection task is to infer $Y$ from $G$.
+For this setting, the graph $G$ can be regarded as observations of edges. When
+additional node observations $X$ are added, we expect that better inference accuracy of $Y$ is achieved using $(G,X)$.
+The additional node observation is called side information, and we define it formally in the following way:
 \begin{definition}[SSBM with side information]
 	Let $(Y,G)$ be sampled from $\SSBM(n,p,q)$, $X_{i1}, \dots, X_{im}$ are i.i.d. random variables for $i \in [n]$,
 	whose probability density function $p(x)$ is determined by $Y_i$ as
@@ -129,35 +131,44 @@ definite definition is given as follows:
 \end{definition}
 The node observations can be written concisely as $\{X_{ij} | i \in [n], j \in [m]\}$.
 We can denote the edge observations in a similar way by using $Z_{ij}:=\mathbbm{1}[\{i,j\} \in E(G)]$.
-Using $X_{ij}$ and $Z_{ij}$, the likelihood function for them is
+Using $X_{ij}$ and $Z_{ij}$, the (posterior) likelihood function for $Y$ is
 \begin{equation}\label{eq:lh}
     p(x, z| Y=y) = p(z|y)\prod_{i=1}^n \prod_{j=1}^m p^{\sigma_i}_0(x_{ij})p^{1-\sigma_i}_1(x_{ij}) 
 \end{equation}
 where $p(z|y)$ is the likelihood function for $\SSBM$ and $\sigma_i = (1+y_i)/2$.
-Based on \eqref{eq:lh}, we can use maximum likelihood method to estimate
+Based on \eqref{eq:lh}, we can use maximum likelihood (ML) method to estimate
 $Y$:
 \begin{align}
     \hat{Y} &= \arg\max_y p(x,z|Y=y) \notag \\
     s.t.\, & y_i \in \{\pm 1\}, \sum_{i=1}^n y_i=0 \label{eq:mle}
 \end{align}
-The joint distribution
-of $Y,Z, X$ is denoted as $\mathcal{F}(n,m,p,q)$.
-The formal definition of exact
+The estimator $\hat{Y}$, given by \eqref{eq:mle}, is a ML estimator in restricted parameter space.
+In contract, ML estimator for $y\in \{ \pm 1 \}^n$ (unrestricted parameter space) in considered in \cite{abbe17sideinfo}.
+To introduce the notion of exact recovery, we use $\mathcal{F}(n,m,p,q)$ to represent the joint distribution
+of $Y,Z, X$.
+Then the formal definition of exact
 recovery is given as:
 \begin{definition}[Exact Recovery for SSBM with side information]
-		Let $(Y,G,X) \sim \mathcal{F}(n,m,p,q)$.
-		We say that exact recovery is solvable if there is an algorithm that takes $(G,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(G,X)$ such that
+		Let $(Y,Z,X) \sim \mathcal{F}(n,m,p,q)$.
+		We say that exact recovery is solvable if there is an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that
 		$$
-		P(\hat{Y} \neq \pm Y) \to 0
+		P(\hat{Y} \neq Y) \to 0
 		\text{~~~as~} n\to\infty
 		$$
-		and we call $P_e:=P(\hat{Y} \neq \pm Y)$ the error probability of the recovery algorithm.
+		and we call $P_e:=P(\hat{Y} \neq Y)$ the error probability of the recovery algorithm.
 \end{definition}
-Based on the probabilistic model, the maximum likelihood estimator
-is commonly used to estimate the community labels $Y$.
-Without edge observations, the exact recovery is decomposed into $n$
+The above definition is slightly different with that for SBM as the latter uses $\hat{Y} \neq \pm Y$.
+When no side information is available, we can only expect a recovery up to a global sign. However,
+since $p_0 \neq p_1$, the sign of $Y$ can be determined when side information is in hand.
+
+We make another remark that exact recovery metric imposes stricter requirement on the recovery algorithm than its weak recovery
+counterpart, which uses $\dist(\hat{Y}, Y)/n$ to measure the recovery error.
+
+Below we analyze the exact recovery error of the maximum likelihood estimator $\hat{Y}$
+given by \eqref{eq:mle}.
+Without edge observations, the estimation is decomposed into $n$
 independent hypothesis testing problems with the global constraint $\sum_{i=1}^n Y_i=0$. 
-Rényi divergence with order $\frac{1}{2}$
+In such case, Rényi divergence with order $\frac{1}{2}$
 is used to quantify the error exponent.
 This information theoretic quantity is defined as:
 \begin{equation}
@@ -166,8 +177,8 @@ D_{1/2}(p_0 || p_1) = -2\log(\sum_{x \in \mathcal{X}} \sqrt{p_0(x)p_1(x)} )
 
 With node observations, we divide our discussion between two cases:
 \begin{enumerate}
-\item $p,q$ are constant values
-\item $p = a \log n /n$ and $q = b \log n / b$
+\item $p,q$ are constant values;
+\item $p = a \log n /n$ and $q = b \log n / b$.
 \end{enumerate}
 For the first case, Rényi divergence is also used to quantify the error.
 For the latter case, it is shown in \cite{abbe2015exact}
@@ -220,8 +231,6 @@ our result shares insight on sample complexities of node features.
 \section{Proofs}\label{s:proof}
 Some additional notations are necessary in this Section. $|A|$ is the cardinality of the set $A$;
 $D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$;
-The Hamming distance of 
-two $n$-dimensional vectors is written as $\dist(x,y):=\sum_{i=1}^n \mathbbm{1}[x_n\neq y_n]$ for $x,y\in \{\pm 1 \}^n$;
 $p_{B_q}(z) = q^z(1-q)^{1-z}$ is the probability mass distribution for $\Bern(q)$;
 From type theory, The set of possible types
 for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$; For any $P\in \mathcal{P}_m$, the probability of the type
