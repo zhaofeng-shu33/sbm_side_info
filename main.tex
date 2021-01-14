@@ -48,37 +48,41 @@
     While experimental results demonstrates the superior performance of detection
     based on both the node attributes and graph structure, theoretical exploration
     remains open.
-    In this paper, we obtain an information theoretic bound of the 
+    In this paper, we obtain information theoretic bounds of the 
     exact recovery error probability for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
+    Our result shares insight on the sample complexity of node features and the general phase transition threshold of SSBM.
 \end{abstract}
 \section{Introduction}
 In network analysis, community detection assigns discrete labels to each node of the graph based on the observation of graph edges.
-In addition to edge information, extra node features are often available in real-world applications such as graph signal \cite{dong2020graph},
-noisy labels \cite{mossel2016local}, and
-feature vectors \cite{zhang2016community}. Combining the edge and node information, it is expected to achieve better
-accuracy for community detection problems. Within this context, a central problem 
-is to investigate how much extra information contributes to the detection, compared to the case when only edge observation is available.
+In addition to edge information, extra node features are often available in real-world applications in the form of graph signal \cite{dong2020graph},
+noisy labels \cite{mossel2016local}, or
+feature vectors \cite{zhang2016community}. Combining the edge and node information, it is expected that better
+accuracy can be achieved for community detection problems. Within this context, a central problem 
+is to investigate the gain that extra information brings to the detection problem, compared to the case when only edge observation is available.
 
 	% first paragraph: short intro to SBM and Ising model
-To get some insight into such problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the solely presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For two community,
-the condition is summarized as $\sqrt{a} - \sqrt{b} > \sqrt{2}$.
+To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the solely presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For a special case of two community model,
+the recovery condition is summarized as $\sqrt{a} - \sqrt{b} > \sqrt{2}$ when $a,b$ are parameters of SBM.
 
 With the presence of extra node information, the condition of exact recovery is improved
-and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the contribution of side information and graph information, and this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. Our result generalizes
+and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the contribution of side information and graph information. In contrast, this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. Our result generalizes
 the exact recovery threshold to a condition $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$
 where the contribution of side information is coded in Renyi divergence.
 
+This paper is organized as follows. In Section \ref{s:rw}, we review the previous works which are closely related with ours.
+In Section \ref{s:model}, we introduce the model and present our main results.
+Then the article concludes in Section \ref{s:conclusion} and
+detailed proofs are provided in Section \ref{s:proof}.
+
 The following notations are used throughout this paper: 
 the random undirected graph $G$ is written as $G(V,E)$ with vertex set $V$ and edge set $E$;
-$V=\{1,\dots, n\} =: [n]$; $\mathbbm{1}_n$ represents the $n$-dimensional all-one vector;
+$V=\{1,\dots, n\} =: [n]$;
 $\mathcal{X}$ is the alphabet
 of the random variable $X$; $m$ is the number of samples generated at each node;
 $\Bern(p)$ and $\Binom(n,p)$ represent Bernoulli
-and Binomial distribution respectively; $f(n)=\omega(g(n))$ means that $\lim_{n\to \infty} f(n) / g(n) = \infty$;
-$I_n$ is the identity matrix with dimension $n$; $|A|$ is the cardinality of the set $A$;
-$D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$.
+and Binomial distribution respectively; $f(n)=\omega(g(n))$(or $=o(g(n))$) means that $\lim_{n\to \infty} f(n) / g(n) = \infty $(or $=0$).
 
-\section{Related Works}
+\section{Related Works}\label{s:rw}
 This work extends the model of two-community SBM considered in \cite{abbe2015community}.
 Specifically, we assume the extra feature vectors are independent samples generated 
 for each node. The sample distribution depends on the node labels. The exact same model in
@@ -89,14 +93,14 @@ a closed-form condition for exact recovery when $m=\gamma \log n$.
 
 A general case of side information is studies
 in \cite{abbe17sideinfo}. We emphasize that the model setting is slightly in Theorem 4 of \cite{abbe17sideinfo}
-assumes that the node labels are generated independently from $\Bern(\frac{1}{2})$ while the model
+assumes that the node labels are independently generated  from $\Bern(\frac{1}{2})$ while the model
 in this paper requires uniform distribution over the space $\sum_{i=1}^n Y_i = 0$. Though these two models are equivalent in
 SBM model when $n$ is large, we observe that it differs when side information is available.
 
 Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the partial recovery error bound. This
 divergence appears when some symmetric condition is satisfied. Therefore, we also use it within this paper to characterize
 the contribution of side information to exact recovery error bound.
-\section{Mathematical Models}
+\section{Mathematical Models}\label{s:model}
 The two-community symmetric stochastic block model (SSBM) is a special case of SBM, and we state
 its definition as:
 \begin{definition}[SSBM]
@@ -208,16 +212,19 @@ the side information becomes the dominant term, and $P_e$ decreases in a rate $\
 When \eqref{eq:positive_condition} does not hold, Theorem \ref{thm:Pe} says that exact recovery is impossible by ML estimator.
 Therefore, the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2$ fully characterizes the 
 phase transition behavior of our model in asymptotic case such that $P_e$ jumps from $1$ to $0$ when this quantity varies in a neighborhood of $2$.
-\section{Conclusion}
+\section{Conclusion}\label{s:conclusion}
 In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the error within a given level,
 our result shares insight on sample complexities of node features.
-\section{Proofs}
-Some additional notations are necessary in this Section. We use
-$D(p_0||p_1)$ to represent the KL divergence of two discrete distributions. The set of possible types
-for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$. For any $P\in \mathcal{P}_m$, the probability of the type
-class $T(P)$ under $p_i$ is denoted as $Q_i^{m}(T(P))$.
-To save writing spaces in the proof, we will omit high order terms in the inequality.
+\section{Proofs}\label{s:proof}
+Some additional notations are necessary in this Section. $|A|$ is the cardinality of the set $A$;
+$D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$;
+The Hamming distance of 
+two $n$-dimensional vectors is written as $\dist(x,y):=\sum_{i=1}^n \mathbbm{1}[x_n\neq y_n]$ for $x,y\in \{\pm 1 \}^n$;
+$p_{B_q}(z) = q^z(1-q)^{1-z}$ is the probability mass distribution for $\Bern(q)$;
+From type theory, The set of possible types
+for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$; For any $P\in \mathcal{P}_m$, the probability of the type
+class $T(P)$ under distribution $p_i$ is denoted as $Q_i^{m}(T(P))$.
 \begin{proof}[Proof of Theorem \ref{thm:constant}]
 Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
 then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F^{(k)}$ denotes
