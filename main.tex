@@ -84,22 +84,23 @@ and Binomial distribution respectively; $f(n)=\omega(g(n))$(or $=o(g(n))$) means
 
 \section{Related Works}\label{s:rw}
 This work extends the model of two-community SBM considered in \cite{abbe2015community}.
-Specifically, we assume the extra feature vectors are independent samples generated 
-for each node. The sample distribution depends on the node labels. The exact same model in
-this paper has been studied in Section V-B of \cite{saad2018community}. However,
-\cite{saad2018community} only got a weak conclusion, which says the sample complexity
-$m=O(\log n)$ is necessary for side information to be useful. In this paper, we obtain
-a closed-form condition for exact recovery when $m=\gamma \log n$.
+Specifically, we assume the extra feature vectors of each node are independent samples, whose distribution depends on the label of the node.
+This model has been studied in Section V-B of \cite{saad2018community}. However,
+\cite{saad2018community} only got a weak conclusion, which says that the sample complexity of feature vectors
+$mO(\log n)$ is required to be of order $O(\log n)$ for side information to take effects. In this paper, we obtain
+a closed-form condition for exact recovery when $m=\gamma \log n$ for a positive constant $\gamma$.
 
-A general case of side information is studies
-in \cite{abbe17sideinfo}. We emphasize that the model setting is slightly in Theorem 4 of \cite{abbe17sideinfo}
+A general case of side information is studied
+in \cite{abbe17sideinfo}. We emphasize that the model setting in Theorem 4 of \cite{abbe17sideinfo}
 assumes that the node labels are independently generated  from $\Bern(\frac{1}{2})$ while the model
-in this paper requires uniform distribution over the space $\sum_{i=1}^n Y_i = 0$. Though these two models are equivalent in
-SBM model when $n$ is large, we observe that it differs when side information is available.
+in this paper requires uniform distribution over the space $\sum_{i=1}^n Y_i = 0$ where $Y_i \in \{\pm 1 \}$ is the label of the $i$-th node.
+Although these two settings are equivalent in
+SBM model when $n$ is large, we observe that it differs when side information is available. Our assumption is easier to analyze due to some
+symmetric property of node observations.
 
-Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the partial recovery error bound. This
-divergence appears when some symmetric condition is satisfied. Therefore, we also use it within this paper to characterize
-the contribution of side information to exact recovery error bound.
+Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the weak recovery error bound. Both the dense and sparse graph are considered.
+Within this paper, we use Rényi divergence to characterize
+the contribution of side information to exact recovery error bound in these two cases.
 \section{Mathematical Models}\label{s:model}
 The two-community symmetric stochastic block model (SSBM) is a special case of SBM, and we state
 its definition as:
@@ -459,8 +460,8 @@ Therefore, we have $P(F_1^c) \leq P(\Delta_1^c) + P(\Delta_2^c) + P(\cap_{i\in A
 We can show that $P(\Delta_1^c) = o(1)$ from Lemma 10 of \cite{abbe2015exact}.
 Using the decomposition in \eqref{eq:decomp}, we can get a lower bound on $P(G_1(i,j))$ as:
 \begin{align*}
-&P(G_1(i,j)) = P(\sum_{r=1}^{n} (z'_r - z_r) \geq  \epsilon \log n) \\
-& \geq Q^m_0 (T(P^{(1)})) Q^m_1 (T(P^{(2)})) 
+&P(G_1(i,j)) = P(\sum_{r=1}^{n} (z'_r - z_r) \geq  \epsilon \log n) \geq Q^m_0 (T(P^{(1)}))\\
+& \cdot Q^m_1 (T(P^{(2)})) 
  P(\sum_{r=1}^{n} (z'_r - z_r) \geq \epsilon(P^{(1)}, P^{(2)}) \log n) \\
 \end{align*}
 where we choose $P^{(1)}=P^{(2)}$, specified by \eqref{eq:p012} such that $\epsilon=\frac{1}{\log \log n} \to 0$.
