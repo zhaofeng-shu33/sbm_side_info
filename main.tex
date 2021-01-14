@@ -180,26 +180,25 @@ With node observations, we divide our discussion between two cases:
 \item $p,q$ are constant values;
 \item $p = a \log n /n$ and $q = b \log n / b$.
 \end{enumerate}
-For the first case, Rényi divergence is also used to quantify the error.
-For the latter case, it is shown in \cite{abbe2015exact}
-that exact recovery is possible if and only if $\sqrt{a} - \sqrt{b} > \sqrt{2}$.
-When node observation and edge observation are both available, the exact error exponent in the first case is given by Theorem \ref{thm:constant}.
+The recovery error for the first case is given in Theorem \ref{thm:constant} while
+the latter case is analyzed in Theorem \ref{thm:Pe}.
 \begin{theorem}\label{thm:constant}
-	Let $\gamma = \frac{m}{n} = O(1)$, if $p,q$ are constant, using maximum likelihood estimator \eqref{eq:mle},
+	Let $\gamma = \frac{m}{n} = O(1)$. If $p,q$ are constant, using maximum likelihood estimator \eqref{eq:mle},
+	the error exponent of exact recovery error is given by:
 	\begin{equation}
 	-\frac{1}{n}\lim_{n\to \infty} \log P_e =  \gamma D_{1/2}(p_0 || p_1) + D_{1/2}(\Bern(p)||\Bern(q))
 	\end{equation} 
 \end{theorem}
-From Theorem \ref{thm:constant}, we see that the exact recovery error decreases in exponential rate.
+From Theorem \ref{thm:constant}, we see that the recovery error decreases in exponential rate.
 When $\gamma=0$, Theorem \ref{thm:constant} says $D_{1/2}(\Bern(p)||\Bern(q))$
 is the error exponent for exact recovery. Since weak recovery differs from exact recovery by a polynomial factor, $D_{1/2}(\Bern(p)||\Bern(q))$ is also the exponent for weak recovery, which has been obtained
-in \cite{zhang2016}. Besides, when $p,q$ are constant, for side information to take effects, the sample complexity $m$ should be $O(n)$. When $m=\omega(n)$, the side information dominates and the edge information is neglectable.
+in \cite{zhang2016}. Besides, when $p,q$ are constant, for side information to take effects, the sample complexity $m$ should be of order $O(n)$. When $m=\omega(n)$, the side information dominates and the edge information is neglectable.
 
-For the second case when the graph is sparse, there is phase transition phenomenon. This result
+For the second case when the graph is sparse, there is the phase transition phenomenon. This result
 is summarized
 in the following theorem:
 \begin{theorem}\label{thm:Pe}
-Let $\gamma = \frac{\log m}{n}$, if $p = a \log n /n$ and $q = b \log n / b$, using maximum likelihood estimator \eqref{eq:mle},
+Let $\gamma = \frac{\log m}{n}$, if $p = a \log n /n$ and $q = b \log n / n$, using maximum likelihood estimator \eqref{eq:mle},
 if
 \begin{equation}\label{eq:positive_condition}
 \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 > 0
@@ -214,10 +213,10 @@ then $P_e \to 1$.
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
 decreasing of error probability $P_e$. Besides, since 
-$D_{1/2}(p_0||p_1) > 0$, it is possible to exactly recover $Y$
+$D_{1/2}(p_0||p_1) > 0$, it is still possible to recover $Y$
 for the case $\sqrt{a} - \sqrt{b} < \sqrt{2}$ as long as $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
 
-Theorem \ref{thm:Pe} is dealing with the case when $m=O(\log n)$. It has been shown
+In addition, Theorem \ref{thm:Pe} is dealing with the case when $m=O(\log n)$. It has been shown
 that side information cannot improve the phase transition of exact recovery when $m=o(\log n)$ (Theorem 6 in \cite{saad2018community}). When $m=\omega(\log n)$,
 the side information becomes the dominant term, and $P_e$ decreases in a rate $\exp(-m D_{1/2}(p_0||p_1) )$.
 
@@ -226,10 +225,10 @@ Therefore, the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2$ ful
 phase transition behavior of our model in asymptotic case such that $P_e$ jumps from $1$ to $0$ when this quantity varies in a neighborhood of $2$.
 \section{Conclusion}\label{s:conclusion}
 In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
-shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the error within a given level,
+shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
 our result shares insight on sample complexities of node features.
 \section{Proofs}\label{s:proof}
-Some additional notations are necessary in this Section. $|A|$ is the cardinality of the set $A$;
+Some additional notations are necessary in this Section: $|A|$ is the cardinality of the set $A$;
 $D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$;
 $p_{B_q}(z) = q^z(1-q)^{1-z}$ is the probability mass distribution for $\Bern(q)$;
 From type theory, The set of possible types
