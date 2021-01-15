@@ -231,7 +231,7 @@ our result shares insight on sample complexities of node features.
 Some additional notations are necessary in this Section: $|A|$ is the cardinality of the set $A$;
 $D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$;
 $p_{B_q}(z) = q^z(1-q)^{1-z}$ is the probability mass distribution for $\Bern(q)$;
-From type theory, The set of possible types
+From type theory, the set of possible types
 for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$; For any $P\in \mathcal{P}_m$, the probability of the type
 class $T(P)$ under distribution $p_i$ is denoted as $Q_i^{m}(T(P))$.
 \begin{proof}[Proof of Theorem \ref{thm:constant}]
@@ -252,7 +252,7 @@ and $z_{i} \sim \Bern(p), z'_{i} \sim \Bern(q)$.
 
 We define several empirical distributions as follows: 
 \begin{align*}
-P(\widetilde{X}_j = u) &= \frac{1}{km} \sum_{i=1}^{km} \mathbbm{1}[x_{ji} = u], u \in \mathcal{X}, j=1,2 \\
+P(\widetilde{X}_j = u) &= \frac{1}{km} \sum_{i=1}^{km} \mathbbm{1}[x_{ji} = u] \textrm{ for } u \in \mathcal{X}, j=1,2 \\
 P(\widetilde{Z} = u) &= \frac{1}{k(n-2k)}\sum_{i=1}^{k(n-2k)} \mathbbm{1}[z_i = u], u \in \{0, 1\}
 \end{align*}
 and $\widetilde{Z}'$ is defined similarly. Then
@@ -269,21 +269,21 @@ $-\frac{1}{kn}\log P(A_k) \to \theta^*_k$ where
 \theta^*_k &= \min \gamma (D(\widetilde{X}_1||p_0) + D(\widetilde{X}_2||p_1)) + \\
 &(1-\frac{2k}{n})D(\widetilde{Z}||\Bern(p)) + D(\widetilde{Z}'||\Bern(q)) 
 \end{align*}
-while \eqref{eq:mnk} is satisfied for these distributions. Using Lagrange multiplier, we can get
+while \eqref{eq:mnk} is satisfied for these distributions. Using the Lagrange multiplier, we can get
 \begin{align*}
 p_{\widetilde{X}_1}(x) = c_1 p_0^{1-\lambda}(x)p_1^{\lambda}(x)\quad & p_{\widetilde{X}_2}(x) = c_2 p_1^{1-\lambda}(x)p_0^{\lambda}(x) \\
 p_{\widetilde{Z}}(z) = c_3 p_{B_p}^{1-\lambda}(x)p_{B_q}^{\lambda}(z)\quad &
 p_{\widetilde{Z}'}(z) = c_4 p_{B_q}^{1-\lambda}(x)p_{B_p}^{\lambda}(z)
 \end{align*}
-where $c_i$ are normalization coefficients for these distributions.
+where $c_1, \dots, c_4$ are normalization coefficients for these distributions.
 The parameter $\lambda$ is chosen such that \eqref{eq:mnk} becomes equality, which leads to $\lambda=\frac{1}{2}$.
 Therefore, $\theta^*_k = \gamma D_{1/2}(p_0 || p_1) +(1-\frac{2k}{n}) D_{1/2}(\Bern(p)||\Bern(q))$
-Denoting $C_1=\gamma D_{1/2}(p_0 || p_1), C_2=D_{1/2}(\Bern(p)||\Bern(q))$ for short.
-Then $
+Denoting $C_1=\gamma D_{1/2}(p_0 || p_1), C_2=D_{1/2}(\Bern(p)||\Bern(q))$ for short,
+then $
 P(A_k) \leq \exp(-knC_1-k(n-2k) C_2)
 $. Using $\binom{n}{k} \leq (ne/k)^k$, we can bound $P_e$ above as follows:
 \begin{align*}
-P_e & \leq \sum_{k=1}^{n/4} (\binom{n/2}{k})^2 P(A_k) \\
+P_e & \leq \sum_{k=1}^{n/4} \binom{n/2}{k}^2 P(A_k) \\
 & \leq \sum_{k=1}^{n/4} \exp(-nf(k))
 \end{align*}
 where $f(k) = \frac{2k}{n}\log \frac{2k}{ne} + k(C_1+C_2) - \frac{2k^2}{n}C_2$.
@@ -299,9 +299,9 @@ Finally we have $-\frac{1}{n} \lim_{n \to \infty} \log P_e = C_1+C_2$.
 Two lemmas are needed to prove Theorem \ref{thm:Pe}.
 \begin{lemma}\label{lem:zxt}
 	Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
-	For $ t > \frac{m}{n}(b - a)$, we have
+	For $ t \geq \frac{m}{n}(b - a)$, we have
 	\begin{equation}\label{eq:estimation}
-	P(Z - X \geq t \log n) \leq \exp(-\log n \frac{m}{n}\cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
+	P(Z - X \geq t \log n) \leq \exp(-\frac{m}{n}\log n \cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
 	\end{equation}
 	where $g(a,b,\epsilon)$ is defined as
 	\begin{equation}\label{eq:gab}
@@ -344,12 +344,12 @@ Two lemmas are needed to prove Theorem \ref{thm:Pe}.
 	\begin{equation}\label{eq:norm}
 	\sum_{x \in \mathcal{X}} \mu_x = 1
 	\end{equation}
-	Using Lagrange multiplier, we can take
+	Using the Lagrange multiplier, we can take
 	the derivative of $L(\mu_1, \dots, \mu_{|\mathcal{X}|})=\sum_{x \in \mathcal{X}}
 	(\mu_x\log \frac{\mu_x}{p_0(x)} +\mu_x \log \frac{\mu_x}{p_1(x)}
 	-\lambda\mu_x) -\lambda$ about $\mu_x$.
 	From $\frac{\partial L(\mu)}{\partial \mu_x} = 0$, we obtain $\mu_x = \sqrt{p_0(x)p_1(x)}e^{\lambda-2}$.
-	By \eqref{eq:norm}, we solve \eqref{eq:gab} out.	
+	By \eqref{eq:norm}, we solve \eqref{eq:p012} out.	
 \end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:Pe}]
 We start from \eqref{eq:ein}.
@@ -367,13 +367,13 @@ Then \eqref{eq:ein} is equivalent to
 Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
 \begin{align}
 P(A_k) & =  \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{km}(T(P^{(2)}))\notag \\
-& \cdot P(\sum_{i=1}^{k(n-2k)} (z'_{i} - z_{i} \geq \epsilon(P^{(1)}, P^{(2)})  \log n ))\label{eq:decomp} \\
+& \cdot P(\sum_{i=1}^{k(n-2k)} (z'_{i} - z_{i} \geq \epsilon(P^{(1)}, P^{(2)})  \log n ))\label{eq:decomp} 
 \end{align}
 Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
 \begin{align*}
 &P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
-& \cdot (1+o(1))\exp(-\log n \frac{k(n-2k)}{n}\cdot g(a, b, \frac{n}{k(n-2k)}\epsilon) ) \\
-&\leq |\mathcal{P}_{km}|^2 \exp(-\log n \cdot \theta^*) 
+& \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot (g(a, b, \frac{n}{k(n-2k)}\epsilon) + o(1))) \\
+&\leq |\mathcal{P}_{km}|^2 \exp(-\log n \cdot (\theta^* + o(1))) 
 \end{align*}
 where
 \begin{align}
@@ -396,8 +396,8 @@ By Lemma \ref{lem:p0p12}, we can get
 \end{align}
 }
 Next, we show that the lower bound is achievable.
-When the pdf of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
-$\epsilon = 0$, and $\theta^*$ in \eqref{eq:theta_star} is exactly the lower bound of \eqref{eq:theta_star_lower_bound}.
+When the probability distribution of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
+$\epsilon = 0$, and $\theta^*$ in \eqref{eq:theta_star} is exactly the lower bound \eqref{eq:theta_star_lower_bound}.
 Since $\theta^*>0$,
 and $|\mathcal{P}_{km}|\leq (km)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
 
@@ -409,8 +409,8 @@ When $k \geq \frac{n}{\sqrt{\log n}}$, using Lemma 8 of \cite{feng2021},
 $P(F_k)$ decreases exponentially. The error probability for $k < \frac{n}{\sqrt{\log n}}$
 can be controlled by:
 \begin{align*}
-P_e &\leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) + \exp(-n) \\
-& \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \\
+P_e &\leq (1+o(1))\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) \\
+& \leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \\
 &\frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
 \end{align*}
 where $\mu = (\sqrt{a} - \sqrt{b})^2-2 + \gamma D_{1/2}(p_0||p_1) > 0$.
