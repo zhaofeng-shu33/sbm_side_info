@@ -373,12 +373,12 @@ Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt}
 \begin{align*}
 &P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
 & \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot (g(a, b, \frac{n}{k(n-2k)}\epsilon) + o(1))) \\
-&\leq |\mathcal{P}_{km}|^2 \exp(-\log n \cdot (\theta^* + o(1))) 
+&\leq |\mathcal{P}_{km}|^2 \exp(-k\log n \cdot (\theta^*_k + o(1))) 
 \end{align*}
 where
 \begin{align}
-\theta^* &= \min_{\widetilde{X}_1,\widetilde{X}_2} k\gamma (D(\widetilde{X}_1|| p_0) + D(\widetilde{X}_2 || p_1)) \notag \\
-& + \frac{k(n-2k)}{n} g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
+\theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(\widetilde{X}_1|| p_0) + D(\widetilde{X}_2 || p_1)) \notag \\
+&\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
 \end{align}
 We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
 a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$:
@@ -388,18 +388,18 @@ g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{
 By Lemma \ref{lem:p0p12}, we can get
 {\scriptsize
 \begin{align}
-\theta^* &\geq \frac{k(n-2k)}{n}(\sqrt{a} - \sqrt{b})^2
-+ \frac{k \gamma}{2}\min (D(\widetilde{X}_1||p_0) + D(\widetilde{X}_1||p_1)) \notag \\
-&+ \frac{k \gamma}{2}\min (D(\widetilde{X}_2||p_0) + D(\widetilde{X}_2||p_1))\notag \\
-&=  \frac{k(n-2k)}{n}(\sqrt{a} - \sqrt{b})^2 - 2 k\gamma\log(\sum_{x\in\mathcal{X}}\sqrt{p_0(x)p_1(x)}) 
+\theta^*_k &\geq (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
++ \frac{ \gamma}{2}\min (D(\widetilde{X}_1||p_0) + D(\widetilde{X}_1||p_1)) \notag \\
+&+ \frac{ \gamma}{2}\min (D(\widetilde{X}_2||p_0) + D(\widetilde{X}_2||p_1))\notag \\
+&=  (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2 - 2 \gamma\log(\sum_{x\in\mathcal{X}}\sqrt{p_0(x)p_1(x)}) 
 \label{eq:theta_star_lower_bound}
 \end{align}
 }
 Next, we show that the lower bound is achievable.
 When the probability distribution of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
-$\epsilon = 0$, and $\theta^*$ in \eqref{eq:theta_star} is exactly the lower bound \eqref{eq:theta_star_lower_bound}.
-Since $\theta^*>0$,
-and $|\mathcal{P}_{km}|\leq (km)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-\theta^*+o(1)}$.
+$\epsilon = 0$, and $\theta^*_k$ in \eqref{eq:theta_star} is exactly the lower bound \eqref{eq:theta_star_lower_bound}.
+Since $\theta^*_k>0$,
+and $|\mathcal{P}_{km}|\leq (km)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-k(\theta^*_k+o(1))}$.
 
 Using the union bound, we can control $P(F_k)$ by
 $$
