@@ -228,7 +228,7 @@ In this paper, we obtain a close-form exact recovery condition for a two-communi
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
 our result shares insight on sample complexities of node features.
 \section{Proofs}\label{s:proof}
-Some additional notations are necessary in this Section: $|A|$ is the cardinality of the set $A$;
+Some additional notations are necessary in this Section: $|A|, A^c$ is the cardinality, complement of the set $A$;
 $D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$;
 $p_{B_q}(z) = q^z(1-q)^{1-z}$ is the probability mass distribution for $\Bern(q)$;
 From type theory, the set of possible types
@@ -236,17 +236,21 @@ for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$; For a
 class $T(P)$ under distribution $p_i$ is denoted as $Q_i^{m}(T(P))$.
 \begin{proof}[Proof of Theorem \ref{thm:constant}]
 Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
-then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F^{(k)}$ denotes
-the event $\{\exists y \in \{\pm 1\}^n | \dist(y, y^*)=2k, p(x,z|y) > p(x,z|y^*) \}$. Since
+then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F_k$ denote
+the event when there are $k$ pairs difference between $y$ and $y^*$.
+\begin{equation}\label{eq:Fk}
+F_k:=\{\exists y \in \{\pm 1\}^n | \dist(y, y^*)=2k, p(x,z|y) > p(x,z|y^*) \}
+\end{equation}
+Since
 $y$ is expected to satisfy the constraint $\sum_{i=1}^n y_i=0$, $\dist(y, y^*)$ is only allowed to take even
 values. Taking $\log$ on both sides of $p(x,z|y) > p(x,z|y^*)$ we can get the equivalent inequality:
-{\footnotesize
+
 \begin{equation}\label{eq:ein}
-\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})}
-+\sum_{i=1}^{km} \log \frac{p_0(x_{2i})}{p_1(x_{2i})}
+\sum_{i=1}^{km} (\log \frac{p_1(x_{1i})}{p_0(x_{1i})}
++ \log \frac{p_0(x_{2i})}{p_1(x_{2i})})
 \geq \log \frac{p(1-q)}{q(1-p)} \sum_{i=1}^{k(n-2k)}(z_{i} - z'_{i})
 \end{equation}
-}
+
 where $x_{1i}(x_{2i})$ are sampled from $p_0(p_1)$ respectively,
 and $z_{i} \sim \Bern(p), z'_{i} \sim \Bern(q)$.
 
@@ -281,7 +285,11 @@ Therefore, $\theta^*_k = \gamma D_{1/2}(p_0 || p_1) +(1-\frac{2k}{n}) D_{1/2}(\B
 Denoting $C_1=\gamma D_{1/2}(p_0 || p_1), C_2=D_{1/2}(\Bern(p)||\Bern(q))$ for short,
 then $
 P(A_k) \leq \exp(-knC_1-k(n-2k) C_2)
-$. Using $\binom{n}{k} \leq (ne/k)^k$, we can bound $P_e$ above as follows:
+$. Using the union bound, we can control $P(F_k)$ by
+\begin{equation}\label{eq:FAk}
+P(F_k) \leq \binom{n/2}{k}^2 P(A_k)
+\end{equation}
+and by $\binom{n}{k} \leq (ne/k)^k$, we can further bound $P_e$ above as follows:
 \begin{align*}
 P_e & \leq \sum_{k=1}^{n/4} \binom{n/2}{k}^2 P(A_k) \\
 & \leq \sum_{k=1}^{n/4} \exp(-nf(k))
@@ -322,8 +330,8 @@ Two lemmas are needed to prove Theorem \ref{thm:Pe}.
     \begin{equation} \label{eq:mmd}
     \begin{aligned}
     & P(Z-X \geq t\log(n))\leq
-    \frac{\mathbb{E}[e^{s(Z-X)}]}{e^{st\log(n)}}  \\
-    \le & \exp\Big(\frac{m\log(n)}{n} \Big( a e^{-s}+b e^s -\frac{n}{m}st -a-b + O\big(\frac{\log(n)}{n}\big) \Big)\Big)
+    \frac{\mathbb{E}[e^{s(Z-X)}]}{e^{st\log(n)}} \le \\
+     & \exp\Big(\frac{m\log(n)}{n} \Big( a e^{-s}+b e^s -\frac{n}{m}st -a-b + O\big(\frac{\log(n)}{n}\big) \Big)\Big)
     \end{aligned}
     \end{equation}
     Let $f(s):=a e^{-s}+be^s-\mu st$ where $\mu=\frac{n}{m}$. We want to find $\min_{s\ge 0}f(s)$ to plug into the above upper bound. Since 
@@ -399,7 +407,7 @@ Next, we show that the lower bound is achievable.
 When the probability distribution of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
 $\epsilon = 0$, and $\theta^*_k$ in \eqref{eq:theta_star} is exactly the lower bound \eqref{eq:theta_star_lower_bound}.
 Since $\theta^*_k>0$,
-and $|\mathcal{P}_{km}|\leq (km)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-k(\theta^*_k+o(1))}$.
+and $|\mathcal{P}_{km}|\leq (km+1)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-k(\theta^*_k+o(1))}$.
 
 Using the union bound, we can control $P(F_k)$ by
 $$
@@ -407,29 +415,30 @@ P(F_k) \leq \binom{n/2}{k}^2 P(A_k)
 $$
 When $k \geq \frac{n}{\sqrt{\log n}}$, using Lemma 8 of \cite{feng2021},
 $P(F_k)$ decreases exponentially. The error probability for $k < \frac{n}{\sqrt{\log n}}$
-can be controlled by:
+is analyzed using \eqref{eq:FAk}.
 \begin{align*}
-P_e &\leq (1+o(1))\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) \\
-& \leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \\
-&\frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
+&P_e \leq (1+o(1))\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) \leq (1+o(1)) \cdot \\
+&\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
 \end{align*}
 where $\mu = (\sqrt{a} - \sqrt{b})^2-2 + \gamma D_{1/2}(p_0||p_1) > 0$.
 Using the inequality
 $$
 \frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq \frac{\mu}{2} \log n
 $$
-for $1\leq k \leq \frac{n}{\sqrt{\log n}}$ we can obtain
+for $1\leq k \leq \frac{n}{\sqrt{\log n}}$, we can obtain
 \begin{align*}
-P_e &\leq \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
-& = \frac{n^{-\mu / 2}}{1-n^{-\mu / 2}} = (1+o(1))n^{-\mu / 2}
+P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
+& =(1+o(1)) \frac{n^{-\mu / 2}}{1-n^{-\mu / 2}} = (1+o(1))n^{-\mu / 2}
 \end{align*}
 Therefore, \eqref{eq:PeMain} is established.
 
-Below we detail with the case $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 < 0$.
-Let $E(i, H)$ be the number of edges between node $i$ and node set $H$. $S_1:=\{i | y^*_i = +1 \}$
-and $S_2:=\{i | y^*_i = -1 \}$. Without loss of generality, we assume $\{1\}\subset S_1$
-and $\{2\} \subset S_2$.
-We consider the event when $y$ differs from $y^*$ at position $i \in S_1$ and $j \in S_2$.
+Below we deal with the case when $\mu < 0$.
+Let $E(i, H)$ be the number of edges between the $i$-th node and node set $H$.
+We further define $S_1:=\{i | y^*_i = +1 \}$
+and $S_2:=\{i | y^*_i = -1 \}$. 
+%Without loss of generality, we assume $\{1\}\subset S_1$ and $\{2\} \subset S_2$.
+We consider the event $F_1(i,j):=\{y_i = -y^*_i, y_j = -y^*_j, \dist(y, y^*)=2, i \in S_1, j \in S_2 \}$,
+which is equivalent to
 \begin{align}
 &\sum_{r=1}^{m} \log \frac{p_1(x_{ir})}{p_0(x_{ir})}
 +\sum_{r=1}^{m} \log \frac{p_0(x_{jr})}{p_1(x_{jr})}
@@ -437,13 +446,11 @@ We consider the event when $y$ differs from $y^*$ at position $i \in S_1$ and $j
 & (E(i, S_1 \backslash \{i\}) + E(j, S_2 \backslash \{j\})
 - E(i, S_2 \backslash \{j\}) - E(j, S_1 \backslash \{i\})) \label{eq:F1ij}
 \end{align}
-which is the same as \eqref{eq:ein} when $k=1$.
+This inequality is the same as \eqref{eq:ein} when $k=1$.
 
-To show $P_F = 1 - o(1)$, we consider $P(F_1)$ where
-$F_1: \exists y$ such that $p(x,z|y) > p(x,z|y^*)$ where $\dist(y,y^*)=2$.
-Then $P(F) \geq P(F_1)$.
-
-Let $F_1(i,j)$ represent the event when \eqref{eq:F1ij} holds. Then $F_1 = \cup_{i \in S_1,j \in S_2}F_1(i,j)$.
+To show $P_e = 1 - o(1)$, we consider $P(F_1)$ where
+$F_1$ is defined in \eqref{eq:Fk} when $k=1$.
+Then $P(F) \geq P(F_1)$. We can write $F_1 = \cup_{i \in S_1,j \in S_2}F_1(i,j)$.
 
 Consider $F_1^c = \cap_{i\in S_1, j\in S_2} F_1^c(i,j)$.
 Let $H_1\subseteq S_1, H_2 \subseteq S_2$ such that $|H_1| = |H_2| = \frac{n}{\log^3 n}$.
@@ -490,7 +497,7 @@ and
 & \leq (1-n^{-\tilde{\theta}})^{n^2/\log^6 n} \\
 & \leq \exp(-n^{2 - \tilde{\theta}}/\log^6 n) \to 0
 \end{align*}
-We get the conclusion that $P(F_1^c) \to 0$ and $P_F \to 1$.
+We get the conclusion that $P(F_1^c) \to 0$ and $P_e \to 1$.
 
 \end{proof}
 
