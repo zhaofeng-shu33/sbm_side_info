@@ -365,7 +365,7 @@ Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \
 -km D(p_0 || p_1)$, which is of order $O(\log n)$.
 Let $\epsilon$ be defined as follows:
 \begin{equation}
-\epsilon = \gamma k\frac{D(\widetilde{X}_1 || P_1) - D(\widetilde{X}_1 || P_0) + D(\widetilde{X}_2 || P_0) - D(\widetilde{X}_2 || P_1)}{\log a /b}
+\epsilon = \gamma k\frac{D(p_{\widetilde{X}_1} || P_1) - D(p_{\widetilde{X}_1} || P_0) + D(p_{\widetilde{X}_2} || P_0) - D(p_{\widetilde{X}_2} || P_1)}{\log a /b}
 \end{equation}
 
 Then \eqref{eq:ein} is equivalent to
@@ -379,13 +379,13 @@ P(A_k) & =  \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{
 \end{align}
 Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
 \begin{align*}
-&P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1))) \\
+&P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1))) \\
 & \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot (g(a, b, \frac{n}{k(n-2k)}\epsilon) + o(1))) \\
 &\leq |\mathcal{P}_{km}|^2 \exp(-k\log n \cdot (\theta^*_k + o(1))) 
 \end{align*}
 where
 \begin{align}
-\theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(\widetilde{X}_1|| p_0) + D(\widetilde{X}_2 || p_1)) \notag \\
+\theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(p_{\widetilde{X}_1}|| p_0) + D(p_{\widetilde{X}_2} || p_1)) \notag \\
 &\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
 \end{align}
 We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
@@ -396,8 +396,8 @@ g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{
 By Lemma \ref{lem:p0p12}, we can get
 \begin{align}
 \theta^*_k &\geq (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
-+ \frac{ \gamma}{2}\min (D(\widetilde{X}_1||p_0) + D(\widetilde{X}_1||p_1)) \notag \\
-&+ \frac{ \gamma}{2}\min (D(\widetilde{X}_2||p_0) + D(\widetilde{X}_2||p_1))\notag \\
++ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_1}||p_0) + D(p_{\widetilde{X}_1}||p_1)) \notag \\
+&+ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_2}||p_0) + D(p_{\widetilde{X}_2}||p_1))\notag \\
 &=  (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2 - 2 \gamma\log(\sum_{x\in\mathcal{X}}\sqrt{p_0(x)p_1(x)}) 
 \label{eq:theta_star_lower_bound}
 \end{align}
@@ -479,7 +479,7 @@ Using the decomposition in \eqref{eq:decomp}, we can get a lower bound on $P(G_1
 where we choose $P^{(1)}=P^{(2)}$, specified by \eqref{eq:p012}. Then $\epsilon= 0$.
 Using Theorem 11.1.4 of \cite{cover1999elements} and Lemma 4 of \cite{abbe2015exact} we have
 \begin{align*}
-P(G_1(i,j))& \geq \frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(\widetilde{X}_1 || p_0) + D(\widetilde{X}_2 || p_1)) \\
+P(G_1(i,j))& \geq \frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1)) \\
 &\cdot\exp(- \log n (g(a, b, \frac{-2}{\log \log n}))) \\
 & = \exp(-\log n (\theta_1^*+ o(1)))
 \end{align*}
