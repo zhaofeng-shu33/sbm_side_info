@@ -171,10 +171,10 @@
 	
 	To transform \eqref{eq:matrix_mle} to SDP, we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
 	to absorb the linear term in object function.
-	Let $D_2 = D(p_1 || p_0)$ and $D_1 = D(p_0 || p_1)$. We define
+	Let 
 	\begin{equation}
 	\tilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & B + \lambda I_n \end{pmatrix}
-	\textrm{ where } \lambda = \frac{m}{2}(D_2 - D_1) 
+	\textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
 	\end{equation}
 	
 	Then we have
@@ -321,79 +321,65 @@
 		s.t.\,& \diag(y) - \widetilde{B} \succeq 0
 		\label{eq:sdp_dual}
 		\end{align}
-		Let $g$ be the underlining ground truth label, and
-		define $\tilde{g} = (1,g^T)^T$.
-		Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
-		Then $$
-		y = (h^T g, \diag\{hg^T+Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
-		$$
-		and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
-		Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
-		\begin{align}
-		\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}^T \\ -h- \lambda \mathbbm{1} & \Xi_n \end{pmatrix}
-		\succeq 0 \notag \\
-		\textrm{ where }\Xi_n & = \diag(hg^T + Bgg^T + \lambda \mathbbm{1}_ng^T) - B
-		\end{align}
+Let $g$ be the underlining ground truth label, and
+define $\tilde{g} = (1,g^T)^T$.
+Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
+Then $$
+y = (h^T g, \diag\{hg^T+Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
+$$
+and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
+Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
+\begin{align}
+\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}^T \\ -h- \lambda \mathbbm{1} & \Xi_n \end{pmatrix}
+\succeq 0 \notag \\
+\textrm{ where }\Xi_n & = \diag(hg^T + Bgg^T + \lambda \mathbbm{1}_ng^T) - B
+\end{align}
 		We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
 		If all eigenvalues of $\Xi_n$ is larger than zero, then by
 		Cauchy’s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
-		Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
-		We further define $J_n = \mathbbm{1}_n \mathbbm{1}_n^T - I_n, \bar{D}=m\frac{D_1+D_2}{2}$.
-		Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
-		Then the constant matrix $C$ can be written as:
-		\begin{equation*}
-		C=\begin{pmatrix}
-		d I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
-		b' J_{n/2} & d I_{n/2} + a'J_{n/2}  
-		\end{pmatrix}
-		\end{equation*}
-		where $a',b', d$ are defined as:
-		\begin{align*}
-		a' & = - \frac{2a \log n}{n} + 1 \\
-		b' & = - \frac{2b \log n}{n} + 1 \\
-		d & = \bar{D}+(a-b) \log n - \frac{2a \log n}{n} + 1
-		\end{align*}
+		Let $A$ be the adjacency matrix of $G$
+		and we define $J_n = \mathbbm{1}_n \mathbbm{1}_n^T $, then $B=2A-J_n+I_n$.
+		Then we have
+		\begin{equation}\label{eq:Xi_n}
+		\Xi_n = \diag(\lambda \mathbbm{1}_n g^T + hg^T + Agg^T) - A + \frac{J_n}{2}
+		\end{equation}
+		%Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
 		
-		The eigenvalues of C take three distinct values
-		\begin{itemize}
-			\item $\lambda_1=\bar{D}+n-2b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
-			\item $\lambda_2=\bar{D}$ associated to the eigenvector corresponding to  $g$
-			\item $\lambda_3=\bar{D}+(a-b)\log(n)$ associated to all other eigenvectors
-		\end{itemize}
-		Since $\bar{D}=O(\log n)$ and $a>b$, $\lambda_3$ is the second smallest eigenvalues.
 		For any vector $x \in \mathbb{R}^n$ with $\norm{x}=1$, we decompose it as $x=\frac{\beta}{\sqrt{n}} g^{\perp}
 		+ \sqrt{1-\beta^2} g$ where $g^Tg^{\perp}=0, \beta \in [0,1], \norm{g^{\perp}}=1$, we can expand $x^T \Xi_n x$ as
 		\begin{align*}
-		x^T \Xi_n x = \frac{\beta^2}{n} g^T \Xi_n g  &+ (1-\beta^2)(g^{\perp})^T \Xi_n g^{\perp} \\
+		x^T \Xi_n x = \frac{\beta^2}{n} g^T \Xi_n g  &+		\frac{\beta}{\sqrt{n}}\sqrt{1-\beta^2} g^T \Xi_n g^{\perp}
+		 \\
 		&+
-		\frac{\beta}{\sqrt{n}}\sqrt{1-\beta^2} g^T \Xi_n g^{\perp}
+		(1-\beta^2)(g^{\perp})^T \Xi_n g^{\perp} 
 		\end{align*}
 		For the first term, using $(\diag(Bgg^T) - B)g=0$ we have
 		\begin{align*}
 		g^T \Xi_n g = g^T(h+\lambda I_n) = g^T h
 		\end{align*}
 		Since $\mathbb{E}[g_ih_i]$ is a positive number of order $O(\log n)$, by Sanov's theorem
-		$P(g^T h < 0)$ decreases exponentially. To get a condition for the second term $(g^{\perp})^T \Xi_n g^{\perp} >0$, it is equivalent
+		$P(g^T h < 0)$ decreases exponentially. Next we analyze the second term,
+		
+		For the last term $(g^{\perp})^T \Xi_n g^{\perp} >0$, it is equivalent
 		to consider the subspace orthogonal to $g$:
 		$$
-		\min_{x \perp g, x \in \mathbb{R}^n } x^T (C-\Gamma) x \geq 0
+		\min_{x \perp g, x \in \mathbb{R}^n } x^T \Xi_n x \geq 0
 		$$
-		The error probability for the above event is bounded by
-		$P(\lambda_{\max}(\Gamma) \geq \bar{D}+(a-b)\log n)$.
-		$\Gamma$ is a random matrix with zero mean, and we can decompose it into diagonal part
-		$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=2(A-\mathbb[A])$
-		where $A$ is the adjacency matrix of the graph. By Theorem 5.2 of \cite{lei2015consistency},
-		with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. By the triangular inequality of the spectral norm, we have
+		Note that $\mathbb{E}[A] = \frac{p-q}{2}gg^T + \frac{p+q}{2}J_n - pI_n$,
+		using \eqref{eq:Xi_n}, we can simplify $x^T \Xi_n x$ for $x \perp g$ as
 		\begin{align*}
-		&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+(a-b)\log n)
-		\leq n^{-r}  \\
-		& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+(a-b)\log n - c\sqrt{\log n})
+		x^T \Xi_n x &= x^T \diag( \lambda \mathbbm{1}_ng^T+hg^T + Agg^T) x  \\
+		&+ \frac{1}{2}(1-p-q)x^TJ_n x
+		 + p -x^T(A-\mathbb{E}[A])x
 		\end{align*}
-		$\Gamma_1$ is a diagonal matrix, and $\lambda_{\max}(\Gamma_1) = \max_{1\leq i \leq n} \Gamma_{ii}$.
-		By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
+		By Theorem 5.2 of \cite{lei2015consistency},
+		with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$.
 		\begin{align*}
-		&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+(a-b)\log n - c\sqrt{\log n})\leq \\
-		&P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
+		x^T \Xi_n x \geq \min\{(\lambda + h_i) g_i + g_i (Ag)_i \} - c \sqrt{\log n}
+		\end{align*}
+		The error probability is then
+		\begin{align*}
+		P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
 		\end{align*}
 		Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
 		$\sum_{j=1}^{n/2} (z_j - z'_j) + h_i + \lambda \leq 0$ if $g_i=1$ and
