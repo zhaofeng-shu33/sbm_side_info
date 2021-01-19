@@ -8,6 +8,7 @@
 \usepackage{amssymb}
 \usepackage{mathtools}
 \DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclareMathOperator{\Var}{Var}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -321,7 +322,7 @@
 		s.t.\,& \diag(y) - \widetilde{B} \succeq 0
 		\label{eq:sdp_dual}
 		\end{align}
-Let $g$ be the underlining ground truth label, and
+Let $g$ be the underlining ground truth label $g_i \in \{\pm 1\}$, and
 define $\tilde{g} = (1,g^T)^T$.
 Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
 Then $$
@@ -348,7 +349,8 @@ Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for 
 		For any vector $x \in \mathbb{R}^n$ with $\norm{x}=1$, we decompose it as $x=\frac{\beta}{\sqrt{n}} g^{\perp}
 		+ \sqrt{1-\beta^2} g$ where $g^Tg^{\perp}=0, \beta \in [0,1], \norm{g^{\perp}}=1$, we can expand $x^T \Xi_n x$ as
 		\begin{align*}
-		x^T \Xi_n x = \frac{\beta^2}{n} g^T \Xi_n g  &+		\frac{\beta}{\sqrt{n}}\sqrt{1-\beta^2} g^T \Xi_n g^{\perp}
+		x^T \Xi_n x = \frac{\beta^2}{n} g^T \Xi_n g  &
+		+		\frac{\beta}{\sqrt{n}}\sqrt{1-\beta^2} g^T \Xi_n g^{\perp}
 		 \\
 		&+
 		(1-\beta^2)(g^{\perp})^T \Xi_n g^{\perp} 
@@ -358,8 +360,29 @@ Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for 
 		g^T \Xi_n g = g^T(h+\lambda I_n) = g^T h
 		\end{align*}
 		Since $\mathbb{E}[g_ih_i]$ is a positive number of order $O(\log n)$, by Sanov's theorem
-		$P(g^T h < 0)$ decreases exponentially. Next we analyze the second term,
-		
+		$P(g^T h < 0)$ decreases exponentially. Next we analyze the second term, Let $\tilde{h}_i
+		=\lambda+h_i$, then
+		$g^T \Xi_n g^{\perp} = \tilde{h}^T g^{\perp} \geq -\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}$.
+		The norm can be expanded as:
+		\begin{align*}
+		\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}^2
+		=\norm{\tilde{h}}^2 - \frac{1}{n}(\tilde{h}^Tg)^2
+		\end{align*}
+		Using Law of Large Numbers (Chebyshev's inequality), with large probability, we can approximate
+		the above equation with 
+		\begin{align*}
+\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2
+&\approx \frac{\mathbb{E}[\tilde{h}_1^2]+\mathbb{E}[\tilde{h}_2^2]}{2}
+- \left(\frac{\mathbb{E}[\tilde{h}_1]-\mathbb{E}[\tilde{h}_2]}{2}\right)^2 \\
+&= \frac{\Var[\tilde{h}_1^2]+\Var[\tilde{h}_2^2]}{2}
++ \left(\frac{\mathbb{E}[\tilde{h}_1]+\mathbb{E}[\tilde{h}_2]}{2}\right)^2 \\
+& =  \frac{\Var[\tilde{h}_1^2]+\Var[\tilde{h}_2^2]}{2} = O(\log n)
+\end{align*}		
+		the above 
+		Therefore, the second term is lower bounded by
+		$$
+			\frac{1}{\sqrt{n}} g^T \Xi_n g^{\perp} \geq -\sqrt{\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2} = O(\sqrt{\log n})
+		$$
 		For the last term $(g^{\perp})^T \Xi_n g^{\perp} >0$, it is equivalent
 		to consider the subspace orthogonal to $g$:
 		$$
