@@ -173,19 +173,17 @@
 	to absorb the linear term in object function.
 	Let 
 	\begin{equation}
-	\tilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & B + \lambda I_n \end{pmatrix}
-	\textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
+	\tilde{B} = \begin{pmatrix} 0 & h^T \\ h & B \end{pmatrix}
 	\end{equation}
 	
 	Then we have
 	\begin{align}
 	\max\, & \widetilde{B} \cdot X \notag \\
-	s.t.\,& X_{ii}=1 \notag \\
+	s.t.\,& X_{ii}=1, \sum_{i=2}^{n+1}X_{1i}=0 \notag \\
 	& X \succeq 0 \label{eq:sdp}
 	\end{align}
 	
-	Compared with \eqref{eq:matrix_mle}, in \eqref{eq:sdp} we have removed
-	the balanced constraint $\mathbbm{1}^T y = 0$. When $m=0$ and $\kappa=1$,
+	When $m=0$ and $\kappa=1$,
 	the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
 	When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
 	the same as the one in Theorem 3 of \cite{Hajek16}. Here we consider the
@@ -314,24 +312,30 @@
 		\end{align*}
 		Therefore, \eqref{eq:PeMain} is established.
 	\end{proof}
-
+\begin{lemma}
+	Suppose $g^T \mathbbm{1}_n=0, g_i\in \{\pm 1 \}$, $D=\diag\{d_1, \dots, d_n\}$ is a diagonal matrix,
+	then
+	\begin{equation}
+	\min_{x\perp g, ||x||=1} x^T D x = \min_{1\leq i < j \leq n}\frac{D_i + D_j}{2}
+	\end{equation}
+\end{lemma}
 	\begin{proof}[Proof of Theorem \ref{thm:sdp}]
 		The dual problem of \eqref{eq:sdp} is
 		\begin{align}
-		\min\, & \mathbbm{1}^T y \notag \\
-		s.t.\,& \diag(y) - \widetilde{B} \succeq 0
+		\min\, & \mathbbm{1}^T_{n+1} y \notag \\
+		s.t.\,& \begin{pmatrix}y_1 & -\lambda\mathbbm{1}^T_n \\ -\lambda\mathbbm{1}_n & \diag\{y_2, \dots, y_{n+1}\} \end{pmatrix} - \widetilde{B} \succeq 0
 		\label{eq:sdp_dual}
 		\end{align}
 Let $g$ be the underlining ground truth label $g_i \in \{\pm 1\}$, and
 define $\tilde{g} = (1,g^T)^T$.
 Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
 Then $$
-y = (h^T g, \diag\{hg^T+Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
+y = (h^T g, \diag\{hg^T+Bgg^T +\lambda \mathbbm{1}g^T\})
 $$
 and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
 Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
 \begin{align}
-\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}^T \\ -h- \lambda \mathbbm{1} & \Xi_n \end{pmatrix}
+\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}_n^T \\ -h- \lambda \mathbbm{1}_n & \Xi_n \end{pmatrix}
 \succeq 0 \notag \\
 \textrm{ where }\Xi_n & = \diag(hg^T + Bgg^T + \lambda \mathbbm{1}_ng^T) - B
 \end{align}
@@ -368,18 +372,28 @@ Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for 
 		\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}^2
 		=\norm{\tilde{h}}^2 - \frac{1}{n}(\tilde{h}^Tg)^2
 		\end{align*}
-		Using Law of Large Numbers (Chebyshev's inequality), with large probability, we can approximate
-		the above equation with 
+		Let $g_1 = |\mathbbm{1}_n+g|/2, g_2 = |\mathbbm{1}_n-g|/2$
 		\begin{align*}
 \frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2
+&=\frac{\norm{\tilde{h}}^2}{n} - 2\frac{(\tilde{h}^T g_1)^2}{n^2} - 2\frac{(\tilde{h}^T g_2)^2}{n^2} + \frac{(\tilde{h}^T\mathbbm{1})^2}{n^2} \\
 &\approx \frac{\mathbb{E}[\tilde{h}_1^2]+\mathbb{E}[\tilde{h}_2^2]}{2}
-- \left(\frac{\mathbb{E}[\tilde{h}_1]-\mathbb{E}[\tilde{h}_2]}{2}\right)^2 \\
+-\frac{\mathbb{E}^2[\tilde{h}_1]+\mathbb{E}^2[\tilde{h}_2]}{2}
++\frac{(\tilde{h}^T\mathbbm{1})^2}{n^2}\\
 &= \frac{\Var[\tilde{h}_1^2]+\Var[\tilde{h}_2^2]}{2}
-+ \left(\frac{\mathbb{E}[\tilde{h}_1]+\mathbb{E}[\tilde{h}_2]}{2}\right)^2 \\
-& =  \frac{\Var[\tilde{h}_1^2]+\Var[\tilde{h}_2^2]}{2} = O(\log n)
-\end{align*}		
-		the above 
-		Therefore, the second term is lower bounded by
++\Var[\frac{\tilde{h}^T\mathbbm{1}_n}{n}]\\
+& = O(\log n)
+\end{align*}
+We define 
+\begin{equation}
+\lambda = -\frac{1}{2}(\min_{i \in S_1} h_i + \max_{i \in S_2} h_i)
+\end{equation}
+Then we can verify that $\mathbb{E}[\tilde{h}^T\mathbbm{1}_n]=0$.
+Notice that $\Var[\frac{\tilde{h}^T\mathbbm{1}_n}{n}]$ has the same order with
+$\Var[\min_{i \in S_1} h_i] + \Var[\max_{i \in S_2} h_i]$.
+
+On the other hand, $\Var[\tilde{h}_1^2] = m \Var[\log \frac{p_0(x)}{p_1(x)}] = O(\log n)$.
+
+Therefore, the second term is lower bounded by
 		$$
 			\frac{1}{\sqrt{n}} g^T \Xi_n g^{\perp} \geq -\sqrt{\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2} = O(\sqrt{\log n})
 		$$
@@ -400,15 +414,25 @@ Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for 
 		\begin{align*}
 		x^T \Xi_n x \geq \min\{(\lambda + h_i) g_i + g_i (Ag)_i \} - c \sqrt{\log n}
 		\end{align*}
-		The error probability is then bounded by
-		\begin{align*}
-		P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
-		\end{align*}
+		Since $x\perp g$, the error probability is then bounded by
+		\begin{align}\label{eq:xij}
+		P(\frac{1}{2}(\Xi_{ii} + \Xi_{jj}) \leq c\sqrt{\log n}, \exists 1\leq i < j \leq n)
+		\end{align}
 		Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
-		$\sum_{j=1}^{n/2} (z_j - z'_j) + h_i + \lambda \leq 0$ if $g_i=1$ and
-		$\sum_{j=1}^{n/2} (z_j - z'_j) - h_i - \lambda \leq 0$ if $g_i = -1$.
-	
-		Therefore, the error probability converges to 0
+		$\sum_{j=1}^{n/2} (z_j - z'_j) + h_i + \lambda \leq 0$ if $i \in S_1$ and
+		$\sum_{j=1}^{n/2} (z_j - z'_j) - h_i - \lambda \leq 0$ if $i \in S_2$.
+		For the first case, using $h_i \geq \min_{i \in S_1} h_i$ it leads
+		to
+		\begin{equation}\label{eq:single}
+		\frac{1}{2}(\min_{i \in S_1} h_i  - \max_{ j \in S_2} h_j) + \sum_{j=1}^{n/2} (z_j - z'_j) \leq 0
+		\end{equation}
+		Adding any two of \eqref{eq:single} together
+		Therefore, \eqref{eq:xij} is further bounded by $\frac{n(n-1)}{2}P(A_k)$
+		where
+		$$
+		A_k: \min_{i \in S_1} h_i  - \max_{ j \in S_2} h_j + \sum_{j=1}^{n} (z_j - z'_j) \leq 0
+		$$
+		Then using the same proof as in that of Theorem \eqref{thm:Pe}, the error probability converges to 0
 		if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
 		
 	\end{proof}
