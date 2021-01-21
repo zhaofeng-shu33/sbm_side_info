@@ -169,7 +169,6 @@
 	Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. 
 	%However, we find that
 	%the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
-	
 	To transform \eqref{eq:matrix_mle} to SDP, we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
 	to absorb the linear term in object function.
 	Let 
@@ -315,6 +314,7 @@
 		\end{align*}
 		Therefore, \eqref{eq:PeMain} is established.
 	\end{proof}
+
 	\begin{proof}[Proof of Theorem \ref{thm:sdp}]
 		The dual problem of \eqref{eq:sdp} is
 		\begin{align}
@@ -400,7 +400,7 @@ Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for 
 		\begin{align*}
 		x^T \Xi_n x \geq \min\{(\lambda + h_i) g_i + g_i (Ag)_i \} - c \sqrt{\log n}
 		\end{align*}
-		The error probability is then
+		The error probability is then bounded by
 		\begin{align*}
 		P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
 		\end{align*}
