@@ -50,7 +50,8 @@
     remains open.
     In this paper, we obtain information theoretic bounds of the 
     exact recovery error probability for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
-    Our result shares insight on the sample complexity of node features and the general phase transition threshold of SSBM.
+    Our result shares insight on the sample complexity of node features and the general phase transition threshold of SSBM. In addition,
+    a semi-definite programming algorithm is proposed to achieve sub-optimal exact recovery threshold of our model.
 \end{abstract}
 \section{Introduction}
 In network analysis, community detection assigns discrete labels to each node of the graph based on the observation of graph edges.
@@ -68,6 +69,10 @@ With the presence of extra node information, the condition of exact recovery is 
 and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the contribution of side information and graph information. In contrast, this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. Our result generalizes
 the exact recovery threshold to a condition $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$
 where the contribution of side information is coded in Renyi divergence.
+
+To achieve the exact recovery condition of SBM, semi-definite programming (SDP) is often utilized \cite{Hajek16}.
+SDP relaxation can also be used for SBM with side information, and in this paper we show that a sub-optimal exact recovery condition
+of our model is achievable by such method.
 
 This paper is organized as follows. In Section \ref{s:rw}, we review the previous works which are closely related with ours.
 In Section \ref{s:model}, we introduce the model and present our main results.
@@ -284,7 +289,7 @@ in the following theorem:
 	&\gamma D^* + (\sqrt{a} - \sqrt{b})^2 > 2  \\
 	\textrm{ where } D^* &= D_{1/2}(p_0||p_1) - \Big\vert\frac{D(p_0||p_1) - D(p_1||p_0)}{2}\Big\vert\notag
 	\end{align}
-	then $P(\hat{Y}_{\SDP} \neq \pm Y) = o(1)$.
+	then $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$.
 \end{theorem}
 Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$. The side information contributes to
 the detection when $D^*>0$. Compared with \ref{eq:PeMain}, which quantifies the error bound of maximum likelihood estimator,
@@ -295,7 +300,7 @@ $D(p_0||p_1) = D(p_1||p_0)$, the result obtained in Theorem \ref{thm:sdp} is the
 that in Theorem \ref{thm:Pe}, which is true for observations from binary symmetric channel.
 \begin{corollary}
 	Suppose $X_{ij}$ is the output of $Y_i$ from a binary symmetric channel with crossover probability
-	$p^*$. $P(\hat{Y}_{\SDP} \neq \pm Y) = o(1)$ as long as
+	$p^*$. $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$ as long as
 	\begin{equation}
 	-2\log(2\sqrt{p^*(1-p^*)}) + (\sqrt{a} - \sqrt{b})^2>2
 	\end{equation}
