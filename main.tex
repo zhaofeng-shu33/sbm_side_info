@@ -251,7 +251,7 @@ To transform \eqref{eq:matrix_mle} to SDP,
 we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
 to absorb the linear term in object function.
 Let 
-\begin{equation}
+\begin{equation}\label{eq:B_lambda_def}
 \widetilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & \frac{1}{2}B + \lambda I_n \end{pmatrix}
 \textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
 \end{equation}
@@ -286,11 +286,11 @@ in the following theorem:
 	\end{align}
 	then $P(\hat{Y}_{\SDP} \neq \pm Y) = o(1)$.
 \end{theorem}
-Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$. We can show that $D_{1/2}(p_0||p_1) \geq \max{D(p_0||p_1), D(p_1||p_0)}$, therefore $D^*>0$ and
-the side information improves the recovery condition for SDP algorithm.
-Compared with \ref{eq:PeMain}, which quantifies the error bound of maximum likelihood estimator,
-the conclusion of Theorem \ref{thm:sdp} is a little weaker. However, SDP can be implemented using various iterative schemes, and Theorem \ref{thm:sdp} justifies the use
-of SDP in a special model of community detection with side information. What's more, when
+Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$. The side information contributes to
+the detection when $D^*>0$. Compared with \ref{eq:PeMain}, which quantifies the error bound of maximum likelihood estimator,
+the conclusion of Theorem \ref{thm:sdp} is a little weaker. We also note that $D^*$ is not always positive for arbitrary distribution $p_0,p_1$, which is a limitation of our theoretical
+analysis. However, SDP can be implemented using various iterative schemes, and Theorem \ref{thm:sdp} gives a quantification of its theoretical
+performance. What's more, when
 $D(p_0||p_1) = D(p_1||p_0)$, the result obtained in Theorem \ref{thm:sdp} is the same as
 that in Theorem \ref{thm:Pe}, which is true for observations from binary symmetric channel.
 \begin{corollary}
@@ -467,9 +467,9 @@ where
 \end{align}
 We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
 a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$:
-\begin{equation*}
+\begin{equation}\label{eq:g_linear}
 g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{b} 
-\end{equation*}
+\end{equation}
 By Lemma \ref{lem:p0p12}, we can get
 \begin{align}
 \theta^*_k &\geq (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
@@ -600,8 +600,8 @@ We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eige
 If all eigenvalues of $\Xi_n$ is larger than zero, then by
 Cauchy??s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
 Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
-We further define $D_1 = m\frac{D(p_0||p_1)}{\log a/b},
-D_2 = m\frac{D(p_1||p_0)}{\log a/b}, \bar{D}=\frac{D_1+D_2}{2}$.
+We further define $D_1 = D(p_0||p_1),
+D_2 = D(p_1||p_0), \bar{D}=m\frac{D_1+D_2}{2\log a/b}$.
 Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
 Then the constant matrix $C$ can be written as:
 	\begin{equation*}
@@ -647,16 +647,24 @@ By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
 &P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)
 \end{align*}
 Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
-$\sum_{j=1}^{n/2} (z_j - z'_j) + h_i + \lambda \leq 0$ if $g_i=1$ and
-$\sum_{j=1}^{n/2} (z_j - z'_j) - h_i - \lambda \leq 0$ if $g_i = -1$.
-Therefore, we can pair the inequality and get the following estimation (suppose $g_1=1, g_2=-1$)
-$$
-P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
-\leq \frac{n}{2} P(h_1 - h_2 + \sum_{j=1}^n (z_j - z'_j) \leq 0)
-$$
-which has the same form as \eqref{eq:ein}. Therefore, the error probability converges to 0
-if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
-
+\begin{align}\label{eq:equiv_condition}
+\sum_{j=1}^{n/2} (z_j - z'_j) +g_i( h_i + \lambda )\leq 0
+\end{align}
+From the definition of $\lambda$ in \eqref{eq:B_lambda_def}, $\lambda/m$ converges to $\frac{D_2-D_1}{2 \log(a/b)}$ in exponential rate.
+Therefore, when analyzing the probability of event defined in \eqref{eq:equiv_condition}, we treat $\lambda/m$ as a constant. 
+Depending on the sign of $g_i$, \eqref{eq:equiv_condition} can be divided into two cases. When $g_i=1$, the samples consisted in $h_i$
+follow distribution $p_0$ and the probability is bounded by $n^{-\theta^*_1 + o(1)}$ where
+\begin{align}
+\theta^*_1 &= \min_{\widetilde{X}_1} \gamma D(p_{\widetilde{X}_1}|| p_0)+ \frac{1}{2} g(a,b, 2\epsilon) \label{eq:theta_star2} \\
+\epsilon &= \gamma \frac{D(p_{\widetilde{X}_1} || P_1) - D(p_{\widetilde{X}_1} || P_0) + (D_2 - D_1)/2}{\log a /b}
+\end{align}
+Using linear approximation of $g$ in \eqref{eq:g_linear}, we can show that 
+\begin{align*}
+\theta^*_1 \geq \frac{1}{2}((\sqrt{a}-\sqrt{b})^2+\gamma D_{1/2}(p_0||p_1)+\gamma\frac{D_2-D_1}{2}) \\
+\geq \frac{1}{2}((\sqrt{a}-\sqrt{b})^2+\gamma D_{1/2}(p_0||p_1)-\gamma\frac{|D_2-D_1|}{2})
+\end{align*}
+Similar results are obtained when $g_i=-1$. Finally,
+$P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)$ is bounded by $n^{1-\theta_1^*+o(1)}$, and Theorem \ref{thm:sdp} follows.
 \end{proof}
 
 \bibliographystyle{IEEEtran}
