@@ -6,9 +6,6 @@
 \usepackage{algorithm,algorithmic}
 \usepackage{url}
 \usepackage{amssymb}
-\usepackage{mathtools}
-\DeclarePairedDelimiter\norm{\lVert}{\rVert}
-\DeclareMathOperator{\Var}{Var}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -113,7 +110,7 @@ Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the w
 Within this paper, we use Rényi divergence to characterize
 the contribution of side information to exact recovery error bound in these two cases.
 \section{Preliminaries}\label{s:model}
-A binary symmetric stochastic block model (BSBM) is a special case of SBM, whose formal definition is given by:
+A balanced binary symmetric stochastic block model (BSBM) is defined by $n$ 
 \begin{definition}[SSBM]
 	Let $0\leq q<p\leq 1$ and $V=[n]$. The random vector $Y=(Y_1,\dots,Y_n)\in \{\pm 1\}^n$ and random graph $G$ are drawn under $\SSBM(n,p,q)$ if
 	\begin{enumerate}
@@ -473,7 +470,7 @@ where
 \theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(p_{\widetilde{X}_1}|| p_0) + D(p_{\widetilde{X}_2} || p_1)) \notag \\
 &\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
 \end{align}
-We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} =\frac{1}{\sqrt{4ab+\epsilon^2}}> 0$,
+We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
 a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$:
 \begin{equation}\label{eq:g_linear}
 g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{b} 
@@ -571,7 +568,7 @@ P(G_1(i,j))& \geq \frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1}
 where $\theta_1^*$
 is from \eqref{eq:theta_star_lower_bound}:
 \begin{equation*}
-\theta_1^* = \gamma D_{1/2}(p_0||p_1) + (1-\frac{2}{n})(\sqrt{a} - \sqrt{b})^2
+\theta_1^* = \gamma D_{1/2}(p_0||p_1) + (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
 \end{equation*}
 and 
 \begin{align*}
@@ -606,77 +603,59 @@ Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for 
 \end{align}
 We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
 If all eigenvalues of $\Xi_n$ is larger than zero, then by
-Cauchy's Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
-Let $A$ be the adjacency matrix of $G$
-and we define $J_n = \mathbbm{1}_n \mathbbm{1}_n^T $, then $B=2A-J_n+I_n$.
-Then we have
-\begin{equation}\label{eq:Xi_n}
-\Xi_n = \diag(\lambda \mathbbm{1}_n g^T + hg^T + Agg^T) - A + \frac{J_n}{2}
-\end{equation}
-For any vector $x \in \mathbb{R}^n$ with $\norm{x}=1$, we decompose it as $x=\frac{\beta}{\sqrt{n}} g^{\perp}
-+ \sqrt{1-\beta^2} g$ where $g^Tg^{\perp}=0, \beta \in [0,1], \norm{g^{\perp}}=1$, we can expand $x^T \Xi_n x$ as
+Cauchy??s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
+Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
+We further define $D_1 = D(p_0||p_1),
+D_2 = D(p_1||p_0), \bar{D}=m\frac{D_1+D_2}{2\log a/b}$.
+Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
+Then the constant matrix $C$ can be written as:
+	\begin{equation*}
+	C=\begin{pmatrix}
+	d I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
+	b' J_{n/2} & d I_{n/2} + a'J_{n/2}  
+	\end{pmatrix}
+	\end{equation*}
+where $a',b', d$ are defined as:
 \begin{align*}
-x^T \Xi_n x = \frac{\beta^2}{n} g^T \Xi_n g  &
-+		\frac{\beta}{\sqrt{n}}\sqrt{1-\beta^2} g^T \Xi_n g^{\perp}
-\\
-&+
-(1-\beta^2)(g^{\perp})^T \Xi_n g^{\perp} 
-\end{align*}
-For the first term, using $(\diag(Bgg^T) - B)g=0$ we have
-\begin{align*}
-g^T \Xi_n g = g^T(h+\lambda I_n) = g^T h
-\end{align*}
-Since $\mathbb{E}[g_ih_i]$ is a positive number of order $O(\log n)$, by Sanov's theorem
-$P(g^T h < 0)$ decreases exponentially. Next we analyze the second term, Let $\tilde{h}_i
-=\lambda+h_i$, then
-$g^T \Xi_n g^{\perp} = \tilde{h}^T g^{\perp} \geq -\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}$.
-The norm can be expanded as:
-\begin{align*}
-\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}^2
-=\norm{\tilde{h}}^2 - \frac{1}{n}(\tilde{h}^Tg)^2
-\end{align*}
-Using $\tilde{h}^T\mathbbm{1}_n=0$ and Law of Large Numbers (Chebyshev's inequality), with large probability (exponential rate), we can approximate
-the above equation with 
-\begin{align*}
-\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2
-&=\frac{\norm{\tilde{h}}^2}{n} - 2\frac{(\tilde{h}^T g_1)^2}{n^2} - 2\frac{(\tilde{h}^T g_2)^2}{n^2} + \frac{(\tilde{h}^T\mathbbm{1}_n)^2}{n^2} \\
-&\approx \frac{\mathbb{E}[\tilde{h}_1^2]+\mathbb{E}[\tilde{h}_2^2]}{2}
--\frac{\mathbb{E}^2[\tilde{h}_1]+\mathbb{E}^2[\tilde{h}_2]}{2}\\
-&= \frac{\Var[\tilde{h}_1^2]+\Var[\tilde{h}_2^2]}{2}
- = O(\log n)
-\end{align*}		
-Therefore, the second term is lower bounded by
-$$
-\frac{1}{\sqrt{n}} g^T \Xi_n g^{\perp} \geq -\sqrt{\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2} = O(\sqrt{\log n})
-$$
-For the last term $(g^{\perp})^T \Xi_n g^{\perp} >0$, it is equivalent
-to consider the subspace orthogonal to $g$:
-$$
-\min_{x \perp g, x \in \mathbb{R}^n } x^T \Xi_n x \geq 0
-$$
-Note that $\mathbb{E}[A] = \frac{p-q}{2}gg^T + \frac{p+q}{2}J_n - pI_n$,
-using \eqref{eq:Xi_n}, we can simplify $x^T \Xi_n x$ for $x \perp g$ as
-\begin{align*}
-x^T \Xi_n x &= x^T \diag( \lambda \mathbbm{1}_ng^T+hg^T + Agg^T) x  \\
-&+ \frac{1}{2}(1-p-q)x^TJ_n x
-+ p -x^T(A-\mathbb{E}[A])x
-\end{align*}
-By Theorem 5.2 of \cite{lei2015consistency},
-with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$.
-\begin{align*}
-x^T \Xi_n x \geq \min\{(\lambda + h_i) g_i + g_i (Ag)_i \} - c \sqrt{\log n}
-\end{align*}
-The error probability is then bounded by
-\begin{align*}
-P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
+a' & = - \frac{a \log n}{n} + \frac{1}{2} \\
+b' & = - \frac{b \log n}{n} + \frac{1}{2} \\
+d & = \bar{D}+\frac{1}{2}(a-b) \log n - \frac{a \log n}{n} + \frac{1}{2}
 \end{align*}
 
+The eigenvalues of C take three distinct values
+\begin{itemize}
+	\item $\lambda_1=\bar{D}+\frac{n}{2}-b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
+	\item $\lambda_2=\bar{D}$ associated to the eigenvector corresponding to  $g$
+	\item $\lambda_3=\bar{D}+\frac{1}{2}(a-b)\log(n)$ associated to all other eigenvectors
+\end{itemize}
+Since $\bar{D}=O(\log n)$ and $a>b$, $\lambda_3$ is the second smallest eigenvalues.
+We can verify $\Xi_n g = 0$, therefore, to show $\Xi_n \preceq 0$, it is equivalent
+to consider the subspace orthogonal to $g$:
+$$
+\min_{x \perp g, x \in \mathbb{R}^n } x^T (C-\Gamma) x \geq 0
+$$
+The error probability for the above event is bounded by
+$P(\lambda_{\max}(\Gamma) \geq \bar{D}+\frac{a-b}{2}\log n)$.
+$\Gamma$ is a random matrix with zero mean, and we can decompose it into diagonal part
+$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=A-\mathbb[A]$
+where $A$ is the adjacency matrix of the graph. By Theorem 5.2 of \cite{lei2015consistency},
+with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. By the triangular inequality of the spectral norm, we have
+\begin{align*}
+&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+\frac{a-b}{2}\log n)
+\leq n^{-r}  \\
+& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})
+\end{align*}
+$\Gamma_1$ is a diagonal matrix, and $\lambda_{\max}(\Gamma_1) = \max_{1\leq i \leq n} \Gamma_{ii}$.
+By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
+\begin{align*}
+&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})\leq \\
+&P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)
+\end{align*}
 Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
 \begin{align}\label{eq:equiv_condition}
 \sum_{j=1}^{n/2} (z_j - z'_j) +g_i( h_i + \lambda )\leq 0
 \end{align}
-From the definition of $\lambda$ in \eqref{eq:B_lambda_def}, $\lambda/m$ converges to $\frac{D_2-D_1}{2 \log(a/b)}$ in exponential rate, where $D_1 = D(p_0||p_1),
-D_2 = D(p_1||p_0)$.
+From the definition of $\lambda$ in \eqref{eq:B_lambda_def}, $\lambda/m$ converges to $\frac{D_2-D_1}{2 \log(a/b)}$ in exponential rate.
 Therefore, when analyzing the probability of event defined in \eqref{eq:equiv_condition}, we treat $\lambda/m$ as a constant. 
 Depending on the sign of $g_i$, \eqref{eq:equiv_condition} can be divided into two cases. When $g_i=1$, the samples consisted in $h_i$
 follow distribution $p_0$ and the probability is bounded by $n^{-\theta^*_1 + o(1)}$ where
