@@ -470,7 +470,7 @@ where
 \theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(p_{\widetilde{X}_1}|| p_0) + D(p_{\widetilde{X}_2} || p_1)) \notag \\
 &\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
 \end{align}
-We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
+We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} =\frac{1}{\sqrt{4ab+\epsilon^2}}> 0$,
 a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$:
 \begin{equation}\label{eq:g_linear}
 g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{b} 
@@ -568,7 +568,7 @@ P(G_1(i,j))& \geq \frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1}
 where $\theta_1^*$
 is from \eqref{eq:theta_star_lower_bound}:
 \begin{equation*}
-\theta_1^* = \gamma D_{1/2}(p_0||p_1) + (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
+\theta_1^* = \gamma D_{1/2}(p_0||p_1) + (1-\frac{2}{n})(\sqrt{a} - \sqrt{b})^2
 \end{equation*}
 and 
 \begin{align*}
