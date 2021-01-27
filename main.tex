@@ -6,6 +6,9 @@
 \usepackage{algorithm,algorithmic}
 \usepackage{url}
 \usepackage{amssymb}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\DeclareMathOperator{\Var}{Var}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
@@ -110,213 +113,73 @@ Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the w
 Within this paper, we use Rényi divergence to characterize
 the contribution of side information to exact recovery error bound in these two cases.
 \section{Preliminaries}\label{s:model}
-A balanced binary symmetric stochastic block model (BSBM) is a special case of SBM, whose formal definition is given by:
-\begin{definition}[SSBM]
-	Let $0\leq q<p\leq 1$ and $V=[n]$. The random vector $Y=(Y_1,\dots,Y_n)\in \{\pm 1\}^n$ and random graph $G$ are drawn under $\SSBM(n,p,q)$ if
-	\begin{enumerate}
-		\item $Y$ is drawn uniformly with the constraint that $Y_1 + \dots, + Y_n = 0$ for $Y_i \in \{\pm 1 \}$;
-		
-		\item There is an edge of $G$ between the vertices $i$ and $j$ with probability $p$ if $Y_i=Y_j$ and with probability $q$ if $Y_i \neq Y_j$; the existence of each edge is independent with each other.
-	\end{enumerate}
-\end{definition}
-Sampling from SSBM, we can get a pair $(Y,G)$ where each label $Y$ has a probability $ 1/ \binom{n}{n/2}$.
-From Bayesian point of view, the community detection task is to infer $Y$ from $G$.
-For this setting, the graph $G$ can be regarded as observations of edges. When
-additional node observations $X$ are added, we expect that better inference accuracy of $Y$ is achieved using $(G,X)$.
-The additional node observation is called side information, and we define it formally in the following way:
-\begin{definition}[SSBM with side information]
-	Let $(Y,G)$ be sampled from $\SSBM(n,p,q)$, $X_{i1}, \dots, X_{im}$ are i.i.d. random variables for $i \in [n]$,
-	whose probability density function $p(x)$ is determined by $Y_i$ as
-	\begin{equation}
-	p(x) = \begin{cases}
-	p_0(x) & Y_i = 1 \\
-	p_1(x) & Y_i = -1
+A balanced binary symmetric stochastic block model (BSBM) is defined by a random graph $Z=\{Z_{i,j}\}_{1\le i,j\le n}$ with $n$ nodes $\{1,\ldots,n\}$ and edges $\{Z_{i,j}\}_{1\le i,j\le n}$, where $Z_{i,j}=1$ if nodes $i$ and $j$ are connected with an edge and $Z_{i,j}=0$ otherwise. 
+Each node $i$, $i\in\{1,\ldots,n\}$ is associated with a label $Y_i\in \{\pm 1\}$ such that the labels $Y=(Y_1,\ldots,Y_n)$ is uniformly distributed over the space $\{Y:\sum^n_{i=1}Y_i=0\}$. The edges $\{Z_{i,j}\}_{1\le i,j\le n}$ are independently distributed Bernouli random variables, where $Z_{i,j}=1$ with probability $p=a\frac{\log n}{n}$ for nodes $i,j$ with the same labels, i.e., $Y_i=Y_j$, and $Z_{i,j}=1$ with probability $q=b\frac{\log n}{n}$ if $Y_i\ne Y_j$. In this paper, it is assumed that $a>b$. Since the probability distribution of the graph is determined by $n$, $p$ and $q$,
+the BSBM model is denoted as $BSBM(n,p,q)$. 
+
+
+
+A BSBM with side information is a generalization of  $BSBM(n,p,q)$. In addition to the graph $Z$ and the labels $Y$, each node $i$ has $m=\gamma \log n$ data samples $X^i_{j}$, $i\in \{1,\ldots,n\}$, $j\in \{1,\ldots,m\}$, that are drawn identically and independently from distribution $P_0$ if $Y_i=1$ and from distribution $P_1$ if $Y_i=-1$. Note that the data samples $X^i_{j}$, $j\in \{1,\ldots,m\}$ are independent from $\{Z_{i,j}\}_{1\le i,j\le n}$ given the label $Y_i$ for any $i\in\{1,\ldots,n\}$. Hence, the joint probability distribution of $(\{Z_{i,j}\}_{1\le i,j\le n},\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ conditioned on $Y$ is given by
+\begin{align}\label{eq:lh}
+    &P(\{x^i_{j}\}_{1\le i\le n,1\le j\le m},\{z_{i,j}\}_{1\le i,j\le n}| y_1,\ldots,y_n) \nonumber\\
+    =& \prod_{1\le i,j\le n}P(z_{i,j}|y_i,y_j)\prod_{i=1}^n \prod_{j=1}^m P(x^i_j|y_i), 
+\end{align}
+where 
+	\begin{equation*}
+	P  (z_{i,j}=1|y_i,y_j) = \begin{cases}
+	p & \text{if } y_i=y_j \\
+	q & \text{if } y_i\ne y_j
+	\end{cases},
+	\end{equation*}
+and
+	\begin{equation*}
+	 P(x^i_j|y_i) = \begin{cases}
+	P_0(x^i_j) & Y_i = 1 \\
+	P_1(x^i_j) & Y_i = -1
 	\end{cases}
-	\end{equation}
+	\end{equation*}
+The conditional probability distribution $P(\{x^i_{j}\}_{1\le i\le n,1\le j\le m},\{z_{i,j}\}_{1\le i,j\le n}| y_1,\ldots,y_n)$ is determined by parameters $n$, $p$, $q$, $P_0$, and $P_1$. Hence, 
+the BSBM with side information is denoted as $SSBM(n,p,q,P_0,P_1)$.
+In BSBM with side information $SSBM(n,p,q,P_0,P_1)$, the goal is to recover the unknown labels $Y$, given the graph $Z$ and the data samples $X$. In this paper, we consider exact recovery of $Y$, which is defined as follows.
+\begin{definition}[Exact Recovery for $SSBM(n,p,q,P_0,P_1)$]
+		Let
+		$(Z=\{Z_{i,j}\}_{1\le i,j\le n},Y,X=\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ be a graph $Z$, node labels $Y$, and node data samples $X$ be drawn from the distribution defined by $SSBM(n,p,q,P_0,P_1)$.
+		Exact recovery is solvable if there exists an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that the error probability $P_e:=P(\hat{Y} \neq Y)$ goes to $0$ as $n$ increases.
 \end{definition}
-The node observations can be written concisely as $\{X_{ij} | i \in [n], j \in [m]\}$.
-We can denote the edge observations in a similar way by using $Z_{ij}:=\mathbbm{1}[\{i,j\} \in E(G)]$.
-Using $X_{ij}$ and $Z_{ij}$, the (posterior) likelihood function for $Y$ is
-\begin{equation}\label{eq:lh}
-    p(x, z| Y=y) = p(z|y)\prod_{i=1}^n \prod_{j=1}^m p^{\sigma_i}_0(x_{ij})p^{1-\sigma_i}_1(x_{ij}) 
-\end{equation}
-where $p(z|y)$ is the likelihood function for $\SSBM$ and $\sigma_i = (1+y_i)/2$.
-Based on \eqref{eq:lh}, we can use maximum likelihood (ML) method to estimate
-$Y$:
-\begin{align}
-    \hat{Y} &= \arg\max_y p(x,z|Y=y) \notag \\
-    s.t.\, & y_i \in \{\pm 1\}, \sum_{i=1}^n y_i=0 \label{eq:mle}
-\end{align}
-The estimator $\hat{Y}$, given by \eqref{eq:mle}, is a ML estimator in restricted parameter space.
-In contract, ML estimator for $y\in \{ \pm 1 \}^n$ (unrestricted parameter space) in considered in \cite{abbe17sideinfo}.
-To introduce the notion of exact recovery, we use $\mathcal{F}(n,m,p,q)$ to represent the joint distribution
-of $Y,Z, X$.
-Then the formal definition of exact
-recovery is given as:
-\begin{definition}[Exact Recovery for SSBM with side information]
-		Let $(Y,Z,X) \sim \mathcal{F}(n,m,p,q)$.
-		We say that exact recovery is solvable if there is an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that
-		$$
-		P(\hat{Y} \neq Y) \to 0
-		\text{~~~as~} n\to\infty
-		$$
-		and we call $P_e:=P(\hat{Y} \neq Y)$ the error probability of the recovery algorithm.
-\end{definition}
-The above definition is slightly different with that for SBM as the latter uses $\hat{Y} \neq \pm Y$.
-When no side information is available, we can only expect a recovery up to a global sign. However,
-since $p_0 \neq p_1$, the sign of $Y$ can be determined when side information is in hand.
-
-We make another remark that exact recovery metric imposes stricter requirement on the recovery algorithm than its weak recovery
-counterpart, which uses $\dist(\hat{Y}, Y)/n$ to measure the recovery error.
-
-Below we analyze the exact recovery error of the maximum likelihood estimator $\hat{Y}$
-given by \eqref{eq:mle}.
-Without edge observations, the estimation is decomposed into $n$
-independent hypothesis testing problems with the global constraint $\sum_{i=1}^n Y_i=0$. 
-In such case, Rényi divergence with order $\frac{1}{2}$
-is used to quantify the error exponent.
-This information theoretic quantity is defined as:
+A key measure used throughout this paper is the Rényi divergence, defined by
 \begin{equation}
-D_{1/2}(p_0 || p_1) = -2\log(\sum_{x \in \mathcal{X}} \sqrt{p_0(x)p_1(x)} )
+D_{1/2}(P_0 || P_1) \triangleq -2\log(\sum_{x \in \mathcal{X}} \sqrt{P_0(x)P_1(x)} ),
 \end{equation}
-
-With node observations, we divide our discussion between two cases:
-\begin{enumerate}
-\item $p,q$ are constant values;
-\item $p = a \log n /n$ and $q = b \log n / b$.
-\end{enumerate}
-The recovery error for the first case is given in Theorem \ref{thm:constant} while
-the latter case is analyzed in Theorem \ref{thm:Pe}.
-\begin{theorem}\label{thm:constant}
-	Let $\gamma = \frac{m}{n} = O(1)$. If $p,q$ are constant, using maximum likelihood estimator \eqref{eq:mle},
-	the error exponent of exact recovery error is given by:
-	\begin{equation}
-	-\frac{1}{n}\lim_{n\to \infty} \log P_e =  \gamma D_{1/2}(p_0 || p_1) + D_{1/2}(\Bern(p)||\Bern(q))
-	\end{equation} 
-\end{theorem}
-From Theorem \ref{thm:constant}, we see that the recovery error decreases in exponential rate.
-When $\gamma=0$, Theorem \ref{thm:constant} says $D_{1/2}(\Bern(p)||\Bern(q))$
-is the error exponent for exact recovery. Since weak recovery differs from exact recovery by a polynomial factor, $D_{1/2}(\Bern(p)||\Bern(q))$ is also the exponent for weak recovery, which has been obtained
-in \cite{zhang2016}. Besides, when $p,q$ are constant, for side information to take effects, the sample complexity $m$ should be of order $O(n)$. When $m=\omega(n)$, the side information dominates and the edge information is neglectable.
-
-For the second case when the graph is sparse, there is the phase transition phenomenon. This result
-is summarized
-in the following theorem:
+where $P_0$ and $P_1$ are the distributions defined in the balanced stocastic block model with side information $SSBM(n,p,q,P_0,P_1)$.
+The Rényi divergence characterizes the error exponent of a SSBM when the graph observation $Z$ is not  available and exact recovery of the labels $Y$ is done with only side information $X$. The following property of the Rényi divergence will be used in proving our main results. It can be proved by using the Lagrange multiplier.
+\begin{lemma}\label{lem:p0p12}
+	Let $p_0, p_1$ be probability distribution functions defined over $\mathcal{X}$. The minimizer
+	of $D(X||p_0) + D(X||p_1)$ for any discrete random variable $X$ is
+	\begin{equation}\label{eq:p012}
+	P(X=x)=\frac{\sqrt{p_0(x)p_1(x)}}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}}
+	\end{equation}
+	and the minimal value is
+	$-2\log \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}$.
+\end{lemma}
+\section{Sharp Threshold for Balanced SSBM}
+In this section we present an analytic sharp threshold for exact recovery in the balanced SSBM  We first provide the threshold, that comes from
+ the phase transition in the exact recovery in SSBM with sparse graph structure. 
 \begin{theorem}\label{thm:Pe}
-Let $\gamma = \frac{\log m}{n}$, if $p = a \log n /n$ and $q = b \log n / n$, using maximum likelihood estimator \eqref{eq:mle},
-if
+For a balanced $SSBM(n,p=a\frac{\log n}{n},q=b\frac{\log n}{n},P_0,P_1)$, exact recovery is solvable if
 \begin{equation}\label{eq:positive_condition}
-\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 > 0
+\gamma D_{1/2}(P_0||P_1) + (\sqrt{a} - \sqrt{b})^2 > 2,
 \end{equation}
-then the error probability
-of exact recovery is bounded by
-\begin{equation}\label{eq:PeMain}
-    P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
-\end{equation}
-On the other hand, if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 < 0$,
-then $P_e \to 1$.
+and is not solvable if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$, in which case, the error probability $P_e$ goes to $1$.
 \end{theorem}
-Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
-decreasing of error probability $P_e$. Besides, since 
-$D_{1/2}(p_0||p_1) > 0$, it is still possible to recover $Y$
-for the case $\sqrt{a} - \sqrt{b} < \sqrt{2}$ as long as $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
-
-In addition, Theorem \ref{thm:Pe} is dealing with the case when $m=O(\log n)$. It has been shown
-that side information cannot improve the phase transition of exact recovery when $m=o(\log n)$ (Theorem 6 in \cite{saad2018community}). When $m=\omega(\log n)$,
-the side information becomes the dominant term, and $P_e$ decreases in a rate $\exp(-m D_{1/2}(p_0||p_1) )$.
-
-When \eqref{eq:positive_condition} does not hold, Theorem \ref{thm:Pe} says that exact recovery is impossible by ML estimator.
-Therefore, the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2$ fully characterizes the 
-phase transition behavior of our model in asymptotic case such that $P_e$ jumps from $1$ to $0$ when this quantity varies in a neighborhood of $2$.
-\section{SDP Relaxation}
-Though the maximum likelihood estimator in \eqref{eq:mle} can achieve polynomial
-error rate in Theorem \ref{thm:Pe}, the exact solution is NP-hard. In this
-Section, we will use semidefinite programming based relaxation to handle
-the optimization problem in \eqref{eq:mle}. The relaxation method
-can also achieve $P_e\to 0$ as long as the recovery condition
-$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$ is satisfied.
-
-The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
-\begin{align}
-\max_{y}\, & h^T y + \frac{1}{2}y^T B y \notag \\
-s.t.\, & \mathbbm{1}_n^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
-\end{align}
-where $h$ is an n-dimensional vector with $h_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_{ij})}{p_1(x_{ij})}$, and the $n\times n $ matrix $B$ is defined as
-\begin{equation}
-B_{ij} = \begin{cases}
-1 & (i,j)\in E(G) \\
--\kappa & (i,j) \not\in E(G)
-\end{cases}
-\end{equation}
-Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. 
-%However, we find that
-%the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
-
-To transform \eqref{eq:matrix_mle} to SDP,
-we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
-to absorb the linear term in object function.
-Let 
-\begin{equation}\label{eq:B_lambda_def}
-\widetilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & \frac{1}{2}B + \lambda I_n \end{pmatrix}
-\textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
-\end{equation}
-
-Then we have
-\begin{align}
-\max\, & \widetilde{B} \cdot X \notag \\
-s.t.\,& X_{ii}=1 \notag \\
-& X \succeq 0 \label{eq:sdp}
-\end{align}
-
-Compared with \eqref{eq:matrix_mle}, in \eqref{eq:sdp} we have removed
-the balanced constraint $\mathbbm{1}^T y = 0$. When $m=0$ and $\kappa=1$,
-the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
-When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
-the same as the one in Theorem 3 of \cite{Hajek16}. Here we consider the
-general case for $m=\gamma \log n$ and $\kappa = 1$. The case $\kappa=1$
-is empirically justified by consider the transformation $B'=2B-J_n$ where
-$J_n=\mathbbm{1}_n \mathbbm{1}_n^T- I_n$. Then $B'_{ij} = -1 +\frac{a-b}{\log a/b}\frac{\log n}{n} \approx -1$
-for $(i,j)\not\in E(G)$, whereas $y^T J_n y$ is a constant for $\mathbbm{1}^T_n y = 0$.
-The theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
-in the following theorem:
-\begin{theorem}\label{thm:sdp}
-	Suppose $X^*$ is the optimal solution for \eqref{eq:sdp}.
-	Let $\hat{Y}_{\SDP}$ be the estimator of $Y$ where  $(\hat{Y}_{\SDP})_i = X^*_{i+1, 1}$ for $i=1,\dots, n$ .
-	%If $\kappa > b\frac{\log n}{n}$
-	If $\kappa = 1$
-	and
-	\begin{align}
-	&\gamma D^* + (\sqrt{a} - \sqrt{b})^2 > 2  \\
-	\textrm{ where } D^* &= D_{1/2}(p_0||p_1) - \Big\vert\frac{D(p_0||p_1) - D(p_1||p_0)}{2}\Big\vert\notag
-	\end{align}
-	then $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$.
-\end{theorem}
-Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$. The side information contributes to
-the detection when $D^*>0$. Compared with \ref{eq:PeMain}, which quantifies the error bound of maximum likelihood estimator,
-the conclusion of Theorem \ref{thm:sdp} is a little weaker. We also note that $D^*$ is not always positive for arbitrary distribution $p_0,p_1$, which is a limitation of our theoretical
-analysis. However, SDP can be implemented using various iterative schemes, and Theorem \ref{thm:sdp} gives a quantification of its theoretical
-performance. What's more, when
-$D(p_0||p_1) = D(p_1||p_0)$, the result obtained in Theorem \ref{thm:sdp} is the same as
-that in Theorem \ref{thm:Pe}, which is true for observations from binary symmetric channel.
-\begin{corollary}
-	Suppose $X_{ij}$ is the output of $Y_i$ from a binary symmetric channel with crossover probability
-	$p^*$. $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$ as long as
-	\begin{equation}
-	-2\log(2\sqrt{p^*(1-p^*)}) + (\sqrt{a} - \sqrt{b})^2>2
-	\end{equation}
-\end{corollary}
-\section{Conclusion}\label{s:conclusion}
-In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
-shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
-our result shares insight on sample complexities of node features.
-\section{Proofs}\label{s:proof}
+Theorem \ref{thm:Pe} shows an improvement of the exact recovery threshold when side information presents, over a BSBM where no side information is available. Moreover, the threshold implies a decoupling effect of graph observation and side information, in the sense that the left part of Eq. \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SSBM when there is graph observation $Z=\{Z_{i,j}\}_{1\le i,j\le n}$ only and when there is side information $X=\{X^i_j\}_{1\le i\le n, 1\le j\le m}$ only, respectively. This decoupling is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ is needed.  
+\subsection{Proof of Theorem \ref{thm:Pe}}
 Some additional notations are necessary in this Section: $|A|, A^c$ is the cardinality, complement of the set $A$;
 $D(p_0 || p_1)$ is the Kullback-Leibler divergence for distribution $p_0$ and $p_1$;
 $p_{B_q}(z) = q^z(1-q)^{1-z}$ is the probability mass distribution for $\Bern(q)$;
 From type theory, the set of possible types
 for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$; For any $P\in \mathcal{P}_m$, the probability of the type
-class $T(P)$ under distribution $p_i$ is denoted as $Q_i^{m}(T(P))$.
-\begin{proof}[Proof of Theorem \ref{thm:constant}]
+class $T(P)$ under distribution $p_i$ is denoted as $Q_i^{m}(T(P))$.  
+\begin{proof}[Proof of Theorem \ref{thm:Pe}]
 Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
 then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F_k$ denote
 the event when there are $k$ pairs difference between $y$ and $y^*$.
@@ -420,27 +283,8 @@ Two lemmas are needed to prove Theorem \ref{thm:Pe}.
     $f'(s)=-ae^{-s}+be^s-\mu t$ and 
     $f''(s)=ae^{-s}+be^s>0$, $f(s)$ is a convex function and takes global minimum at $s^\ast$ such that $f'(s^\ast)=0$. Next we show that $s^\ast\ge 0$ for all $t\ge \frac{1}{\mu}(b-a)$, so $\min_{s\ge 0}f(s)=f(s^\ast)$. Indeed, this follows directly from the facts that $f'(0)=b-a-\mu t\le 0=f'(s^\ast)$ and that $f'(s)$ is an increasing function. Taking $s^\ast=\log(\sqrt{\mu^2 t^2+4ab}+\mu t)-\log(2b)$ into \eqref{eq:mmd}, we obtain \eqref{eq:estimation} for all $t \geq \frac{m}{n}(b-a) $ and large enough $n$.
 \end{proof}
-\begin{lemma}\label{lem:p0p12}
-	Let $p_0, p_1$ be probability distribution functions defined over $\mathcal{X}$. The minimizer
-	of $D(X||p_0) + D(X||p_1)$ for any discrete random variable $X$ is
-	\begin{equation}\label{eq:p012}
-	P(X=x)=\frac{\sqrt{p_0(x)p_1(x)}}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}}
-	\end{equation}
-	and the minimal value is
-	$-2\log \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}$.
-\end{lemma}
-\begin{proof}
-	Let $\mu_x = P(X=x)$, the optimization problem is subject to the constraint that
-	\begin{equation}\label{eq:norm}
-	\sum_{x \in \mathcal{X}} \mu_x = 1
-	\end{equation}
-	Using the Lagrange multiplier, we can take
-	the derivative of $L(\mu_1, \dots, \mu_{|\mathcal{X}|})=\sum_{x \in \mathcal{X}}
-	(\mu_x\log \frac{\mu_x}{p_0(x)} +\mu_x \log \frac{\mu_x}{p_1(x)}
-	-\lambda\mu_x) -\lambda$ about $\mu_x$.
-	From $\frac{\partial L(\mu)}{\partial \mu_x} = 0$, we obtain $\mu_x = \sqrt{p_0(x)p_1(x)}e^{\lambda-2}$.
-	By \eqref{eq:norm}, we solve \eqref{eq:p012} out.	
-\end{proof}
+
+
 \begin{proof}[Proof of Theorem \ref{thm:Pe}]
 We start from \eqref{eq:ein}.
 Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \sim
@@ -470,7 +314,7 @@ where
 \theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(p_{\widetilde{X}_1}|| p_0) + D(p_{\widetilde{X}_2} || p_1)) \notag \\
 &\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
 \end{align}
-We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
+We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} =\frac{1}{\sqrt{4ab+\epsilon^2}}> 0$,
 a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$:
 \begin{equation}\label{eq:g_linear}
 g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{b} 
@@ -568,7 +412,7 @@ P(G_1(i,j))& \geq \frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1}
 where $\theta_1^*$
 is from \eqref{eq:theta_star_lower_bound}:
 \begin{equation*}
-\theta_1^* = \gamma D_{1/2}(p_0||p_1) + (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
+\theta_1^* = \gamma D_{1/2}(p_0||p_1) + (1-\frac{2}{n})(\sqrt{a} - \sqrt{b})^2
 \end{equation*}
 and 
 \begin{align*}
@@ -590,7 +434,7 @@ s.t.\,& \diag(y) - \widetilde{B} \succeq 0
 \end{align}
 Let $g$ be the underlining ground truth label, and
 define $\tilde{g} = (1,g^T)^T$.
-Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
+Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_{i+1} = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
 Then $$
 y = (h^T g, \diag\{hg^T+\frac{1}{2}Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
 $$
@@ -603,59 +447,77 @@ Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for 
 \end{align}
 We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
 If all eigenvalues of $\Xi_n$ is larger than zero, then by
-Cauchy??s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
-Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
-We further define $D_1 = D(p_0||p_1),
-D_2 = D(p_1||p_0), \bar{D}=m\frac{D_1+D_2}{2\log a/b}$.
-Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
-Then the constant matrix $C$ can be written as:
-	\begin{equation*}
-	C=\begin{pmatrix}
-	d I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
-	b' J_{n/2} & d I_{n/2} + a'J_{n/2}  
-	\end{pmatrix}
-	\end{equation*}
-where $a',b', d$ are defined as:
+Cauchy's Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
+Let $A$ be the adjacency matrix of $G$
+and we define $J_n = \mathbbm{1}_n \mathbbm{1}_n^T $, then $B=2A-J_n+I_n$.
+Then we have
+\begin{equation}\label{eq:Xi_n}
+\Xi_n = \diag(\lambda \mathbbm{1}_n g^T + hg^T + Agg^T) - A + \frac{J_n}{2}
+\end{equation}
+For any vector $x \in \mathbb{R}^n$ with $\norm{x}=1$, we decompose it as $x=\frac{\beta}{\sqrt{n}} g^{\perp}
++ \sqrt{1-\beta^2} g$ where $g^Tg^{\perp}=0, \beta \in [0,1], \norm{g^{\perp}}=1$, we can expand $x^T \Xi_n x$ as
 \begin{align*}
-a' & = - \frac{a \log n}{n} + \frac{1}{2} \\
-b' & = - \frac{b \log n}{n} + \frac{1}{2} \\
-d & = \bar{D}+\frac{1}{2}(a-b) \log n - \frac{a \log n}{n} + \frac{1}{2}
+x^T \Xi_n x = \frac{\beta^2}{n} g^T \Xi_n g  &
++		\frac{\beta}{\sqrt{n}}\sqrt{1-\beta^2} g^T \Xi_n g^{\perp}
+\\
+&+
+(1-\beta^2)(g^{\perp})^T \Xi_n g^{\perp} 
 \end{align*}
-
-The eigenvalues of C take three distinct values
-\begin{itemize}
-	\item $\lambda_1=\bar{D}+\frac{n}{2}-b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
-	\item $\lambda_2=\bar{D}$ associated to the eigenvector corresponding to  $g$
-	\item $\lambda_3=\bar{D}+\frac{1}{2}(a-b)\log(n)$ associated to all other eigenvectors
-\end{itemize}
-Since $\bar{D}=O(\log n)$ and $a>b$, $\lambda_3$ is the second smallest eigenvalues.
-We can verify $\Xi_n g = 0$, therefore, to show $\Xi_n \preceq 0$, it is equivalent
+For the first term, using $(\diag(Bgg^T) - B)g=0$ we have
+\begin{align*}
+g^T \Xi_n g = g^T(h+\lambda I_n) = g^T h
+\end{align*}
+Since $\mathbb{E}[g_ih_i]$ is a positive number of order $O(\log n)$, by Sanov's theorem
+$P(g^T h < 0)$ decreases exponentially. Next we analyze the second term, Let $\tilde{h}_i
+=\lambda+h_i$, then
+$g^T \Xi_n g^{\perp} = \tilde{h}^T g^{\perp} \geq -\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}$.
+The norm can be expanded as:
+\begin{align*}
+\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}^2
+=\norm{\tilde{h}}^2 - \frac{1}{n}(\tilde{h}^Tg)^2
+\end{align*}
+Using $\tilde{h}^T\mathbbm{1}_n=0$ and Law of Large Numbers (Chebyshev's inequality), with large probability (exponential rate), we can approximate
+the above equation with 
+\begin{align*}
+\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2
+&=\frac{\norm{\tilde{h}}^2}{n} - 2\frac{(\tilde{h}^T g_1)^2}{n^2} - 2\frac{(\tilde{h}^T g_2)^2}{n^2} + \frac{(\tilde{h}^T\mathbbm{1}_n)^2}{n^2} \\
+&\approx \frac{\mathbb{E}[\tilde{h}_1^2]+\mathbb{E}[\tilde{h}_2^2]}{2}
+-\frac{\mathbb{E}^2[\tilde{h}_1]+\mathbb{E}^2[\tilde{h}_2]}{2}\\
+&= \frac{\Var[\tilde{h}_1^2]+\Var[\tilde{h}_2^2]}{2}
+ = O(\log n)
+\end{align*}		
+Therefore, the second term is lower bounded by
+$$
+\frac{1}{\sqrt{n}} g^T \Xi_n g^{\perp} \geq -\sqrt{\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2} = O(\sqrt{\log n})
+$$
+For the last term $(g^{\perp})^T \Xi_n g^{\perp} >0$, it is equivalent
 to consider the subspace orthogonal to $g$:
 $$
-\min_{x \perp g, x \in \mathbb{R}^n } x^T (C-\Gamma) x \geq 0
+\min_{x \perp g, x \in \mathbb{R}^n } x^T \Xi_n x \geq 0
 $$
-The error probability for the above event is bounded by
-$P(\lambda_{\max}(\Gamma) \geq \bar{D}+\frac{a-b}{2}\log n)$.
-$\Gamma$ is a random matrix with zero mean, and we can decompose it into diagonal part
-$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=A-\mathbb[A]$
-where $A$ is the adjacency matrix of the graph. By Theorem 5.2 of \cite{lei2015consistency},
-with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. By the triangular inequality of the spectral norm, we have
+Note that $\mathbb{E}[A] = \frac{p-q}{2}gg^T + \frac{p+q}{2}J_n - pI_n$,
+using \eqref{eq:Xi_n}, we can simplify $x^T \Xi_n x$ for $x \perp g$ as
 \begin{align*}
-&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+\frac{a-b}{2}\log n)
-\leq n^{-r}  \\
-& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})
+x^T \Xi_n x &= x^T \diag( \lambda \mathbbm{1}_ng^T+hg^T + Agg^T) x  \\
+&+ \frac{1}{2}(1-p-q)x^TJ_n x
++ p -x^T(A-\mathbb{E}[A])x
 \end{align*}
-$\Gamma_1$ is a diagonal matrix, and $\lambda_{\max}(\Gamma_1) = \max_{1\leq i \leq n} \Gamma_{ii}$.
-By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
+By Theorem 5.2 of \cite{lei2015consistency},
+with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$.
 \begin{align*}
-&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})\leq \\
-&P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)
+x^T \Xi_n x \geq \min\{(\lambda + h_i) g_i + g_i (Ag)_i \} - c \sqrt{\log n}
 \end{align*}
+The error probability is then bounded by
+\begin{align*}
+P(\Xi_{ii} \leq c\sqrt{\log n}, \forall 1\leq i \leq n)
+\end{align*}
+
 Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
 \begin{align}\label{eq:equiv_condition}
 \sum_{j=1}^{n/2} (z_j - z'_j) +g_i( h_i + \lambda )\leq 0
 \end{align}
-From the definition of $\lambda$ in \eqref{eq:B_lambda_def}, $\lambda/m$ converges to $\frac{D_2-D_1}{2 \log(a/b)}$ in exponential rate.
+From the definition of $\lambda$ in \eqref{eq:B_lambda_def}, $\lambda/m$ converges to $\frac{D_2-D_1}{2 \log(a/b)}$ in exponential rate, where $D_1 = D(p_0||p_1),
+D_2 = D(p_1||p_0)$.
 Therefore, when analyzing the probability of event defined in \eqref{eq:equiv_condition}, we treat $\lambda/m$ as a constant. 
 Depending on the sign of $g_i$, \eqref{eq:equiv_condition} can be divided into two cases. When $g_i=1$, the samples consisted in $h_i$
 follow distribution $p_0$ and the probability is bounded by $n^{-\theta^*_1 + o(1)}$ where
@@ -671,6 +533,91 @@ Using linear approximation of $g$ in \eqref{eq:g_linear}, we can show that
 Similar results are obtained when $g_i=-1$. Finally,
 $P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)$ is bounded by $n^{1-\theta_1^*+o(1)}$, and Theorem \ref{thm:sdp} follows.
 \end{proof}
+
+\section{SDP Relaxation}
+and a semi-definite programing algorithm which, though sub-optimal in general, shows optimality in cases where the Kullback-Leibler (KL)-divergence between $P_0$ and $P_1$ is symmetric, i.e., $D(P_0||P_1)=D(P_1||P_0)$.
+
+Though the maximum likelihood estimator in \eqref{eq:mle} can achieve polynomial
+error rate in Theorem \ref{thm:Pe}, the exact solution is NP-hard. In this
+Section, we will use semidefinite programming based relaxation to handle
+the optimization problem in \eqref{eq:mle}. The relaxation method
+can also achieve $P_e\to 0$ as long as the recovery condition
+$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$ is satisfied.
+
+The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
+\begin{align}
+\max_{y}\, & h^T y + \frac{1}{2}y^T B y \notag \\
+s.t.\, & \mathbbm{1}_n^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
+\end{align}
+where $h$ is an n-dimensional vector with $h_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_{ij})}{p_1(x_{ij})}$, and the $n\times n $ matrix $B$ is defined as
+\begin{equation}
+B_{ij} = \begin{cases}
+1 & (i,j)\in E(G) \\
+-\kappa & (i,j) \not\in E(G)
+\end{cases}
+\end{equation}
+Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. 
+%However, we find that
+%the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
+
+To transform \eqref{eq:matrix_mle} to SDP,
+we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
+to absorb the linear term in object function.
+Let 
+\begin{equation}\label{eq:B_lambda_def}
+\widetilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & \frac{1}{2}B + \lambda I_n \end{pmatrix}
+\textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
+\end{equation}
+
+Then we have
+\begin{align}
+\max\, & \widetilde{B} \cdot X \notag \\
+s.t.\,& X_{ii}=1 \notag \\
+& X \succeq 0 \label{eq:sdp}
+\end{align}
+
+Compared with \eqref{eq:matrix_mle}, in \eqref{eq:sdp} we have removed
+the balanced constraint $\mathbbm{1}^T y = 0$. When $m=0$ and $\kappa=1$,
+the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
+When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
+the same as the one in Theorem 3 of \cite{Hajek16}. Here we consider the
+general case for $m=\gamma \log n$ and $\kappa = 1$. The case $\kappa=1$
+is empirically justified by consider the transformation $B'=2B-J_n$ where
+$J_n=\mathbbm{1}_n \mathbbm{1}_n^T- I_n$. Then $B'_{ij} = -1 +\frac{a-b}{\log a/b}\frac{\log n}{n} \approx -1$
+for $(i,j)\not\in E(G)$, whereas $y^T J_n y$ is a constant for $\mathbbm{1}^T_n y = 0$.
+The theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
+in the following theorem:
+\begin{theorem}\label{thm:sdp}
+	Suppose $X^*$ is the optimal solution for \eqref{eq:sdp}.
+	Let $\hat{Y}_{\SDP}$ be the estimator of $Y$ where  $(\hat{Y}_{\SDP})_i = X^*_{i+1, 1}$ for $i=1,\dots, n$ .
+	%If $\kappa > b\frac{\log n}{n}$
+	If $\kappa = 1$
+	and
+	\begin{align}
+	&\gamma D^* + (\sqrt{a} - \sqrt{b})^2 > 2  \\
+	\textrm{ where } D^* &= D_{1/2}(p_0||p_1) - \Big\vert\frac{D(p_0||p_1) - D(p_1||p_0)}{2}\Big\vert\notag
+	\end{align}
+	then $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$.
+\end{theorem}
+Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$. The side information contributes to
+the detection when $D^*>0$. Compared with \ref{eq:PeMain}, which quantifies the error bound of maximum likelihood estimator,
+the conclusion of Theorem \ref{thm:sdp} is a little weaker. We also note that $D^*$ is not always positive for arbitrary distribution $p_0,p_1$, which is a limitation of our theoretical
+analysis. However, SDP can be implemented using various iterative schemes, and Theorem \ref{thm:sdp} gives a quantification of its theoretical
+performance. What's more, when
+$D(p_0||p_1) = D(p_1||p_0)$, the result obtained in Theorem \ref{thm:sdp} is the same as
+that in Theorem \ref{thm:Pe}, which is true for observations from binary symmetric channel.
+\begin{corollary}
+	Suppose $X_{ij}$ is the output of $Y_i$ from a binary symmetric channel with crossover probability
+	$p^*$. $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$ as long as
+	\begin{equation}
+	-2\log(2\sqrt{p^*(1-p^*)}) + (\sqrt{a} - \sqrt{b})^2>2
+	\end{equation}
+\end{corollary}
+\section{Conclusion}\label{s:conclusion}
+In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
+shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
+our result shares insight on sample complexities of node features.
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{exportlist}
