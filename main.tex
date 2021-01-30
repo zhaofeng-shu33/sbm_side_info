@@ -65,7 +65,7 @@ the exact recovery threshold to a condition $\gamma D_{1/2}(p_0 || p_1) + (\sqrt
 where the contribution of side information is coded in Renyi divergence.
 
 To achieve the exact recovery condition of SBM, semi-definite programming (SDP) is often utilized \cite{Hajek16}.
-SDP relaxation can also be used for SBM with side information, and in this paper we show that a sub-optimal exact recovery condition
+SDP relaxation can also be used for SBM with side information \cite{esmaeili2019exact}, and in this paper we show that a sub-optimal exact recovery condition
 of our model is achievable by such method.
 
 This paper is organized as follows. In Section \ref{s:rw}, we review the previous works which are closely related with ours.
@@ -162,6 +162,9 @@ For a balanced $SSBM(n,p=a\frac{\log n}{n},q=b\frac{\log n}{n},P_0,P_1)$, exact 
 \end{equation}
 and is not solvable if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$, in which case, the error probability $P_e$ goes to $1$.
 \end{theorem}
+
+engineering insight
+
 Theorem \ref{thm:Pe} shows an improvement of the exact recovery threshold when side information presents, over a BSBM where no side information is available. Moreover, the threshold implies a decoupling effect of graph observation and side information, in the sense that the left part of Eq. \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SSBM when there is graph observation $Z=\{Z_{i,j}\}_{1\le i,j\le n}$ only and when there is side information $X=\{X^i_j\}_{1\le i\le n, 1\le j\le m}$ only, respectively. This decoupling is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ is needed.  
 \subsection{Proof of Theorem \ref{thm:Pe}}
 %\begin{proof}[Proof of Theorem \ref{thm:Pe}]
@@ -281,12 +284,12 @@ In the following we show that exact recovery is not possible if $\gamma D_{1/2}(
 
 Let $A$ and $B$ be the set of nodes with labels $1$ and $-1$, respectively. Let $H_1$ be a subset of $A$ of size $\frac{n}{\log^3 n}$. It was shown in \cite{abbe2015exact} that in the SBM, with probability at least $\frac{9}{10}$, no node in $H_1$ is connected to more than $\frac{\log n}{\log\log n}$ edges in $H_1$. Similarly, let $H_2$ be a subset of $B$ of size $\frac{n}{\log^3 n}$. Then, with high probability $H_2$ satisfies the same property as $H_1$ does. 
 
-For any $i_1\in H_1$ and $i_2\in H_2$, let $F(i_1,i_2)$ be the event that the likelihood $P(X,Z|(Y_1,\ldots,Y_n))$ (defined in \eqref{eq:lh}) with $Y_{i_1}=-1,Y_{i_2}=1$ is larger than the likelihood $P(X,Z|(Y_1,\ldots,Y_n))$ with $Y_{i_1}=1,Y_{i_2}=-1$, which results in  recovery failure. For a node $i$ and a node set $S\subset\{1,\ldots,n\}, $let $E(i,S)$ be the number of edges between $i$ and nodes in $S$. Then, according to \eqref{eq:lh}, the event $F(i_1,i_2)$ is equivalent to  
+For any $i_1\in H_1$ and $i_2\in H_2$, let $F(i_1,i_2)$ be the event that the likelihood $P(X,Z|(Y_1,\ldots,Y_n))$ (defined in \eqref{eq:lh}) with $Y_{i_1}=-1,Y_{i_2}=1$ is larger than the likelihood $P(X,Z|(Y_1,\ldots,Y_n))$ with $Y_{i_1}=1,Y_{i_2}=-1$, which results in  recovery failure because the maximum likelihood estimate is equivalent to maximum a posteriori probability estimate when $Y$ is uniformly distributed. For a node $i$ and a node set $S\subset\{1,\ldots,n\}, $let $E(i,S)$ be the number of edges between $i$ and nodes in $S$. Then, according to \eqref{eq:lh}, the event $F(i_1,i_2)$ is equivalent to  
 the following 
 \begin{align}
 &\sum_{j=1}^{m} \log \frac{p_1(x^{i_1}_{j})}{p_0(x^{i_1}_{j})}
 +\sum_{j=1}^{m} \log \frac{p_0(x^{i_2}_{j})}{p_1(x^{i_2}_{j})}\nonumber\\
-\ge &q\log \frac{p(1-q)}{q(1-p)}(E(i_1, A \backslash \{i_1\}) + E(i_2, B \backslash \{i_2\})\nonumber\\
+\ge &\log \frac{p(1-q)}{q(1-p)}(E(i_1, A \backslash \{i_1\}) + E(i_2, B \backslash \{i_2\})\nonumber\\
 &- E(i_1, B \backslash \{i_2\}) - E(i_2, A \backslash \{i_1\})) \label{eq:F1ij}.
 \end{align}
 By the definition and property of $H_1$ and $H_2$ mentioned above, the probability of \eqref{eq:F1ij} is lower bounded by the probability of
@@ -328,16 +331,16 @@ Since $\gamma D_{1/2}(P_0||P_1) + (\sqrt{a} - \sqrt{b})^2<2$, we have that $P(G_
 Consider the dual problem of \eqref{eq:sdp}
 \begin{align*}
 \min &\sum_{i=1}^{n+1} y_i \\
-s.t. &\, \diag\{y_1, \dots, y_n\} + \Xi - \widetilde{B} \succeq 0, 
+s.t. &\, \diag\{y_1, \dots, y_{n+1}\} + \Xi - \widetilde{B} \succeq 0, 
 \end{align*}
-where the symmetric matrix $\Xi$ is defined as 
+where the $(n+1)\times (n+1)$ symmetric matrix $\Xi$ is defined as 
 \begin{equation}
 \Xi_{ij} = \begin{cases}
-0 & i=j \\
-\lambda_i + \lambda_j & i\neq j
-\end{cases}
+0, & i=j \\
+\lambda_i + \lambda_j, & i\neq j
+\end{cases},
 \end{equation}
-
+Similar to the arguments in \cite{abbe2015exact}, to prove that  
 
 We choose $y_i, \lambda_i$ for $i=1,\dots, n+1$ which satisfy
 the dual constraint and achieve the strong duality.
@@ -461,79 +464,69 @@ $P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)$ is bounded by $n^{1-\t
 \end{proof}
 
 \section{SDP Relaxation}
+In this section, we propose a semi-definite programming based relaxation to find the maximum likelihood estimate of the labels $Y$. Note that
+ the ML estimate of the labels $Y$ is NP-hard. 
+Our SDP algorithm finds the true label $Y^*$ with probability approaching $1$, if
+$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
+The SDP pcan be implemented using various iterative schemes
 
-Though the maximum likelihood estimator in \eqref{eq:mle} can achieve polynomial
-error rate in Theorem \ref{thm:Pe}, the exact solution is NP-hard. In this
-Section, we will use semidefinite programming based relaxation to handle
-the optimization problem in \eqref{eq:mle}. The relaxation method
-can also achieve $P_e\to 0$ as long as the recovery condition
-$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$ is satisfied.
-
-The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
-\begin{align}
-\max_{y}\, & h^T y + \frac{1}{2}y^T B y \notag \\
-s.t.\, & \mathbbm{1}_n^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
+Let $A(Y)$ and $B(Y)$ be the sets of nodes with label $1$ and $-1$, respectively.
+According to \eqref{eq:lh}, the log likelihood of $Y$ is given by
+\begin{align}\label{eq:loglh}
+&\sum^m_{j=1}[\sum_{i\in A(Y)} \log P_1(X^i_{j})+\sum_{i\in B(Y)} \log P_0(X^i_{j})]\nonumber\\
+&+\sum_{i,j\in A(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]\nonumber\\
+&+\sum_{i,j\in B(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]
+\nonumber\\
+&+\sum_{i\in A(Y),j\in B(Y)}[z_{i,j}\log q+(1-z_{i,j})\log (1-q)].
 \end{align}
-where $h$ is an n-dimensional vector with $h_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_{ij})}{p_1(x_{ij})}$, and the $n\times n $ matrix $B$ is defined as
+It can be verified that maximizing \eqref{eq:loglh} over $Y\in\{\pm\}^n$ is equivalent to the following optimization problem
+\begin{align}
+\max_{x}\, & h^T v + \frac{1}{2}v^T B v \notag \\
+s.t.\, & \mathbbm{1}_n^T v = 0 \text{ and } v_i \in \{\pm 1 \} \label{eq:matrix_mle}
+\end{align}
+where $h$ is an n-dimensional vector with entry $h_i = \frac{1}{\log \frac{p(1-q)}{q(1-p)}}\sum_{j=1}^m \log \frac{P_0(x^i_{j})}{P_1(x^i_{j})}$ for $i\in\{1,\ldots,n\}$ and the $n\times n $ matrix $B$ is defined as
 \begin{equation}
 B_{ij} = \begin{cases}
-1 & (i,j)\in E(G) \\
--\kappa & (i,j) \not\in E(G)
+1, & (i,j)\in E(G) \\
+ -1, (i,j) \not\in E(G)
 \end{cases}
-\end{equation}
-Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. 
+\end{equation}  
+for $i,j\in\{1,\ldots,n\}$.
 %However, we find that
 %the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
 
-To transform \eqref{eq:matrix_mle} to SDP,
-we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
-to absorb the linear term in object function.
-Let 
+Let $v^*$ be the optimal solution to \eqref{eq:matrix_mle} and $V=(1,v^*)(1,v^*)^T$, where $(1,v^*)$ is a $(n+1)$-dimensional  vector obtained by concatenating $1$ and $v^*$.
+Then, the optimal value of \eqref{eq:matrix_mle} equals $\frac{1}{2}Tr(\widetilde{B}V)$, where
 \begin{equation}\label{eq:B_lambda_def}
-\widetilde{B} = \begin{pmatrix} 0 & h^T  \\ h  & \frac{1}{2}B \end{pmatrix}
+\widetilde{B} = \begin{pmatrix} 0 & h^T  \\ h  & B \end{pmatrix}.
 \end{equation}
-
-Then we have
+We wish to show that $V$ is the unique optimal solution to the following problem.
 \begin{align}
-\max\, \tilde{B} \cdot X  &\notag\\
-s.t.\, \diag(X) &= 1 \notag\\
- X &\succeq 0 \notag\\
- \sum_{j=1, j\neq i}^{n+1} (X_{ij} + X_{ji})& = 0 \label{eq:sdp}
+\max\, Tr(\tilde{B}V)  &\notag\\
+s.t.\, V_{ii} &= 1, \notag\\
+ V &\succeq 0, \notag\\
+ \sum_{j=1,j\neq i}^{n+1} (V_{ij} + V_{ji})& = 0,~\forall i\in\{1,\ldots,n\}. \label{eq:sdp}
 \end{align}
-Compared with \eqref{eq:matrix_mle}, in \eqref{eq:sdp} we have enlarged
-the balanced constraint $\mathbbm{1}^T y = 0$ to $(n+1)$ constraints.
+Note that here we use $n+1$ constrains in the last line of \eqref{eq:sdp} to describe the balanced property of the labels. This is important in deriving the optimality and uniqueness of $V$, which will be proved in the following theorem. The theorem shows that our SDP relaxation achieves exact recovery with high probability, if the threshold is met.
 %When $m=0$ and $\kappa=1$,
 %the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
 %When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
 %the same as the one in Theorem 3 of \cite{Hajek16}.
-Here we consider the
-general case for $m=\gamma \log n$ and $\kappa = 1$. The case $\kappa=1$
-is empirically justified by consider the transformation $B'=2B-J_n$ where
-$J_n=\mathbbm{1}_n \mathbbm{1}_n^T- I_n$. Then $B'_{ij} = -1 +\frac{a-b}{\log a/b}\frac{\log n}{n} \approx -1$
-for $(i,j)\not\in E(G)$, whereas $y^T J_n y$ is a constant for $\mathbbm{1}^T_n y = 0$.
-The theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
-in the following theorem:
+% The theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
+% in the following theorem:
 \begin{theorem}\label{thm:sdp}
-	Suppose $X^*$ is the optimal solution for \eqref{eq:sdp}.
-	Let $\hat{Y}_{\SDP}$ be the estimator of $Y$ where  $(\hat{Y}_{\SDP})_i = X^*_{i+1, 1}$ for $i=1,\dots, n$ .
-	%If $\kappa > b\frac{\log n}{n}$
-	If $\kappa = 1$
-	and
-	\begin{align}
-	\gamma D_{1/2}(p_0||p_1)  + (\sqrt{a} - \sqrt{b})^2 > 2  
-	\end{align}
-	then $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$.
-\end{theorem}
-Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$. The side information contributes to
-the detection when $D^*>0$. SDP can be implemented using various iterative schemes, and Theorem \ref{thm:sdp} gives a quantification of its theoretical
-performance. For observations from binary symmetric channel, the result is
-\begin{corollary}
-	Suppose $X_{ij}$ is the output of $Y_i$ from a binary symmetric channel with crossover probability
-	$p^*$. $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$ as long as
-	\begin{equation}
-	-2\log(2\sqrt{p^*(1-p^*)}) + (\sqrt{a} - \sqrt{b})^2>2
-	\end{equation}
-\end{corollary}
+	If $\gamma D_{1/2}(p_0||p_1)  + (\sqrt{a} - \sqrt{b})^2 > 2$, then with high probability, the optimal solution
+	 $V^*$ to \eqref{eq:sdp} is unique and given by $(1,y^*)(1,y^*)^T$, where $y^*$ is the true labeling of the nodes.
+ \end{theorem}
+% , and Theorem \ref{thm:sdp} gives a quantification of its theoretical
+% performance. For observations from binary symmetric channel, the result is
+% \begin{corollary}
+% 	Suppose $X_{ij}$ is the output of $Y_i$ from a binary symmetric channel with crossover probability
+% 	$p^*$. $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$ as long as
+% 	\begin{equation}
+% 	-2\log(2\sqrt{p^*(1-p^*)}) + (\sqrt{a} - \sqrt{b})^2>2
+% 	\end{equation}
+% \end{corollary}
 \section{Conclusion}\label{s:conclusion}
 In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
