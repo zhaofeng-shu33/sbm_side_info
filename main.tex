@@ -16,6 +16,7 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{remark}{Remark}
 \newtheorem{corollary}{Corollary}
+\DeclareMathOperator{\SBMSI}{SBMSI}
 \DeclareMathOperator{\SSBM}{SSBM}
 \DeclareMathOperator{\SDP}{SDP}
 \DeclareMathOperator{\Tr}{Tr}
@@ -50,19 +51,19 @@
 		% 	The balanced constraint in the SBM allows us to derive a sharp exact recovery threshold that is analytical. We also present an efficient semi-definite programming (SDP) algorithm that achieves the optimal exact recovery threshold. Our SDP algorithm is a non-trivial generalization of the SDP algorithm for SBM without side information in the sense that our proof involves more detailed arguments. Moreover, the SDP algorithm also applies to the binary SBM where the label of each node has a uniform distribution.
 	\end{abstract}
 	\section{Introduction}
-	The stochastic block model (SBM) \cite{holland1983stochastic}, also known as the planted partition model, is a statistical model that admits clean theoretical analysis and efficient algorithms while capturing some key features exhibited in large data networks, such as social, biological, and computer networks \cite{abbe2015exact}. 
+	The stochastic block model (SBM) \cite{holland1983stochastic}, also known as the planted partition model, is a statistical model that admits neat theoretical analysis and efficient algorithms while capturing some key features exhibited in large data networks, such as social, biological, and computer networks \cite{abbe2015exact}. 
 	The SBM describes a graph of $n$ nodes, partitioned into multiple communities. Each edge in the graph exists independently with a probability determined by the communities the two nodes on the edge belong to. The goal is to recover  the community each node belongs to, based on one instance of the graph edges. While there are several levels of recovery defined and studied (see \cite{Abbe17} for a comprehensive survey), in this paper we focus on the exact recovery, which aims to recover all the communities. 
 	
-	For exact recovery in the SBM, a more interesting regime is when the edge connecting probabilities are in order of $O(\frac{\log n}{n})$, in which circumstance there is a phase transition in the exact recovery condition. 
+	For exact recovery in the SBM, a more interesting regime is when the edge connecting probabilities are in order of $O(\frac{\log n}{n})$, in which circumstance there are phase transition phenomena for the exact recovery problem. 
 	The tight threshold on the exact recovery in this setting was not established until the work of \cite{abbe2015exact,mossel2016}, where efficient and optimal algorithms based on semi-definite programming (SDP) were also provided. 
 	The results in \cite{abbe2015exact,mossel2016} were generalized in \cite{abbe2015community} where the sharp threshold for multiple communities with asymmetric edge connecting probabilities is derived, and in \cite{Hajek16}, where optimal SDP algorithms for multiple communities and two communities with unequal community sizes are given.
 	
-	While the SBM focuses on graphical data only, it is natural to study the benefit of additional local data at the nodes, referred to as side information, to the exact recovery in the SBM. Such setting arises in applications where multi-modal data is observed. For example, in a social network, not only the interactions among people, but also the profile of each individual can be collected. It has been shown in many studies that side information such as node attributes or features \cite{zhang2016community,mossel2016local} can assist the community detection tasks. For exact recovery in the SBM with side information, the work of \cite{abbe17sideinfo} generalized \cite{abbe2015community} and derived a sharp threshold for exact recovery in the SBM with side information, given in the form of $\log n$ (in accordance with the order of the edge connecting probabilities) data samples at each node, drawn identically and independently  according to a probability distribution determined by the community the node belongs to. The communities are described by node labels, which are i.i.d. according to a probability distribution. 
-	The threshold in \cite{abbe17sideinfo} holds for general cases and is expressed in the form of an optimization problem, to which no closed form solution can be found. The work of \cite{esmaeili2019exact,esmaeili2019community,saad2018community} considered more specific cases where side information is given as partial revealed labels and noisy labels.
+	While the SBM focuses on graphical data only, it is natural to study the benefit of additional local data at the nodes, referred to as side information, to the exact recovery in the SBM. Such setting arises in applications where multi-modal data are observed. For example, in a social network, not only the interactions among people, but also the profile of each individual can be collected. It has been shown in many studies that side information such as node attributes or features \cite{zhang2016community,mossel2016local} can assist the community detection tasks. For exact recovery in the SBM with side information, the work of \cite{abbe17sideinfo} generalized \cite{abbe2015community} and derived a sharp threshold for exact recovery in the SBM with side information, given in the form of $\log n$ (in accordance with the order of the edge connecting probabilities) data samples at each node, drawn identically and independently  according to a probability distribution determined by the community the node belongs to. The community belongings are described by node labels, which are i.i.d. according to a probability distribution. 
+	The threshold in \cite{abbe17sideinfo} holds for general cases and is expressed in the form of an optimization problem, to which no closed form solution can be found. The work of \cite{esmaeili2019exact,esmaeili2019community,saad2018community} considered more specific cases where side information is given as partial revealed labels or noisy labels.
 	
 	In this paper, we consider balanced binary symmetric SBM with side information in the form of i.i.d. node samples, drawn according to a distribution determined by the community the node belongs to. The balanced property in this paper means that the two communities in the graph have equal sizes. At the first glance, the setting in this paper might look like a special case of that in \cite{abbe17sideinfo}, where each node belongs to any one of the two communities with probability $\frac{1}{2}$. 
 	Yet, 
-	the difference between the balanced assumption in this paper and the equal probability assumption in \cite{abbe17sideinfo},  which  also the contributions of this paper, is as follows. 
+	the difference between the balanced assumption in this paper and the equal probability assumption in \cite{abbe17sideinfo},  and also the contributions of this paper, are as follows. 
 	
 	
 	First, while no closed form expression of the exact recovery threshold can be established in \cite{abbe17sideinfo} for  the binary symmetric SBM, in this paper, we derived a sharp and closed form threshold when balanced assumption is considered. Note that the result in \cite{abbe17sideinfo} does not imply our threshold. Our threshold indicates a separation between the side information and the graph data. Such separation provides an insight that the graph data and the side information can be designed and collected independently to achieve exact recovery. 
@@ -130,15 +131,16 @@
 %	Within this paper, we use Rényi divergence to characterize
 %	the contribution of side information to exact recovery error bound in these two cases.
 	\section{Preliminaries}\label{s:model}
-	A balanced binary symmetric SBM is defined by a random graph $Z=\{Z_{i,j}\}_{1\le i,j\le n}$ with $n$ nodes $\{1,\ldots,n\}$ and edges $\{Z_{i,j}\}_{1\le i,j\le n}$, where $Z_{i,j}=1$ if nodes $i$ and $j$ are connected with an edge and $Z_{i,j}=0$ otherwise. 
-	Each node $i\in\{1,\ldots,n\}$ is associated with a label $Y_i\in \{\pm 1\}$ such that the label $Y=(Y_1,\ldots,Y_n)$ is uniformly distributed over the space $\{Y:\sum^n_{i=1}Y_i=0\}$. The edges $\{Z_{i,j}\}_{1\le i,j\le n}$ are independently distributed Bernouli random variables, where $Z_{i,j}=1$ with probability $p=a\frac{\log n}{n}$ for nodes $i,j$ with the same labels, i.e., $Y_i=Y_j$, and $Z_{i,j}=1$ with probability $q=b\frac{\log n}{n}$ if $Y_i\ne Y_j$. In this paper, it is assumed that $a>b$. 
+	A balanced binary symmetric SBM is defined by a random graph %$Z=\{Z_{i,j}\}_{1\le i<j\le n}$
+	with $n$ nodes $\{1,\ldots,n\}$ and edges $Z=\{Z_{i,j}\}_{1\le i<j\le n}$, where $Z_{i,j}=1$ if nodes $i$ and $j$ are connected with an edge and $Z_{i,j}=0$ otherwise. 
+	Each node $i\in\{1,\ldots,n\}$ is associated with a label $Y_i\in \{\pm 1\}$ such that the label $Y=(Y_1,\ldots,Y_n)$ is uniformly distributed over the space $\{Y:\sum^n_{i=1}Y_i=0\}$. The edges $\{Z_{i,j}\}_{1\le i<j\le n}$ are independently distributed Bernoulli random variables, where $Z_{i,j}=1$ with probability $p=a\frac{\log n}{n}$ for nodes $i,j$ with the same labels, i.e., $Y_i=Y_j$, and $Z_{i,j}=1$ with probability $q=b\frac{\log n}{n}$ if $Y_i\ne Y_j$. In this paper, it is assumed that $a>b$. 
 
 	
 	
 	
-	A balanced binary symmetric SBM with side information (SBMSI) is a generalization of the balanced SBM. In addition to the graph $Z$ and the labels $Y$, each node $i$ has $m=\gamma \log n$ data samples $X^i_{j}$, $i\in \{1,\ldots,n\}$, $j\in \{1,\ldots,m\}$, that are drawn identically and independently from distribution $P_0$ if $Y_i=1$ and from distribution $P_1$ if $Y_i=-1$. Note that the data samples $X^i_{j}$, $j\in \{1,\ldots,m\}$ are independent from $\{Z_{i,j}\}_{1\le i,j\le n}$ given the label $Y_i$ for any $i\in\{1,\ldots,n\}$. Hence, the joint probability distribution of $(\{Z_{i,j}\}_{1\le i,j\le n},\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ conditioned on $Y$ is
+	A balanced binary symmetric SBM with side information (SBMSI) is a generalization of the balanced SBM. In addition to the graph $Z$ and the labels $Y$, each node $i$ has $m=\gamma \log n$ data samples $X^i_{j}$, $i\in \{1,\ldots,n\}$, $j\in \{1,\ldots,m\}$, that are drawn identically and independently from distribution $P_0$ if $Y_i=1$ and from distribution $P_1$ if $Y_i=-1$. Note that the data samples $X^i_{j}$, $j\in \{1,\ldots,m\}$ are independent from $\{Z_{i,j}\}_{1\le i<j\le n}$ given the label $Y_i$ for any $i\in\{1,\ldots,n\}$. Hence, the joint probability distribution of $(\{Z_{i,j}\}_{1\le i<j\le n},\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ conditioned on $Y$ is
 	\begin{align}\label{eq:lh}
-		&P(x=\{x^i_{j}\}_{1\le i\le n,1\le j\le m},z=\{z_{i,j}\}_{1\le i,j\le n}| (y_1,\ldots,y_n)) \nonumber\\
+		&P(x=\{x^i_{j}\}_{1\le i\le n,1\le j\le m},z=\{z_{i,j}\}_{1\le i<j\le n}| (y_1,\ldots,y_n)) \nonumber\\
 		=& \prod_{1\le i,j\le n}P(z_{i,j}|y_i,y_j)\prod_{i=1}^n \prod_{j=1}^m P(x^i_j|y_i), 
 	\end{align}
 	where 
@@ -151,23 +153,23 @@
 	and
 	\begin{equation*}
 		P(x^i_j|y_i) = \begin{cases}
-			P_0(x^i_j) & Y_i = 1 \\
-			P_1(x^i_j) & Y_i = -1
+			P_0(x^i_j) & y_i = 1 \\
+			P_1(x^i_j) & y_i = -1
 		\end{cases}
 	\end{equation*}
-	The conditional probability distribution $P(\{x^i_{j}\}_{1\le i\le n,1\le j\le m},\{z_{i,j}\}_{1\le i,j\le n}| y_1,\ldots,y_n)$ is determined by parameters $n$, $p$, $q$, $P_0$, and $P_1$. Hence, 
-	the SBMSI is denoted as $SBMSI(n,p,q,P_0,P_1)$.
-	In $SBMSI(n,p,q,P_0,P_1)$, the goal is to recover the unknown labels $Y$, given the graph $Z$ and the data samples $X$. In this paper, we consider exact recovery of $Y$, which is defined as follows.
-	\begin{definition}[Exact Recovery for $SBMSI(n,p,q,P_0,P_1)$]
+	The conditional probability distribution $P(\{x^i_{j}\}_{1\le i\le n,1\le j\le m},\{z_{i,j}\}_{1\le i<j\le n}| y_1,\ldots,y_n)$ is determined by parameters $n$, $p$, $q$, $P_0$, and $P_1$. Hence, 
+	the SBMSI is denoted as $\SBMSI(n,m,p,q,P_0,P_1)$.
+	In $\SBMSI(n,m,p,q,P_0,P_1)$, the goal is to recover the unknown labels $Y$, given the graph $Z$ and the data samples $X$. In this paper, we consider exact recovery of $Y$, which is defined as follows.
+	\begin{definition}[Exact Recovery for $\SBMSI(n,m,p,q,P_0,P_1)$]
 		Let
-		$(Z=\{Z_{i,j}\}_{1\le i,j\le n},Y,X=\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ be a graph $Z$, node labels $Y$, and node data samples $X$ be drawn from the distribution defined by $SBMSI(n,p,q,P_0,P_1)$.
+		$(Z=\{Z_{i,j}\}_{1\le i<j\le n},Y,X=\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ be a graph $Z$, node labels $Y$, and node data samples $X$ be drawn from the distribution defined by $\SBMSI(n,m,p,q,P_0,P_1)$.
 		Exact recovery is solvable if there exists an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that the error probability $P_e:=P(\hat{Y} \neq Y)$ goes to $0$ as $n$ increases.
 	\end{definition}
 	A key measure used throughout this paper is the Rényi divergence, defined by
 	\begin{equation}
 		D_{1/2}(P_0 || P_1) \triangleq -2\log(\sum_{x \in \mathcal{X}} \sqrt{P_0(x)P_1(x)} ),
 	\end{equation}
-	where $P_0$ and $P_1$ are the distributions defined in the balanced   $SBMSI(n,p,q,P_0,P_1)$.
+	where $P_0$ and $P_1$ are the distributions defined in the balanced   $\SBMSI(n,p,q,P_0,P_1)$ with finite alphabet set $\mathcal{X}$.
 	%The Rényi divergence characterizes the error exponent of a SSBM when the graph observation $Z$ is not  available and exact recovery of the labels $Y$ is done with only side information $X$. 
 	The following property of the Rényi divergence will be needed in proving our main results. It can be proved by using the Lagrange multiplier.
 	\begin{lemma}\label{lem:p0p12}
@@ -183,7 +185,7 @@
 	In this section we present a sharp closed form threshold for exact recovery in the balanced SBMSI.  %We first provide the threshold, that comes from
 	%the phase transition in the exact recovery in SBMSI with sparse graph structure. 
 	\begin{theorem}\label{thm:Pe}
-		For a balanced $SBMSI(n,p=a\frac{\log n}{n},q=b\frac{\log n}{n},P_0,P_1)$, exact recovery is solvable if
+		For a balanced $\SBMSI(n,m,p=a\frac{\log n}{n},q=b\frac{\log n}{n},P_0,P_1)$, exact recovery is solvable if
 		\begin{equation}\label{eq:positive_condition}
 			\gamma D_{1/2}(P_0||P_1) + (\sqrt{a} - \sqrt{b})^2 > 2,
 		\end{equation}
@@ -303,7 +305,7 @@
 %		Therefore, \eqref{eq:PeMain} is established.
 %		\newpage
 		The achievability part can be proved by our SDP algorithm, the details of which will be given in  Section \ref{s:sdp}.
-		In the following we show that exact recovery is not possible if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$. Most part of the arguments follow a similar manner to those in \cite{abbe2015exact}. Those similar arguments are briefly stated due to space limitation. 
+		In the following we show that exact recovery is not possible if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$. Most parts of the arguments follow a similar manner to those in \cite{abbe2015exact}. Those similar arguments are briefly stated due to space limitation. 
 		
 		Let $S_1$ and $S_2$ be the set of nodes with labels $1$ and $-1$, respectively. Let $H_1$ be a subset of $S_1$ of size $\frac{n}{\log^3 n}$. It was shown in \cite{abbe2015exact} that in the SBM, with probability at least $\frac{9}{10}$, no node in $H_1$ is connected to more than $\frac{\log n}{\log\log n}$ edges in $H_1$. Similarly, let $H_2$ be a subset of $S_2$ of size $\frac{n}{\log^3 n}$. Then, with high probability $H_2$ satisfies the same property as $H_1$ does. 
 		
@@ -319,11 +321,11 @@
 		\begin{align}
 			&\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}
 			+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}\nonumber\\
-			\ge &q\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, S_1 \backslash \{i_1\}) + E(i_2, S_2 \backslash \{i_2\})\nonumber\\
+			\ge &q\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, H_1 \backslash \{i_1\}) + E(i_2, H_2 \backslash \{i_2\})\nonumber\\
 			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:G1ij}.
 		\end{align}
 		with high probability. Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$. In the next, we show that
-		the probability of $G(i_1,i_)$ is lower bounded by $\frac{1}{n^{-2+\mu}}$ for some positive constant $\mu$. Then we have that 
+		the probability of $G(i_1,i_2)$ is lower bounded by $\frac{1}{n^{-2+\mu}}$ for some positive constant $\mu$. Then we have that 
 		\begin{align}
 			& P(\cap_{i_1\in S_1, i_2\in S_2} F^c(i_1,i_2)) = (1 - P(F(i_1,i_2)))^{|H_1|\cdot|H_2|} \nonumber\\
 			& \le (1 - P(G(i_1,i_2)))^{|H_1|\cdot|H_2|}\nonumber\\
@@ -332,8 +334,8 @@
 		\end{align}
 		where $F^c(i_1,i_2)$ is the event that $F(i_1,i_2)$ does not occur. Eq. \eqref{eq:boundg} implies that with high probability $F(i_1,i_2)$ occurs for some $i_1\in S_1$ and $i_2\in S_2$, and hence the failure occurs.
 		
-		Note that the right hand side of \eqref{eq:G1ij} can be written as $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2+o(\log n))$, where $Z_1\sim Binom(n-2,\frac{a\log n}{n})$ and $Z_2\sim Binom(n-2,\frac{b\log n}{n})$ 
-		follow binomial distributions, where a binomial distribution $Binom(s,r)$ is the probability distribution of the sum of $s$ independent Bernouli random variables, each equals $1$ with probability $r$.
+		Note that the right hand side of \eqref{eq:G1ij} is upper bounded by $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2+o(\log n))$, where $Z_1\sim \Binom(n-2,\frac{a\log n}{n})$ and $Z_2\sim \Binom(n-2,\frac{b\log n}{n})$ 
+		follow binomial distributions. A binomial distribution $\Binom(s,r)$ is the probability distribution of the sum of $s$ independent Bernoulli random variables, each equals $1$ with probability $r$.
 		The left hand side can be expressed as
 		\begin{align*}
 			\epsilon\triangleq&m\log^{-1}( a /b)\cdot [(D(P_{\widetilde{X}^{i_1}} || P_0) - D(P_{\widetilde{X}^{i_1}} || P_1)) \\
@@ -359,14 +361,14 @@
 	$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
 	The SDP problem can be solved using various efficient iterative schemes.
 	
-	Let $S_+(Y)$ and $S_-(Y)$ be the sets of nodes with label $1$ and $-1$, respectively, given $Y$.
+	Let $S_1(Y)$ and $S_2(Y)$ be the sets of nodes with label $1$ and $-1$, respectively, given $Y$.
 	According to \eqref{eq:lh}, the log likelihood of $Y$ is given by
 	\begin{align}\label{eq:loglh}
-		&\sum^m_{j=1}[\sum_{i\in S_+(Y)} \log P_1(X^i_{j})+\sum_{i\in S_-(Y)} \log P_0(X^i_{j})]\nonumber\\
-		&+\sum_{i,j\in S_+(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]\nonumber\\
-		&+\sum_{i,j\in S_-(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]
+		&\sum^m_{j=1}[\sum_{i\in S_1(Y)} \log P_1(X^i_{j})+\sum_{i\in S_2(Y)} \log P_0(X^i_{j})]\nonumber\\
+		&+\sum_{i,j\in S_1(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]\nonumber\\
+		&+\sum_{i,j\in S_2(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]
 		\nonumber\\
-		&+\sum_{i\in S_+(Y),j\in S_-(Y)}[z_{i,j}\log q+(1-z_{i,j})\log (1-q)].
+		&+\sum_{i\in S_1(Y),j\in S_2(Y)}[z_{i,j}\log q+(1-z_{i,j})\log (1-q)].
 	\end{align}
 	It can be verified that maximizing \eqref{eq:loglh} over $Y\in\{\pm\}^n$ is equivalent to the following optimization problem
 	\begin{align}
@@ -595,7 +597,7 @@
 
 	\section{Conclusion}\label{s:conclusion}In this paper, we obtained a sharp close-form exact recovery condition for a balanced two-community symetric SBM with side information. %This condition
 	%shows that the detection error can be %characterized by a separation of Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
-	Our result provides insight on the number of node samples to achieve exact recovery. We also proposed an Semidefinite programming based algorithm to achieve the threshold with high probability.
+	Our result provides insight on the number of node samples to achieve exact recovery. We also proposed an Semidefinite programming based algorithm that achieves the threshold with high probability.
 	\bibliographystyle{IEEEtran}
 	\bibliography{exportlist}
 \end{document}
