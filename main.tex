@@ -189,14 +189,14 @@
 		\begin{equation}\label{eq:positive_condition}
 			\gamma D_{1/2}(P_0||P_1) + (\sqrt{a} - \sqrt{b})^2 > 2,
 		\end{equation}
-			in which case, the error probability
-	\begin{equation*}
-		P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)},
-	\end{equation*}
+%			in which case, the error probability
+%	\begin{equation*}
+%		P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)},
+%	\end{equation*}
 		and is not solvable if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$, in which case, the error probability $P_e$ goes to $1$.
 	\end{theorem}
 	\begin{remark}
-	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernouli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve a given exact recover error probability. 
+	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernouli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve exact recover. 
 	\end{remark}
 	\begin{figure}
 	    \centering
