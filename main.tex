@@ -189,14 +189,14 @@
 		\begin{equation}\label{eq:positive_condition}
 			\gamma D_{1/2}(P_0||P_1) + (\sqrt{a} - \sqrt{b})^2 > 2,
 		\end{equation}
-			in which case, the error probability
-	\begin{equation*}
-		P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)},
-	\end{equation*}
+%			in which case, the error probability
+%	\begin{equation*}
+%		P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)},
+%	\end{equation*}
 		and is not solvable if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$, in which case, the error probability $P_e$ goes to $1$.
 	\end{theorem}
 	\begin{remark}
-	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernouli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve a given exact recover error probability. 
+	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernouli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve exact recover. 
 	\end{remark}
 	\begin{figure}
 	    \centering
@@ -370,16 +370,16 @@
 		\nonumber\\
 		&+\sum_{i\in S_1(Y),j\in S_2(Y)}[z_{i,j}\log q+(1-z_{i,j})\log (1-q)].
 	\end{align}
-	It can be verified that maximizing \eqref{eq:loglh} over $Y\in\{\pm\}^n$ is equivalent to the following optimization problem
+	It can be verified that maximizing \eqref{eq:loglh} over $Y\in\{\pm 1\}^n$ is equivalent to the following optimization problem
 	\begin{align}
-		\max_{x}\, & h^T v + \frac{1}{2}v^T B v \notag \\
+		\max_{x}\, & h^T v + \frac{1}{4}v^T B v \notag \\
 		s.t.\, & \mathbbm{1}_n^T v = 0 \text{ and } v_i \in \{\pm 1 \} \label{eq:matrix_mle}
 	\end{align}
 	where $h$ is an n-dimensional vector with entry $h_i = \frac{1}{\log \frac{p(1-q)}{q(1-p)}}\sum_{j=1}^m \log \frac{P_0(x^i_{j})}{P_1(x^i_{j})}$ for $i\in\{1,\ldots,n\}$ and the $n\times n $ matrix $B$ is defined as
 	\begin{equation}
 		B_{ij} = \begin{cases}
-			1, & \text{if $i$ is concected to $j$}, \\
-			-1,& \text{else.}
+			1, & \text{if $i$ is connected to $j$}, \\
+			-1,& \text{otherwise.}
 		\end{cases}
 	\end{equation}  
 	for $i,j\in\{1,\ldots,n\}$.
@@ -389,7 +389,7 @@
 	Let $v^*$ be the optimal solution to \eqref{eq:matrix_mle} and $V=(1,v^*)(1,v^*)^T$, where $(1,v^*)$ is a $(n+1)$-dimensional  vector obtained by concatenating $1$ and $v^*$.
 	Then, the optimal value of \eqref{eq:matrix_mle} equals $\frac{1}{2}Tr(\widetilde{B}V)$, where
 	\begin{equation}\label{eq:B_lambda_def}
-		\widetilde{B} = \begin{pmatrix} 0 & h^T  \\ h  & B \end{pmatrix}.
+		\widetilde{B} = \begin{pmatrix} 0 & h^T  \\ h  & \frac{1}{2}B \end{pmatrix}.
 	\end{equation}
 	We wish to show that $V$ is the unique optimal solution to the following problem.
 	\begin{align}
@@ -398,7 +398,7 @@
 		V &\succeq 0, \notag\\
 		\sum_{j=1,j\neq i}^{n+1} (V_{ij} + V_{ji})& = 0,~\forall i\in\{1,\ldots,n\}. \label{eq:sdp}
 	\end{align}
-	Note that here we use $n+1$ constrains in the last line of \eqref{eq:sdp} to describe the balanced property of the labels. This is important in deriving the optimality and uniqueness of $V$, which will be proved in the following theorem. The theorem shows that our SDP relaxation achieves exact recovery with high probability, if the threshold is met.
+	Note that here we use $n+1$ constraints in the last line of \eqref{eq:sdp} to describe the balanced property of the labels. This is important in deriving the optimality and uniqueness of $V$, which will be proved in the following theorem. The theorem shows that our SDP relaxation achieves exact recovery with high probability, as long as the recovery condition is met.
 	%When $m=0$ and $\kappa=1$,
 	%the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
 	%When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
@@ -422,11 +422,11 @@
 			\lambda_i + \lambda_j, & i\neq j
 		\end{cases},
 	\end{equation}
-	WLOG, let $g=(1,\ldots,1,-1,\ldots,-1)$ be the true labels of the nodes, i.e., the first and second half of the nodes are labeled by $1$ and $-1$, respectively. As similarly mentioned in \cite{abbe2015exact},
+	Let $g\in\{1,-1\}^n$ be the true labels of the nodes, i.e., the first and second half of the nodes are labeled by $1$ and $-1$, respectively. As similarly mentioned in \cite{abbe2015exact},
 	the optimality and uniqueness of the solution $(1,g)(1,g)^T$ to \eqref{eq:sdp} is guaranteed by the following conditions: 
 	\begin{enumerate}
 		\item[(a)] $(1,g)(1,g)^T$ is a feasible solution to the primal problem \eqref{eq:matrix_mle}.
-		\item[(b)] There exists a feasible solution $(a_1,\ldots,a_{n+1},$ $\lambda_1,\ldots,\lambda_{n+1})$to \eqref{eq:dual}, such that $\sum_{i=1}^{n+1} a_i=Tr((1,g)(1,g)^T\widetilde{B})$.
+		\item[(b)] There exists a feasible solution $(a_1,\ldots,a_{n+1},$ $\lambda_1,\ldots,\lambda_{n+1})$ to \eqref{eq:dual}, such that $\sum_{i=1}^{n+1} a_i=Tr((1,g)(1,g)^T\widetilde{B})$.
 		\item[(c)] $(\diag\{a_1, \dots, a_{n+1}\} + \Xi - \widetilde{B})(1,g)=0$.
 		\item[(d)] The second smallest eigenvalue of $\diag\{a_1, \dots, a_{n+1}\} + \Xi - \widetilde{B}$ is greater than $0$. 
 	\end{enumerate}
@@ -455,7 +455,7 @@
 	The matrix $\Xi'$ is given by $\Xi'_{ij}=g_i + g_j$.
 	
 	In the following we show that $\Xi_n$ is positive definite. Then according to condition (c) and the
-	Cauchy's Interlace Theorem, condition (d) holds.
+	Cauchy's Interlacing Theorem \cite{hwang}, condition (d) holds.
 	Then, the proof is done.
 	
 	We show that $x^T \Xi_n x>0$ for any vector $x \in \mathbb{R}^n$ satisfying $\norm{x}=1$. Decompose $x$ as $x=\frac{\beta}{\sqrt{n}} g
@@ -472,11 +472,11 @@
 	\begin{align*}
 		g^T \Xi_n g = g^T(h -\lambda I_n) -\lambda  = g^T h-\lambda
 	\end{align*}
-	Since $\mathbb{E}[g_ih_i]$ is a positive number of order $O(n\log n)$ and $\lambda$ has order at most $O(\log n)$,
+	Since $\mathbb{E}[g^T h]$ is a positive number of order $O(n\log n)$ and $\lambda$ has order at most $O(\log n)$,
 	by Sanov's theorem or Chernoff bound, the probability 
 	$P(g^T h < 0)$ decreases exponentially in $n$. Hence, with high probability, the first term $g^T \Xi_n g$ is positive.
 	
-	For the second term, let $\tilde{h}=(g^T \Xi)^T
+	For the second term, let $\tilde{h}=\Xi_n g
 	=(n-1)\lambda\mathbbm{1}_n+h-\lambda g$, then
 	$g^T \Xi_n g^{\perp} = \tilde{h}^T g^{\perp} \geq -\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}$, where the  norm $\norm{\tilde{h}-\frac{1}{n}(\tilde{h}^Tg)g}$ satisfies
 	\begin{align*}
@@ -499,7 +499,7 @@
 		P(\Big| \frac{\sum_{i\in S_j} h_i^2}{n} - \frac{1}{2}(m \bar{D}_j + m^2D_j^2) \Big| \geq \log n) & \leq \frac{m^4 \bar{C}_j}{2n\log^2 n} \\
 		P(\Big| \frac{h^T \hat{g}_j}{n} - \frac{m}{2}D_j\Big| \geq \log^{-1} n) & \leq \frac{m \log^{2} n\bar{D}_j}{2n}
 	\end{align*}
-	for $j\in\{1,2\}$. Hence, with probability $1-n^{1-o(1)}$, 
+	for $j\in\{1,2\}$. Hence, with probability $1-n^{-1-o(1)}$, 
 	\begin{align*}
 		I_j \leq& \frac{1}{2}m\bar{D}_j + \frac{1}{2}m^2 D_j^2 + \log n - 2(\frac{1}{2}m D_j - \log^{-1} n)^2 \\
 		=& O(\log n)
@@ -539,10 +539,10 @@
 		(-\lambda + h_i) g_i + g_i (Ag)_i  - c \sqrt{\log n}\ge 0
 	\end{align}
 	for $i\in\{1,\ldots,n\}$. For $g_i=1$,
-	the term $(Ag)_i$ can be written as 
-	$\log (Z_1-Z_2)$, where $Z_1\sim Binom(n-1,\frac{a\log n}{n})$
-	and $Z_2\sim Binom(n-1,\frac{b\log n}{n})$ 
-	follow binomial distributions. The term $h_ig_i=\gamma \frac{D(P_{\widetilde{X}_i} || P_1) - D(P_{\widetilde{X}_i} || P_0) }{\log a /b}$, where $P_{\widetilde{X}_i}$ is the empirical distribution of samples $\{X^i_j\}^m_{j=1}$ at node $i$. Then, we have the following lemma, which is a slight generalization of Lemma 8 in \cite{abbe2015exact} and can be proved using Chernoff bound.
+	the term $g_i(Ag)_i$ can be written as 
+	$Z_1-Z_2$, where $Z_1\sim \Binom(\frac{n}{2}-1,\frac{a\log n}{n})$
+	and $Z_2\sim \Binom(\frac{n}{2},\frac{b\log n}{n})$ 
+	follow binomial distributions. The term $h_i=m \frac{D(P_{\widetilde{X}_i} || P_1) - D(P_{\widetilde{X}_i} || P_0) }{\log a /b}$, where $P_{\widetilde{X}_i}$ is the empirical distribution of samples $\{X^i_j\}^m_{j=1}$ at node $i$. Then, we have the following lemma, which is a slight generalization of Lemma 8 in \cite{abbe2015exact} and can be proved using Chernoff bound.
 	\begin{lemma}\label{lem:zxt}
 		Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
 		For $ t \geq \frac{m}{n}(b - a)$, we have
@@ -554,7 +554,7 @@
 			g(a,b,\epsilon) = a + b - \sqrt{\epsilon^2 + 4ab} + \epsilon \log \frac{\epsilon + \sqrt{\epsilon^2 + 4ab}}{2b}
 		\end{equation}
 	\end{lemma}
-	According to Lemma \ref{lem:zxt} and Sanov's theorem, the probability that \eqref{eq:nodei} does not hold is upper bounded by
+	According to Lemma \ref{lem:zxt} and Sanov's theorem, if $g_i=1$, the probability that \eqref{eq:nodei} does not hold is upper bounded by
 	$n^{-\theta^*_i + o(1)}$ where
 	\begin{align}
 		\theta^*_i &= \min_{\widetilde{X}_1} \gamma D(p_{\widetilde{X}_1}|| p_0)+ \frac{1}{2} g(a,b, 2\epsilon) \label{eq:theta_star2},\mbox{ and} \nonumber\\
@@ -595,9 +595,9 @@
 % 	    \label{fig:my_label}
 % 	\end{figure}
 
-	\section{Conclusion}\label{s:conclusion}In this paper, we obtained a sharp close-form exact recovery condition for a balanced two-community symetric SBM with side information. %This condition
+	\section{Conclusion}\label{s:conclusion}In this paper, we obtained a sharp close-form exact recovery condition for a balanced two-community symmetric SBM with side information. %This condition
 	%shows that the detection error can be %characterized by a separation of Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
-	Our result provides insight on the number of node samples to achieve exact recovery. We also proposed an Semidefinite programming based algorithm that achieves the threshold with high probability.
+	Our result provides insight on the number of node samples to achieve exact recovery. We also proposed a semidefinite programming based algorithm that achieves the threshold with high probability.
 	\bibliographystyle{IEEEtran}
 	\bibliography{exportlist}
 \end{document}
