@@ -63,11 +63,11 @@
 	
 	In this paper, we consider balanced binary symmetric SBM with side information in the form of i.i.d. node samples, drawn according to a distribution determined by the community the node belongs to. The balanced property in this paper means that the two communities in the graph have equal sizes. At the first glance, the setting in this paper might look like a special case of that in \cite{abbe17sideinfo}, where each node belongs to any one of the two communities with probability $\frac{1}{2}$. 
 	Yet, 
-	the difference between the balanced assumption in this paper and the equal probability assumption in \cite{abbe17sideinfo},  and also the contributions of this paper, are as follows. 
+	the difference between the balanced assumption in this paper and the equal probability assumption in \cite{abbe17sideinfo},  along with the contributions of this paper, are as follows. 
 	
 	
-	First, while no closed form expression of the exact recovery threshold can be established in \cite{abbe17sideinfo} for  the binary symmetric SBM, in this paper, we derived a sharp and closed form threshold when balanced assumption is considered. Note that the result in \cite{abbe17sideinfo} does not imply our threshold. Our threshold indicates a separation between the side information and the graph data. Such separation provides an insight that the graph data and the side information can be designed and collected independently to achieve exact recovery. 
-	Second, we proposed an SDP based algorithm that achieves the threshold with high probability, while an SDP algorithm is not available in \cite{abbe17sideinfo}. Note that the admissibility of an SDP algorithm normally requires a balanced assumption \cite{abbe2015exact},
+	Firstly, while no closed form expression of the exact recovery threshold can be established in \cite{abbe17sideinfo} for  the binary symmetric SBM, in this paper, we derived a sharp and closed form threshold when balanced assumption is considered. Note that the result in \cite{abbe17sideinfo} does not imply our threshold. Our threshold indicates a separation between the side information and the graph data. Such separation provides an insight that the graph data and the side information can be designed and collected independently to achieve exact recovery. 
+	Secondly, we proposed an SDP based algorithm that achieves the threshold with high probability, while an SDP algorithm is not available in \cite{abbe17sideinfo}. Note that the admissibility of an SDP algorithm normally requires a balanced assumption \cite{abbe2015exact},
 	\cite{esmaeili2019community} or other assumptions that the community sizes are fixed \cite{Hajek16}. Our SDP algorithm is a generalization of the SDP in \cite{abbe2015exact} where side information is included. To this end, we added more linear constraints to the SDP problem and the proof is more involved.
 	
 	The paper is organized as follows. 
@@ -165,7 +165,7 @@
 		$(Z=\{Z_{i,j}\}_{1\le i<j\le n},Y,X=\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ be a graph $Z$, node labels $Y$, and node data samples $X$ be drawn from the distribution defined by $\SBMSI(n,m,p,q,P_0,P_1)$.
 		Exact recovery is solvable if there exists an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that the error probability $P_e:=P(\hat{Y} \neq Y)$ goes to $0$ as $n$ increases.
 	\end{definition}
-	A key measure used throughout this paper is the Rényi divergence, defined by
+	A key measure used throughout this paper is the Rényi divergence of order $\frac{1}{2}$, defined by
 	\begin{equation}
 		D_{1/2}(P_0 || P_1) \triangleq -2\log(\sum_{x \in \mathcal{X}} \sqrt{P_0(x)P_1(x)} ),
 	\end{equation}
@@ -173,7 +173,7 @@
 	%The Rényi divergence characterizes the error exponent of a SSBM when the graph observation $Z$ is not  available and exact recovery of the labels $Y$ is done with only side information $X$. 
 	The following property of the Rényi divergence will be needed in proving our main results. It can be proved by using the Lagrange multiplier.
 	\begin{lemma}\label{lem:p0p12}
-		Let $p_0, p_1$ be probability distribution functions defined over $\mathcal{X}$. The minimizer
+		Let $p_0, p_1$ be probability mass functions defined over $\mathcal{X}$. The minimizer
 		of $D(X||p_0) + D(X||p_1)$ for any discrete random variable $X$ is
 		\begin{equation}\label{eq:p012}
 			P(X=x)=\frac{\sqrt{p_0(x)p_1(x)}}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}}
@@ -196,7 +196,7 @@
 		and is not solvable if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$, in which case, the error probability $P_e$ goes to $1$.
 	\end{theorem}
 	\begin{remark}
-	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernouli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve exact recover. 
+	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernoulli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve exact recover. 
 	\end{remark}
 	\begin{figure}
 	    \centering
