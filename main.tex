@@ -321,7 +321,7 @@
 		\begin{align}
 			&\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}
 			+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}\nonumber\\
-			\ge &q\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, H_1 \backslash \{i_1\}) + E(i_2, H_2 \backslash \{i_2\})\nonumber\\
+			\ge &\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, H_1 \backslash \{i_1\}) + E(i_2, H_2 \backslash \{i_2\})\nonumber\\
 			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:G1ij}.
 		\end{align}
 		with high probability. Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$. In the next, we show that
@@ -557,7 +557,7 @@
 	According to Lemma \ref{lem:zxt} and Sanov's theorem, if $g_i=1$, the probability that \eqref{eq:nodei} does not hold is upper bounded by
 	$n^{-\theta^*_i + o(1)}$ where
 	\begin{align}
-		\theta^*_i &= \min_{\widetilde{X}_1} \gamma D(p_{\widetilde{X}_1}|| p_0)+ \frac{1}{2} g(a,b, 2\epsilon) \label{eq:theta_star2},\mbox{ and} \nonumber\\
+		\theta^*_i &= \min_{\widetilde{X}_1} \gamma D(p_{\widetilde{X}_1}|| P_0)+ \frac{1}{2} g(a,b, 2\epsilon) \label{eq:theta_star2},\mbox{ and} \nonumber\\
 		\epsilon &= \gamma \frac{D(P_{\widetilde{X}_1} || P_1) - D(P_{\widetilde{X}_1} || P_0) }{\log a /b}
 	\end{align}
 	Since $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} =\frac{1}{\sqrt{4ab+\epsilon^2}}> 0$, we have that
@@ -566,8 +566,8 @@
 	\end{equation}
 	Then, by Lemma \ref{lem:p0p12},
 	\begin{align*}
-		\theta^*_1 \geq \frac{1}{2}((\sqrt{a}-\sqrt{b})^2+\gamma \frac{P_{\widetilde{X}_1} || P_1) - D(P_{\widetilde{X}_1} || P_0)}{2} \\
-		\geq \frac{1}{2}((\sqrt{a}-\sqrt{b})^2+\gamma D_{1/2}(P_0||P_1)),
+		\theta^*_1 &\geq \gamma D(p_{\widetilde{X}_1}|| P_0) +\frac{1}{2}((\sqrt{a}-\sqrt{b})^2 +\gamma \frac{D(P_{\widetilde{X}_1} || P_1) - D(P_{\widetilde{X}_1} || P_0)}{2}
+		\\&\geq \frac{1}{2}((\sqrt{a}-\sqrt{b})^2+\gamma D_{1/2}(P_0||P_1)),
 	\end{align*}
 	where the equality holds when $P_{\widetilde{X}_1}$ is given by \eqref{eq:p012}. 
 	Similar error probability can be obtained when $g_i=-1$. Finally,
