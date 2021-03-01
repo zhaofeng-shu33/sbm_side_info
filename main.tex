@@ -316,36 +316,52 @@
 			+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}\nonumber\\
 			\ge &\log \frac{p(1-q)}{q(1-p)}(E(i_1, S_1 \backslash \{i_1\}) + E(i_2, S_2 \backslash \{i_2\})\nonumber\\
 			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:F1ij}.
-		\end{align}
-		
+		\end{align}		
 		By the definition and property of $H_1$ and $H_2$ mentioned above, the probability of \eqref{eq:F1ij} is lower bounded by the probability of
 		\begin{align}
 			&\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}
 			+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}\nonumber\\
-			\ge &\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, S_1 \backslash H_1) + E(i_2, S_2 \backslash H_2)\nonumber\\
-			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:G1ij}.
+			\ge &\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+2+E(i_1, S_1 \backslash H_1) + E(i_2, S_2 \backslash H_2)\nonumber\\
+			&- E(i_1, S_2) - E(i_2, S_1)) \label{eq:G1ij}.
 		\end{align}
-		with high probability. Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$. In the next, we show that
-		the probability of $G(i_1,i_2)$ is lower bounded by $\frac{1}{n^{-2+\mu}}$ for some positive constant $\mu$. Then we have that 
+		with high probability.
+				Instead of considering the above property directly, we split \eqref{eq:G1ij} into two parts
 		\begin{align}
-			& P(\cap_{i_1\in S_1, i_2\in S_2} F^c(i_1,i_2)) \le P(\cap_{i_1\in H_1, i_2\in H_2} G^c(i_1,i_2)) \nonumber\\
-			& = (1 - P(G(i_1,i_2)))^{|H_1|\cdot|H_2|}\nonumber\\
-			& \leq (1-n^{-2+u})^{n^2/\log^6 n} \nonumber\\
-			& \leq \exp(-n^{\mu+ o(1)}) \to 0, \label{eq:boundg}
+			\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}
+			\geq & \log \frac{p(1-q)}{q(1-p)}(\frac{\log n}{\log\log n} + 1 + \notag\\
+			& E(i_1, S_1 \backslash H_1) - E(i_1, S_2)) \label{eq:single_side_Gi}\\
+			\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}
+			\geq &  \log \frac{p(1-q)}{q(1-p)}(\frac{\log n}{\log\log n} + 1 + \notag \\
+			& E(i_2, S_2 \backslash H_2)  - E(i_2, S_1))\label{eq:single_side_Gai}
 		\end{align}
-		where $F^c(i_1,i_2)$ and $G^c(i_1,i_2)$ are the events that $F(i_1,i_2)$ and $G(i_1,i_2)$ do not occur,respectively. Eq. \eqref{eq:boundg} implies that with high probability $F(i_1,i_2)$ occurs for some $i_1\in S_1$ and $i_2\in S_2$, and hence the failure occurs.
 		
-		Note that the right hand side of \eqref{eq:G1ij} is upper bounded by $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2+o(\log n))$, where $Z_1\sim \Binom(n-2,\frac{a\log n}{n})$ and $Z_2\sim \Binom(n-2,\frac{b\log n}{n})$ 
+		Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$,
+		$G(i_1)$(or $G'(i_2)$) be the event that \eqref{eq:single_side_Gi} (or \eqref{eq:single_side_Gai}) holds for any $i_1 \in H_1$(or $i_2 \in H_2$).
+		Since $P(\cup_{i_1\in H_1, i_2\in H_2} G(i_1,i_2)) \le P(\cup_{i_1\in H_1, i_2\in H_2} F(i_1,i_2))$, we only need to show $P(\cup_{i_1\in H_1, i_2\in H_2} G(i_1,i_2))\to 1$, which
+		implies $P(\cup_{i_1\in H_1, i_2\in H_2} F(i_1,i_2)) \to 1$.
+		Notice that the intersection of the event $\cup_{i_1 \in H_1} G(i_1)$
+		and $\cup_{i_2 \in H_2} G'(i_2)$ implies $\cup_{i_1\in H_1, i_2\in H_2} G(i_1,i_2)$.
+		The probability of this intersection event is further lower bounded by
+		$P(\cup_{i_1 \in H_1} G(i_1)) + P(\cup_{i_2 \in H_2} G'(i_2)) - 1$. Therefore,
+		we only need to show $P(\cup_{i_1 \in H_1} G(i_1)) \to 1$ to finish the proof.
+		Suppose that
+		the probability of $G(i_1)$ is lower bounded by $\frac{1}{n^{-1+\mu}}$ for some positive constant $\mu$, then we have that 
+		\begin{align}
+			& P(\cap_{i_1 \in H_1} G^c(i_1))= (1 - P(G(i_1,i_2)))^{|H_1|}\nonumber\\
+			& \leq (1-n^{-1+u})^{n/\log^3 n} \leq \exp(-n^{\mu+ o(1)}) \to 0, \label{eq:boundg}
+		\end{align}
+		where  $G^c(i_1)$ is the complement of the event $G(i_1)$. Eq. \eqref{eq:boundg} implies that with high probability $G(i_1)$ occurs for some $i_1 \in H_1$, and hence the failure occurs.
+		
+		Below we prove $P(G(i_1)) \geq \frac{1}{n^{-1+\mu}}$. Note that the right hand side of \eqref{eq:single_side_Gi} is upper bounded by $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2+o(\log n))$, where $Z_1\sim \Binom(\frac{n}{2}-1,\frac{a\log n}{n})$ and $Z_2\sim \Binom(\frac{n}{2},\frac{b\log n}{n})$ 
 		follow binomial distributions. A binomial distribution $\Binom(s,r)$ is the probability distribution of the sum of $s$ independent Bernoulli random variables, each equals $1$ with probability $r$.
 		The left hand side can be expressed as
 		\begin{align*}
-			\epsilon\triangleq&m\log^{-1}( a /b)\cdot [(D(P_{\widetilde{X}^{i_1}} || P_0) - D(P_{\widetilde{X}^{i_1}} || P_1)) \\
-			&+(D(P_{\widetilde{X}^{i_2}} || P_1) - D(P_{\widetilde{X}^{i_2}} || P_0))],
+			\epsilon\triangleq m\log^{-1}( a /b)\cdot [(D(P_{\widetilde{X}^{i_1}} || P_0) - D(P_{\widetilde{X}^{i_1}} || P_1))]
 		\end{align*}
-		where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. Let $P_{\widetilde{X}^{i_1}}$ and $P_{\widetilde{X}^{i_2}}$ follow the distribution specified in \eqref{eq:p012}. Then we have that $\epsilon =0$. Using Sanov's theorem and Lemma 4 from \cite{abbe2015exact}, we have that
+		where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. Let $P_{\widetilde{X}^{i_1}}$ follow the distribution specified in \eqref{eq:p012}. Then we have that $\epsilon =0$. Using Sanov's theorem and Lemma 4 from \cite{abbe2015exact}, we have that
 		\begin{align*}
 			&P(G_1(i,j))\\
-			\geq &\frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1)) \\
+			\geq &\frac{1}{(m+1)^{|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1)) \\
 			&\cdot\exp(- (\sqrt{a} - \sqrt{b})^2\log n+o(\log n) ) \\
 			& = \exp(-\log n (\gamma D_{1/2}(P_0||P_1) + (\sqrt{a} - \sqrt{b})^2+ o(1))),
 		\end{align*}
