@@ -320,9 +320,9 @@
 		By the definition and property of $H_1$ and $H_2$ mentioned above, the probability of \eqref{eq:F1ij} is lower bounded by the probability of
 		\begin{align}
 			&\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}
-			+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}\nonumber\\
-			\ge &\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+2+E(i_1, S_1 \backslash H_1) + E(i_2, S_2 \backslash H_2)\nonumber\\
-			&- E(i_1, S_2) - E(i_2, S_1)) \label{eq:G1ij}.
+			+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}\nonumber\\   
+			\ge &\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, S_1 \backslash H_1) + E(i_2, S_2 \backslash H_2)\nonumber\\
+			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:G1ij}.
 		\end{align}
 		with high probability.
 				Instead of considering the above property directly, we split \eqref{eq:G1ij} into two parts
