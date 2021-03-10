@@ -211,7 +211,7 @@ if
 then the error probability
 of exact recovery is bounded by
 \begin{equation}\label{eq:PeMain}
-    P_e \leq (1+o(1)) n^{-\frac{1}{2}\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
+    P_e \leq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
 \end{equation}
 On the other hand, if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 < 0$,
 then $P_e \to 1$.
@@ -503,12 +503,12 @@ is analyzed using \eqref{eq:FAk}.
 where $\mu = (\sqrt{a} - \sqrt{b})^2-2 + \gamma D_{1/2}(p_0||p_1) > 0$.
 Using the inequality
 $$
-\frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq \frac{\mu}{2} \log n
+\frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq \frac{\mu}{2} C\sqrt{\log n}
 $$
 for $1\leq k \leq \frac{n}{\sqrt{\log n}}$, we can obtain
 \begin{align*}
-P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
-& =(1+o(1)) \frac{n^{-\mu / 2}}{1-n^{-\mu / 2}} = (1+o(1))n^{-\mu / 2}
+P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + o(1))) \\
+& =(1+o(1)) \frac{n^{-\mu}}{1-n^{-\mu }} = (1+o(1))n^{-\mu}
 \end{align*}
 Therefore, \eqref{eq:PeMain} is established.
 
