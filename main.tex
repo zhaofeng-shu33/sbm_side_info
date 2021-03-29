@@ -210,23 +210,39 @@ if
 \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 > 0
 \end{equation}
 then the error probability
-of exact recovery is given by
+of exact recovery is bounded by
 \begin{equation}\label{eq:PeMain}
-    -\lim_{n\to \infty} \frac{1}{\log n}P_e  = \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2
+P_e \leq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
+\end{equation}
+If the following condition
+\begin{align}
+&(\sqrt{a}-\sqrt{b})^2-2 + \gamma \min \{D_{\frac{2}{3}}(p_0||p_1), D_{\frac{2}{3}}(p_1||p_0) \} \notag \\
+&> 3a^{1/3}b^{1/3}(a^{1/6}-b^{1/6})^2 + \gamma D_{1/2}(p_0||p_1)\label{eq:two_conditions}
+\end{align}
+is satisfied, then we can show that $P_e$ is lower bounded by
+\begin{equation}\label{eq:PeMainL}
+P_e \geq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
 \end{equation}
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
-decreasing of error probability $P_e$. Besides, since 
-$D_{1/2}(p_0||p_1) > 0$, it is still possible to recover $Y$
-for the case $\sqrt{a} - \sqrt{b} < \sqrt{2}$ as long as $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
+decreasing of error probability $P_e$. Under some parameter configurations specified in \eqref{eq:two_conditions},
+the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2$
+exactly describes the error rate for the exact recovery problem of SBMSI.
 
-In addition, Theorem \ref{thm:Pe} is dealing with the case when $m=O(\log n)$. It has been shown
-that side information cannot improve the phase transition of exact recovery when $m=o(\log n)$ (Theorem 6 in \cite{saad2018community}). When $m=\omega(\log n)$,
-the side information becomes the dominant term, and $P_e$ decreases in a rate $\exp(-m D_{1/2}(p_0||p_1) )$.
-
-When \eqref{eq:positive_condition} does not hold, Theorem \ref{thm:Pe} says that exact recovery is impossible by ML estimator.
-Therefore, the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2$ fully characterizes the 
-phase transition behavior of our model in asymptotic case such that $P_e$ jumps from $1$ to $0$ when this quantity varies in a neighborhood of $2$.
+In addition, when $p_0=p_1$
+Theorem \ref{thm:Pe} gives the error rate of maximum likelihood for SSBM. This corollary is
+summarized as follows:
+\begin{corollary}
+If the condition
+\begin{equation}
+(\sqrt{a}-\sqrt{b})^2-2 > 3a^{1/3}b^{1/3}(a^{1/6}-b^{1/6})^2
+\end{equation}
+is satisfied,
+ and we consider SSBM $(n, 2, \frac{a\log n}{n}, \frac{b \log n}{n})$, for ML algorithms, the exact recovery error rate $P_e$ satisfies
+$\lim_{n\to \infty} \frac{\log P_e}{\log n} =2-(\sqrt{a} - \sqrt{b})^2$.
+More careful analysis gives  $P_e = (\frac{1}{2}+o(1))n^{2-(\sqrt{a} - \sqrt{b})^2}$.
+\end{corollary}
+\section{Experiment}
 \section{Conclusion}\label{s:conclusion}
 In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
@@ -434,72 +450,6 @@ P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + o(1)
 \end{align*}
 Therefore, \eqref{eq:PeMain} is established.
 
-Below we deal with the case when $\mu < 0$.
-Let $E(i, H)$ be the number of edges between the $i$-th node and node set $H$.
-We further define $S_1:=\{i | y^*_i = +1 \}$
-and $S_2:=\{i | y^*_i = -1 \}$. 
-%Without loss of generality, we assume $\{1\}\subset S_1$ and $\{2\} \subset S_2$.
-We consider the event $F_1(i,j):=\{y_i = -y^*_i, y_j = -y^*_j, \dist(y, y^*)=2, i \in S_1, j \in S_2 \}$,
-which is equivalent to
-\begin{align}
-&\sum_{r=1}^{m} \log \frac{p_1(x_{ir})}{p_0(x_{ir})}
-+\sum_{r=1}^{m} \log \frac{p_0(x_{jr})}{p_1(x_{jr})}
-\geq\log \frac{p(1-q)}{q(1-p)} \notag\\
-& (E(i, S_1 \backslash \{i\}) + E(j, S_2 \backslash \{j\})
-- E(i, S_2 \backslash \{j\}) - E(j, S_1 \backslash \{i\})) \label{eq:F1ij}
-\end{align}
-This inequality is the same as \eqref{eq:ein} when $k=1$.
-
-To show $P_e = 1 - o(1)$, we consider $P(F_1)$ where
-$F_1$ is defined in \eqref{eq:Fk} when $k=1$.
-Then $P(F) \geq P(F_1)$. We can write $F_1 = \cup_{i \in S_1,j \in S_2}F_1(i,j)$.
-
-Consider $F_1^c = \cap_{i\in S_1, j\in S_2} F_1^c(i,j)$.
-Let $H_1\subseteq S_1, H_2 \subseteq S_2$ such that $|H_1| = |H_2| = \frac{n}{\log^3 n}$.
-
-To upper bound $P(F_1^c)$, we restrict $i \in H_1, j \in H_2$ and consider the event
-$G_1(i,j)$:
-\begin{align}
-&\sum_{r=1}^{m} \log \frac{p_1(x_{ir})}{p_0(x_{ir})}
-+\sum_{r=1}^{m} \log \frac{p_0(x_{jr})}{p_1(x_{jr})}
-\geq\log \frac{p(1-q)}{q(1-p)} (2\delta(n) + \notag\\
-& E(i, S_1 \backslash H_1) + E(j, S_2 \backslash H_2)
-- E(i, S_2 \backslash \{j\}) - E(j, S_1 \backslash \{i\})) \label{eq:G1ij}
-\end{align}
-where $\delta(n) = \frac{\log n}{\log \log n}$.
-The advantage of considering $G_1(i,j)$ is that $G_1(i,j)$ and $G_1(i', j')$ are independent.
-Define the event $\Delta_i$ as $\{E(r, H_i) \leq \delta(n), \forall r\in H_i \}$ for $i=1,2$.
-%represents all nodes in $H_i$ are connected to less than $\delta(n)$ other nodes in $H_i$ for $i=1,2$.
-
-Then we have $F_1^c \Rightarrow \Delta_1^c \cup \Delta_2^c \cup \cap_{i\in S_1, j\in S_2}G^c_1(i,j)$
-
-Therefore, we have $P(F_1^c) \leq P(\Delta_1^c) + P(\Delta_2^c) + P(\cap_{i\in S_1, j\in S_2}G^c_1(i,j))$.
-We can show that $P(\Delta_1^c) = o(1)$ from Lemma 10 of \cite{abbe2015exact}.
-Using the decomposition in \eqref{eq:decomp}, we can get a lower bound on $P(G_1(i,j))$ as:
-\begin{align*}
-&P(G_1(i,j))  \geq Q^m_0 (T(P^{(1)}))  Q^m_1 (T(P^{(2)})) \\
-&\cdot P(\sum_{r=1}^{n} (z'_r - z_r) \geq \epsilon(P^{(1)}, P^{(2)}) \log n- 2\delta(n) ) 
-\end{align*}
-where we choose $P^{(1)}=P^{(2)}$, specified by \eqref{eq:p012}. Then $\epsilon= 0$.
-Using Theorem 11.1.4 of \cite{cover1999elements} and Lemma 4 of \cite{abbe2015exact} we have
-\begin{align*}
-P(G_1(i,j))& \geq \frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1)) \\
-&\cdot\exp(- \log n (g(a, b, \frac{-2}{\log \log n}))) \\
-& = \exp(-\log n (\theta_1^*+ o(1)))
-\end{align*}
-where $\theta_1^*$
-is from \eqref{eq:theta_star_lower_bound}:
-\begin{equation*}
-\theta_1^* = \gamma D_{1/2}(p_0||p_1) + (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
-\end{equation*}
-and 
-\begin{align*}
-& P(\cap_{i\in S_1, j\in S_2} G^c_1(i,j)) = (1 - P(G_1(i,j)))^{|H_1|^2} \\
-& \leq (1-n^{-\theta_1^*+o(1)})^{n^2/\log^6 n} \\
-& \leq \exp(-n^{2 -\theta_1^* + o(1)}/\log^6 n) \\
-& \leq \exp(-n^{-\mu+ o(1)}) \to 0
-\end{align*}
-We get the conclusion that $P(F_1^c) \to 0$ and $P_e \to 1$.
 
 \end{proof}
 
