@@ -49,9 +49,9 @@
     While experimental results demonstrates the superior performance of detection
     based on both the node attributes and graph structure, theoretical exploration
     remains open.
-    In this paper, we obtain information theoretic bounds of the 
-    exact recovery error probability for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
-    Our result shares insight on the sample complexity of node features and the general phase transition threshold of SSBM. In addition,
+    In this paper, we obtain asymptotic error rate of the 
+    exact recovery recovery for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
+    Our result shares insight on the sample complexity of node features and of node numbers in the graph. In addition,
     a semi-definite programming algorithm is proposed to achieve sub-optimal exact recovery threshold of our model.
 \end{abstract}
 \section{Introduction}
@@ -89,7 +89,8 @@ $\Bern(p)$ and $\Binom(n,p)$ represent Bernoulli
 and Binomial distribution respectively; $f(n)=\omega(g(n))$(or $=o(g(n))$) means that $\lim_{n\to \infty} f(n) / g(n) = \infty $(or $=0$);
 $\mathbbm{1}[A]$ is the indicator function for the event $A$; $W^n$ is the n-ary Cartesian power of the set $W$;
 The Hamming distance of 
-two $n$-dimensional vectors is written as $\dist(x,y):=\sum_{i=1}^n \mathbbm{1}[x_n\neq y_n]$ for $x,y\in \{\pm 1 \}^n$.
+two $n$-dimensional vectors is written as $\dist(x,y):=\sum_{i=1}^n \mathbbm{1}[x_n\neq y_n]$ for $x,y\in \{\pm 1 \}^n$. The Rényi divergence of order $\alpha$ from distribution $P$ to $Q$ is defined
+as $D_{\alpha}(P||Q) = \frac{1}{\alpha - 1} \log \sum_{x\in \mathcal{X}} P^{\alpha}(x)Q^{1-\alpha}(x) $.
 
 \section{Related Works}\label{s:rw}
 This work extends the model of two-community SBM considered in \cite{abbe2015community}.
@@ -125,7 +126,7 @@ From Bayesian point of view, the community detection task is to infer $Y$ from $
 For this setting, the graph $G$ can be regarded as observations of edges. When
 additional node observations $X$ are added, we expect that better inference accuracy of $Y$ is achieved using $(G,X)$.
 The additional node observation is called side information, and we define it formally in the following way:
-\begin{definition}[SSBM with side information]
+\begin{definition}[SBMSI]
 	Let $(Y,G)$ be sampled from $\SSBM(n,p,q)$, $X_{i1}, \dots, X_{im}$ are i.i.d. random variables for $i \in [n]$,
 	whose probability density function $p(x)$ is determined by $Y_i$ as
 	\begin{equation}
@@ -134,6 +135,7 @@ The additional node observation is called side information, and we define it for
 	p_1(x) & Y_i = -1
 	\end{cases}
 	\end{equation}
+	We call the above generative model as SSBM with symmetric side information (SBMSI) with parameter $(n,p,q,p_0,p_1)$.
 \end{definition}
 The node observations can be written concisely as $\{X_{ij} | i \in [n], j \in [m]\}$.
 We can denote the edge observations in a similar way by using $Z_{ij}:=\mathbbm{1}[\{i,j\} \in E(G)]$.
@@ -180,13 +182,12 @@ This information theoretic quantity is defined as:
 \begin{equation}
 D_{1/2}(p_0 || p_1) = -2\log(\sum_{x \in \mathcal{X}} \sqrt{p_0(x)p_1(x)} )
 \end{equation}
-
 With node observations, we divide our discussion between two cases:
 \begin{enumerate}
 \item $p,q$ are constant values;
 \item $p = a \log n /n$ and $q = b \log n / b$.
 \end{enumerate}
-The recovery error for the first case is given in Theorem \ref{thm:constant} while
+The recovery error rate for the first case is given in Theorem \ref{thm:constant} while
 the latter case is analyzed in Theorem \ref{thm:Pe}.
 \begin{theorem}\label{thm:constant}
 	Let $\gamma = \frac{m}{n} = O(1)$. If $p,q$ are constant, using maximum likelihood estimator \eqref{eq:mle},
@@ -324,108 +325,19 @@ P_e \leq \frac{n}{4}\exp(-nf(1)) = \exp(-n (C_1+C_2+o(1)))
 On the other hand $P_e \geq P(A_1) = \exp(-n(C_1+C_2+o(1)))$.
 Finally we have $-\frac{1}{n} \lim_{n \to \infty} \log P_e = C_1+C_2$.
 \end{proof}
-Two lemmas are needed to prove Theorem \ref{thm:Pe}.
-\begin{lemma}\label{lem:zxt}
-	Suppose $m > n, Z \sim \Binom(m, \frac{b\log n}{n}), X\sim \Binom(m, \frac{a\log n}{n})$.
-	For $ t \geq \frac{m}{n}(b - a)$, we have
-	\begin{equation}\label{eq:estimation}
-	P(Z - X \geq t \log n) \leq \exp(-\frac{m}{n}\log n \cdot ( g(a, b, \frac{n}{m}t) + O(\frac{\log n}{n})))
-	\end{equation}
-	where $g(a,b,\epsilon)$ is defined as
-	\begin{equation}\label{eq:gab}
-	g(a,b,\epsilon) = a + b - \sqrt{\epsilon^2 + 4ab} + \epsilon \log \frac{\epsilon + \sqrt{\epsilon^2 + 4ab}}{2b}
-	\end{equation}
-\end{lemma}
-\begin{proof}
-    The moment generating function of $Z-X$ is
-    \begin{align*}
-    &\mathbb{E}[e^{s(Z-X)}]  = 
-    \Big(1-q+q e^s \Big)^{m}
-    \Big(1-p+pe^{-s} \Big)^{m}  \\
-    & = 
-    \exp\Big(\frac{m\log(n)}{n} \Big( a e^{-s}+b e^s-a-b + O\big(\frac{\log(n)}{n}\big) \Big)\Big)
-    \end{align*}
-    where we use the Taylor expansion $\log(1+x)=x+O(x^2)$ to obtain the second equality.
-    By Chernoff bound, for any $s\ge 0$, we have
-    \begin{equation} \label{eq:mmd}
-    \begin{aligned}
-    & P(Z-X \geq t\log(n))\leq
-    \frac{\mathbb{E}[e^{s(Z-X)}]}{e^{st\log(n)}} \le \\
-     & \exp\Big(\frac{m\log(n)}{n} \Big( a e^{-s}+b e^s -\frac{n}{m}st -a-b + O\big(\frac{\log(n)}{n}\big) \Big)\Big)
-    \end{aligned}
-    \end{equation}
-    Let $f(s):=a e^{-s}+be^s-\mu st$ where $\mu=\frac{n}{m}$. We want to find $\min_{s\ge 0}f(s)$ to plug into the above upper bound. Since 
-    $f'(s)=-ae^{-s}+be^s-\mu t$ and 
-    $f''(s)=ae^{-s}+be^s>0$, $f(s)$ is a convex function and takes global minimum at $s^\ast$ such that $f'(s^\ast)=0$. Next we show that $s^\ast\ge 0$ for all $t\ge \frac{1}{\mu}(b-a)$, so $\min_{s\ge 0}f(s)=f(s^\ast)$. Indeed, this follows directly from the facts that $f'(0)=b-a-\mu t\le 0=f'(s^\ast)$ and that $f'(s)$ is an increasing function. Taking $s^\ast=\log(\sqrt{\mu^2 t^2+4ab}+\mu t)-\log(2b)$ into \eqref{eq:mmd}, we obtain \eqref{eq:estimation} for all $t \geq \frac{m}{n}(b-a) $ and large enough $n$.
-\end{proof}
-\begin{lemma}\label{lem:p0p12}
-	Let $p_0, p_1$ be probability distribution functions defined over $\mathcal{X}$. The minimizer
-	of $D(X||p_0) + D(X||p_1)$ for any discrete random variable $X$ is
-	\begin{equation}\label{eq:p012}
-	P(X=x)=\frac{\sqrt{p_0(x)p_1(x)}}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}}
-	\end{equation}
-	and the minimal value is
-	$-2\log \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}$.
-\end{lemma}
-\begin{proof}
-	Let $\mu_x = P(X=x)$, the optimization problem is subject to the constraint that
-	\begin{equation}\label{eq:norm}
-	\sum_{x \in \mathcal{X}} \mu_x = 1
-	\end{equation}
-	Using the Lagrange multiplier, we can take
-	the derivative of $L(\mu_1, \dots, \mu_{|\mathcal{X}|})=\sum_{x \in \mathcal{X}}
-	(\mu_x\log \frac{\mu_x}{p_0(x)} +\mu_x \log \frac{\mu_x}{p_1(x)}
-	-\lambda\mu_x) -\lambda$ about $\mu_x$.
-	From $\frac{\partial L(\mu)}{\partial \mu_x} = 0$, we obtain $\mu_x = \sqrt{p_0(x)p_1(x)}e^{\lambda-2}$.
-	By \eqref{eq:norm}, we solve \eqref{eq:p012} out.	
-\end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:Pe}]
-We start from \eqref{eq:ein}.
-Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \sim
--km D(p_0 || p_1)$, which is of order $O(\log n)$.
-Let $\epsilon$ be defined as follows:
-\begin{equation}
-\epsilon = \gamma k\frac{D(p_{\widetilde{X}_1} || P_1) - D(p_{\widetilde{X}_1} || P_0) + D(p_{\widetilde{X}_2} || P_0) - D(p_{\widetilde{X}_2} || P_1)}{\log a /b}
-\end{equation}
-
-Then \eqref{eq:ein} is equivalent to
-\begin{equation}\label{eq:zeps}
-\sum_{i=1}^{k(n-2k)}(z'_{i} - z_{i}) \geq \epsilon \log n
-\end{equation}
-Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
-\begin{align}
-P(A_k) & =  \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{km}(T(P^{(2)}))\notag \\
-& \cdot P(\sum_{i=1}^{k(n-2k)} (z'_{i} - z_{i} \geq \epsilon(P^{(1)}, P^{(2)})  \log n ))\label{eq:decomp} 
-\end{align}
-Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
+Below we use Chernoff inequality to give an upper bound of \eqref{eq:ein}.
+$P(A) \leq n^{-k\theta^*_k}$ where $\theta^*_k=\gamma D_{1/2}(p_0||p_1)+(1-\frac{2k}{n})(\sqrt{a}-\sqrt{b})^2$.
 \begin{align*}
-&P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1))) \\
-& \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot (g(a, b, \frac{n}{k(n-2k)}\epsilon) + o(1))) \\
-&\leq |\mathcal{P}_{km}|^2 \exp(-k\log n \cdot (\theta^*_k + o(1))) 
+P(A_k) &\leq \mathbb{E}[\exp \left( s\sum_{i=1}^{km}
+\left( \log \frac{p_1(x_{1i})}{p_0(x_{2i})}
++ \log \frac{p_0(x_{2i})}{p_1(x_{2i})} \right) \right)]\\
+&\cdot \mathbb{E}[\exp\left(s\log \frac{a}{b}\sum_{i=1}^{k(n-2k)} (z'_i - z_i )\right)] \\
+& \stackrel{(a)}{=} (\sum_{x\in \mathcal{X}} p_0^{1-s}p_1^{s})^{km} (\sum_{x\in \mathcal{X}} p_1^{1-s}p_0^{s})^{km} \\
+& \cdot \exp\left(k\log n (1-\frac{2k}{n})(-a-b+a^sb^{1-s}+b^sa^{1-s} +o(1))\right)
 \end{align*}
-where
-\begin{align}
-\theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(p_{\widetilde{X}_1}|| p_0) + D(p_{\widetilde{X}_2} || p_1)) \notag \\
-&\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
-\end{align}
-We can verify $\frac{\partial^2 g(a,b,\epsilon)}{\partial \epsilon^2} > 0$,
-a lower bound of $\theta^*$ is obtained by using linear expansion of $g(a,b, \epsilon)$:
-\begin{equation}\label{eq:g_linear}
-g(a,b,\epsilon) \geq  (\sqrt{a} - \sqrt{b})^2 + \frac{\epsilon}{2}\log \frac{a}{b} 
-\end{equation}
-By Lemma \ref{lem:p0p12}, we can get
-\begin{align}
-\theta^*_k &\geq (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
-+ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_1}||p_0) + D(p_{\widetilde{X}_1}||p_1)) \notag \\
-&+ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_2}||p_0) + D(p_{\widetilde{X}_2}||p_1))\notag \\
-&=  (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2 - 2 \gamma\log(\sum_{x\in\mathcal{X}}\sqrt{p_0(x)p_1(x)}) 
-\label{eq:theta_star_lower_bound}
-\end{align}
-Next, we show that the lower bound is achievable.
-When the probability distribution of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
-$\epsilon = 0$, and $\theta^*_k$ in \eqref{eq:theta_star} is exactly the lower bound \eqref{eq:theta_star_lower_bound}.
-Since $\theta^*_k>0$,
-and $|\mathcal{P}_{km}|\leq (km+1)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-k(\theta^*_k+o(1))}$.
+where $(a)$ follows from independence. Choosing $s=\frac{1}{2}$ we then have 
+$P(A_k) \leq  n^{-k(\theta^*_k+o(1))}$.
 
 Using the union bound, we can control $P(F_k)$ by
 $$
