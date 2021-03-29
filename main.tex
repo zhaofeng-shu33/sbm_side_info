@@ -23,16 +23,17 @@
 
 \newcommand{\A}{\frac{a \log(n)}{n}}
 \newcommand{\B}{\frac{b \log(n)}{n}}
-\title{Exact Recovery of Stochastic Block Model with Symmetric Side Information}
+\title{Exact Recovery Error Rate of Stochastic Block Model with Symmetric Side Information}
 \author{%
-  \IEEEauthorblockN{Jin Sima}
-  \IEEEauthorblockA{affilication}
 
   \IEEEauthorblockN{Feng Zhao}
   \IEEEauthorblockA{Department of Electronic Engineering\\
                     Tsinghua University\\ 
                     Beijing, China 100084\\
                     Email: zhaof17@mails.tsinghua.edu.cn}
+  \IEEEauthorblockN{Jin Sima}
+\IEEEauthorblockA{affilication}
+
 \and                    
   \IEEEauthorblockN{Shao-Lun Huang}
   \IEEEauthorblockA{DSIT Research Center\\
@@ -191,7 +192,7 @@ the latter case is analyzed in Theorem \ref{thm:Pe}.
 	Let $\gamma = \frac{m}{n} = O(1)$. If $p,q$ are constant, using maximum likelihood estimator \eqref{eq:mle},
 	the error exponent of exact recovery error is given by:
 	\begin{equation}
-	-\frac{1}{n}\lim_{n\to \infty} \log P_e =  \gamma D_{1/2}(p_0 || p_1) + D_{1/2}(\Bern(p)||\Bern(q))
+	-\lim_{n\to \infty} \frac{1}{n}\log P_e =  \gamma D_{1/2}(p_0 || p_1) + D_{1/2}(\Bern(p)||\Bern(q))
 	\end{equation} 
 \end{theorem}
 From Theorem \ref{thm:constant}, we see that the recovery error decreases in exponential rate.
@@ -209,12 +210,10 @@ if
 \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 > 0
 \end{equation}
 then the error probability
-of exact recovery is bounded by
+of exact recovery is given by
 \begin{equation}\label{eq:PeMain}
-    P_e \leq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
+    -\lim_{n\to \infty} \frac{1}{\log n}P_e  = \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2
 \end{equation}
-On the other hand, if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 < 0$,
-then $P_e \to 1$.
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
 decreasing of error probability $P_e$. Besides, since 
@@ -228,83 +227,6 @@ the side information becomes the dominant term, and $P_e$ decreases in a rate $\
 When \eqref{eq:positive_condition} does not hold, Theorem \ref{thm:Pe} says that exact recovery is impossible by ML estimator.
 Therefore, the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2$ fully characterizes the 
 phase transition behavior of our model in asymptotic case such that $P_e$ jumps from $1$ to $0$ when this quantity varies in a neighborhood of $2$.
-\section{SDP Relaxation}
-Though the maximum likelihood estimator in \eqref{eq:mle} can achieve polynomial
-error rate in Theorem \ref{thm:Pe}, the exact solution is NP-hard. In this
-Section, we will use semidefinite programming based relaxation to handle
-the optimization problem in \eqref{eq:mle}. The relaxation method
-can also achieve $P_e\to 0$ as long as the recovery condition
-$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$ is satisfied.
-
-The SDP based relaxation starts by converting \eqref{eq:mle} in matrix form:
-\begin{align}
-\max_{y}\, & h^T y + \frac{1}{2}y^T B y \notag \\
-s.t.\, & \mathbbm{1}_n^T y = 0 \text{ and } y_i \in \{\pm 1 \} \label{eq:matrix_mle}
-\end{align}
-where $h$ is an n-dimensional vector with $h_i = \frac{1}{\log a/b}\sum_{j=1}^m \log \frac{p_0(x_{ij})}{p_1(x_{ij})}$, and the $n\times n $ matrix $B$ is defined as
-\begin{equation}
-B_{ij} = \begin{cases}
-1 & (i,j)\in E(G) \\
--\kappa & (i,j) \not\in E(G)
-\end{cases}
-\end{equation}
-Specifically, when $\kappa = -\log\frac{1-p}{1-q} / \log\frac{p}{q} \sim \frac{a-b}{\log a/b}\frac{\log n}{n}$, \eqref{eq:matrix_mle} is equivalent with \eqref{eq:mle}. 
-%However, we find that
-%the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
-
-To transform \eqref{eq:matrix_mle} to SDP,
-we define an $(n+1) \times (n+1)$ matrix $\widetilde{B}$
-to absorb the linear term in object function.
-Let 
-\begin{equation}\label{eq:B_lambda_def}
-\widetilde{B} = \begin{pmatrix} 0 & h^T + \lambda \mathbbm{1}^T \\ h + \lambda \mathbbm{1} & \frac{1}{2}B + \lambda I_n \end{pmatrix}
-\textrm{ where } \lambda = \frac{-h^T \mathbbm{1}_n}{n} 
-\end{equation}
-
-Then we have
-\begin{align}
-\max\, & \widetilde{B} \cdot X \notag \\
-s.t.\,& X_{ii}=1 \notag \\
-& X \succeq 0 \label{eq:sdp}
-\end{align}
-
-Compared with \eqref{eq:matrix_mle}, in \eqref{eq:sdp} we have removed
-the balanced constraint $\mathbbm{1}^T y = 0$. When $m=0$ and $\kappa=1$,
-the SDP is exactly the one Abbe considered in \cite{abbe2015exact}.
-When $m=0$ and $\kappa=\frac{a-b}{\log a/b}\frac{\log n}{n}$, the SDP is
-the same as the one in Theorem 3 of \cite{Hajek16}. Here we consider the
-general case for $m=\gamma \log n$ and $\kappa = 1$. The case $\kappa=1$
-is empirically justified by consider the transformation $B'=2B-J_n$ where
-$J_n=\mathbbm{1}_n \mathbbm{1}_n^T- I_n$. Then $B'_{ij} = -1 +\frac{a-b}{\log a/b}\frac{\log n}{n} \approx -1$
-for $(i,j)\not\in E(G)$, whereas $y^T J_n y$ is a constant for $\mathbbm{1}^T_n y = 0$.
-The theoretical guarantee for the relaxation form in \eqref{eq:sdp} is summarized
-in the following theorem:
-\begin{theorem}\label{thm:sdp}
-	Suppose $X^*$ is the optimal solution for \eqref{eq:sdp}.
-	Let $\hat{Y}_{\SDP}$ be the estimator of $Y$ where  $(\hat{Y}_{\SDP})_i = X^*_{i+1, 1}$ for $i=1,\dots, n$ .
-	%If $\kappa > b\frac{\log n}{n}$
-	If $\kappa = 1$
-	and
-	\begin{align}
-	&\gamma D^* + (\sqrt{a} - \sqrt{b})^2 > 2  \\
-	\textrm{ where } D^* &= D_{1/2}(p_0||p_1) - \Big\vert\frac{D(p_0||p_1) - D(p_1||p_0)}{2}\Big\vert\notag
-	\end{align}
-	then $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$.
-\end{theorem}
-Theorem \ref{thm:sdp} tells us the error probability of $\hat{Y}_{\SDP}$ converges to $0$ as $n\to \infty$. The side information contributes to
-the detection when $D^*>0$. Compared with \ref{eq:PeMain}, which quantifies the error bound of maximum likelihood estimator,
-the conclusion of Theorem \ref{thm:sdp} is a little weaker. We also note that $D^*$ is not always positive for arbitrary distribution $p_0,p_1$, which is a limitation of our theoretical
-analysis. However, SDP can be implemented using various iterative schemes, and Theorem \ref{thm:sdp} gives a quantification of its theoretical
-performance. What's more, when
-$D(p_0||p_1) = D(p_1||p_0)$, the result obtained in Theorem \ref{thm:sdp} is the same as
-that in Theorem \ref{thm:Pe}, which is true for observations from binary symmetric channel.
-\begin{corollary}
-	Suppose $X_{ij}$ is the output of $Y_i$ from a binary symmetric channel with crossover probability
-	$p^*$. $P(\hat{Y}_{\SDP} \neq  Y) = o(1)$ as long as
-	\begin{equation}
-	-2\log(2\sqrt{p^*(1-p^*)}) + (\sqrt{a} - \sqrt{b})^2>2
-	\end{equation}
-\end{corollary}
 \section{Conclusion}\label{s:conclusion}
 In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
@@ -581,96 +503,6 @@ We get the conclusion that $P(F_1^c) \to 0$ and $P_e \to 1$.
 
 \end{proof}
 
-\begin{proof}[Proof of Theorem \ref{thm:sdp}]
-The dual problem of \eqref{eq:sdp} is
-\begin{align}
-\min\, & \mathbbm{1}^T y \notag \\
-s.t.\,& \diag(y) - \widetilde{B} \succeq 0
-\label{eq:sdp_dual}
-\end{align}
-Let $g$ be the underlining ground truth label, and
-define $\tilde{g} = (1,g^T)^T$.
-Now we construct a solution pair to (\ref{eq:sdp}, \ref{eq:sdp_dual}): $X=\tilde{g}\tilde{g}^T, y_i = \tilde{B}(\tilde{g}\tilde{g}^T)_{ii}$.
-Then $$
-y = (h^T g, \diag\{hg^T+\frac{1}{2}Bgg^T + \lambda I_n + \lambda \mathbbm{1}g^T\})
-$$
-and the dual slack is zero since $\widetilde{B} \cdot X = \mathbbm{1}^T y $.
-Since $X$ already satisfies the constraint of \eqref{eq:sdp}, the condition for such solution pair to become optimal is then
-\begin{align}
-\diag(y) - \tilde{B} & = \begin{pmatrix} h^T g & -h^T - \lambda \mathbbm{1}_n^T \\ -h- \lambda \mathbbm{1}_n & \Xi_n \end{pmatrix}
-\succeq 0 \notag \\
-\textrm{ where }\Xi_n & = \diag(hg^T + \frac{1}{2}Bgg^T + \lambda \mathbbm{1}_ng^T) - \frac{1}{2}B
-\end{align}
-We can verify $\tilde{g}$ is the eigenvector of $\diag(y) - \tilde{B}$ with eigenvalue $0$.
-If all eigenvalues of $\Xi_n$ is larger than zero, then by
-Cauchy??s Interlace Theorem, all eigenvalues of $\diag(y) - \tilde{B}$ is larger than zero.
-Let $C=\mathbb{E}[\Xi_n]$ and $\Gamma = C-\Xi_n$.
-We further define $D_1 = D(p_0||p_1),
-D_2 = D(p_1||p_0), \bar{D}=m\frac{D_1+D_2}{2\log a/b}$.
-Without loss of generality we suppose $g=(1, \dots, 1, -1, \dots, -1)^T$.
-Then the constant matrix $C$ can be written as:
-	\begin{equation*}
-	C=\begin{pmatrix}
-	d I_{n/2} + a'J_{n/2}& b' J_{n/2} \\
-	b' J_{n/2} & d I_{n/2} + a'J_{n/2}  
-	\end{pmatrix}
-	\end{equation*}
-where $a',b', d$ are defined as:
-\begin{align*}
-a' & = - \frac{a \log n}{n} + \frac{1}{2} \\
-b' & = - \frac{b \log n}{n} + \frac{1}{2} \\
-d & = \bar{D}+\frac{1}{2}(a-b) \log n - \frac{a \log n}{n} + \frac{1}{2}
-\end{align*}
-
-The eigenvalues of C take three distinct values
-\begin{itemize}
-	\item $\lambda_1=\bar{D}+\frac{n}{2}-b \log(n)$ associated to the eigenvector $\mathbbm{1}_n$
-	\item $\lambda_2=\bar{D}$ associated to the eigenvector corresponding to  $g$
-	\item $\lambda_3=\bar{D}+\frac{1}{2}(a-b)\log(n)$ associated to all other eigenvectors
-\end{itemize}
-Since $\bar{D}=O(\log n)$ and $a>b$, $\lambda_3$ is the second smallest eigenvalues.
-We can verify $\Xi_n g = 0$, therefore, to show $\Xi_n \preceq 0$, it is equivalent
-to consider the subspace orthogonal to $g$:
-$$
-\min_{x \perp g, x \in \mathbb{R}^n } x^T (C-\Gamma) x \geq 0
-$$
-The error probability for the above event is bounded by
-$P(\lambda_{\max}(\Gamma) \geq \bar{D}+\frac{a-b}{2}\log n)$.
-$\Gamma$ is a random matrix with zero mean, and we can decompose it into diagonal part
-$\Gamma_1$ and non-diagonal part $\Gamma_2$. $\Gamma_2=A-\mathbb[A]$
-where $A$ is the adjacency matrix of the graph. By Theorem 5.2 of \cite{lei2015consistency},
-with probability $1-n^{-r}$, $\lambda_{\max}(\Gamma_2) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. By the triangular inequality of the spectral norm, we have
-\begin{align*}
-&P(\lambda_{\max}(\Gamma) \geq  \bar{D}+\frac{a-b}{2}\log n)
-\leq n^{-r}  \\
-& + P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})
-\end{align*}
-$\Gamma_1$ is a diagonal matrix, and $\lambda_{\max}(\Gamma_1) = \max_{1\leq i \leq n} \Gamma_{ii}$.
-By union bound and $\Gamma_{ii} = d - \Xi_{ii}$, we have
-\begin{align*}
-&P(\lambda_{\max}(\Gamma_1) \geq \bar{D}+\frac{a-b}{2}\log n - c\sqrt{\log n})\leq \\
-&P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)
-\end{align*}
-Since $\mathbb{E}[\Xi_{ii}]=O(\log n)$, the order of $P(\Xi_{ii} \leq c\sqrt{\log n})$ is unchanged when we modify $c=0$. Therefore, it is sufficient to consider $\Xi_{ii} \leq 0 $, which is
-\begin{align}\label{eq:equiv_condition}
-\sum_{j=1}^{n/2} (z_j - z'_j) +g_i( h_i + \lambda )\leq 0
-\end{align}
-From the definition of $\lambda$ in \eqref{eq:B_lambda_def}, $\lambda/m$ converges to $\frac{D_2-D_1}{2 \log(a/b)}$ in exponential rate.
-Therefore, when analyzing the probability of event defined in \eqref{eq:equiv_condition}, we treat $\lambda/m$ as a constant. 
-Depending on the sign of $g_i$, \eqref{eq:equiv_condition} can be divided into two cases. When $g_i=1$, the samples consisted in $h_i$
-follow distribution $p_0$ and the probability is bounded by $n^{-\theta^*_1 + o(1)}$ where
-\begin{align}
-\theta^*_1 &= \min_{\widetilde{X}_1} \gamma D(p_{\widetilde{X}_1}|| p_0)+ \frac{1}{2} g(a,b, 2\epsilon) \label{eq:theta_star2} \\
-\epsilon &= \gamma \frac{D(p_{\widetilde{X}_1} || P_1) - D(p_{\widetilde{X}_1} || P_0) + (D_2 - D_1)/2}{\log a /b}
-\end{align}
-Using linear approximation of $g$ in \eqref{eq:g_linear}, we can show that 
-\begin{align*}
-\theta^*_1 \geq \frac{1}{2}((\sqrt{a}-\sqrt{b})^2+\gamma D_{1/2}(p_0||p_1)+\gamma\frac{D_2-D_1}{2}) \\
-\geq \frac{1}{2}((\sqrt{a}-\sqrt{b})^2+\gamma D_{1/2}(p_0||p_1)-\gamma\frac{|D_2-D_1|}{2})
-\end{align*}
-Similar results are obtained when $g_i=-1$. Finally,
-$P(\Xi_{ii} \leq c\sqrt{\log n}, \exists 1\leq i \leq n)$ is bounded by $n^{1-\theta_1^*+o(1)}$, and Theorem \ref{thm:sdp} follows.
-\end{proof}
 
 \bibliographystyle{IEEEtran}
 \bibliography{exportlist}
