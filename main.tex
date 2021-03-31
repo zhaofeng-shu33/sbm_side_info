@@ -3,6 +3,7 @@
 \usepackage{bbm}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{authblk}
 \usepackage{algorithm,algorithmic}
 \usepackage{url}
 \usepackage{amssymb}
@@ -24,24 +25,17 @@
 \newcommand{\A}{\frac{a \log(n)}{n}}
 \newcommand{\B}{\frac{b \log(n)}{n}}
 \title{Exact Recovery Error Rate of Stochastic Block Model with Symmetric Side Information}
-\author{%
-
-  \IEEEauthorblockN{Feng Zhao}
-  \IEEEauthorblockA{Department of Electronic Engineering\\
-                    Tsinghua University\\ 
-                    Beijing, China 100084\\
-                    Email: zhaof17@mails.tsinghua.edu.cn}
-  \IEEEauthorblockN{Jin Sima}
-\IEEEauthorblockA{affilication}
-
-\and                    
-  \IEEEauthorblockN{Shao-Lun Huang}
-  \IEEEauthorblockA{DSIT Research Center\\
-                    Tsinghua-Berkeley Shenzhen Institute\\
-                    Shenzhen, China 518055\\
-                    Email: shaolun.huang@sz.tsinghua.edu.cn}
-                      
-}
+\author[1]{\textbf{Feng Zhao}}
+\author[2]{\textbf{Jin Sima}}
+\author[3]{\textbf{Shao-Lun Huang}}
+\affil[1]{\normalsize{Department of Electronic Engineering,
+		Tsinghua University, 
+		Beijing, China 100084}}
+\affil[2]{\normalsize{Department of Electrical Engineering, California Institute of Technology, Pasadena 91125, CA, USA}}
+\affil[3]{\normalsize{DSIT Research Center,
+		Tsinghua-Berkeley Shenzhen Institute,
+		Shenzhen, China 518055}}
+\allowdisplaybreaks[4]
 \begin{document}
 \maketitle
 \begin{abstract}
@@ -50,9 +44,8 @@
     based on both the node attributes and graph structure, theoretical exploration
     remains open.
     In this paper, we obtain asymptotic error rate of the 
-    exact recovery recovery for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
-    Our result shares insight on the sample complexity of node features and of node numbers in the graph. In addition,
-    a semi-definite programming algorithm is proposed to achieve sub-optimal exact recovery threshold of our model.
+    exact recovery for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
+    Our result shares insight on the sample complexity of node features and of node numbers in the graph.
 \end{abstract}
 \section{Introduction}
 In network analysis, community detection assigns discrete labels to each node of the graph based on the observation of graph edges.
@@ -63,17 +56,14 @@ accuracy can be achieved for community detection problems. Within this context, 
 is to investigate the gain that extra information brings to the detection problem, compared to the case when only edge observation is available.
 
 	% first paragraph: short intro to SBM and Ising model
-To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the solely presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For a special case of two community model,
+To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the sole presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For a special case of two community model,
 the recovery condition is summarized as $\sqrt{a} - \sqrt{b} > \sqrt{2}$ when $a,b$ are parameters of SBM.
 
 With the presence of extra node information, the condition of exact recovery is improved
-and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the contribution of side information and graph information. In contrast, this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. Our result generalizes
-the exact recovery threshold to a condition $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$
-where the contribution of side information is coded in Renyi divergence.
+and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the error rate of SBM with side information. In contrast, this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. We have obtained that
+the exact recovery error decreases polynomially in a rate $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 -2$
+where the contribution of side information is coded in Rényi divergence.
 
-To achieve the exact recovery condition of SBM, semi-definite programming (SDP) is often utilized \cite{Hajek16}.
-SDP relaxation can also be used for SBM with side information, and in this paper we show that a sub-optimal exact recovery condition
-of our model is achievable by such method.
 
 This paper is organized as follows. In Section \ref{s:rw}, we review the previous works which are closely related with ours.
 In Section \ref{s:model}, we introduce the model and present our main results.
@@ -93,24 +83,23 @@ two $n$-dimensional vectors is written as $\dist(x,y):=\sum_{i=1}^n \mathbbm{1}[
 as $D_{\alpha}(P||Q) = \frac{1}{\alpha - 1} \log \sum_{x\in \mathcal{X}} P^{\alpha}(x)Q^{1-\alpha}(x) $.
 
 \section{Related Works}\label{s:rw}
-This work extends the model of two-community SBM considered in \cite{abbe2015community}.
+The model considered in this work extends the two-community SBM in \cite{abbe2015community}.
 Specifically, we assume the extra feature vectors of each node are independent samples, whose distribution depends on the label of the node.
-This model has been studied in Section V-B of \cite{saad2018community}. However,
-\cite{saad2018community} only got a weak conclusion, which says that the sample complexity of feature vectors
-$m$ is required to be of order $O(\log n)$ for side information to take effects. In this paper, we obtain
-a closed-form condition for exact recovery when $m=\gamma \log n$ for a positive constant $\gamma$.
-
+This model has been studied in Section V-B of \cite{saad2018community}, in which the sample complexity of feature vectors
+$m$ is required to be of order $O(\log n)$ for side information to take effects.
 A general case of side information is studied
-in \cite{abbe17sideinfo}. We emphasize that the model setting in Theorem 4 of \cite{abbe17sideinfo}
+in \cite{abbe17sideinfo} and the exact recovery condition is obtained, which involves an optimization problem.
+We emphasize that the SBM in Theorem 4 of \cite{abbe17sideinfo}
 assumes that the node labels are independently generated  from $\Bern(\frac{1}{2})$ while the model
 in this paper requires uniform distribution over the space $\sum_{i=1}^n Y_i = 0$ where $Y_i \in \{\pm 1 \}$ is the label of the $i$-th node.
-Although these two settings are equivalent in
-SBM model when $n$ is large, we observe that it differs when side information is available. Our assumption is easier to analyze due to some
-symmetric property of node observations.
+To distinguish the two models, we call the former SBM with equal probability and the latter the SBM with equal community size.
+The exact recovery condition of these two settings are equivalent but their error rate differs.
+For SBM model with side information, we find the error rate of SBM with equal community size constraint allows close-form solution while SBM with
+equal probability does not have such good property.
 
-Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the weak recovery error bound. Both the dense and sparse graph are considered.
-Within this paper, we use Rényi divergence to characterize
-the contribution of side information to exact recovery error bound in these two cases.
+Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the weak recovery error rate. Both the dense and sparse graph are considered. In this paper, we consider the exact recovery metric and obtain similar results containing
+Rényi divergence
+in both the two types of graphs for SBM with side information.
 \section{Mathematical Models}\label{s:model}
 The two-community symmetric stochastic block model (SSBM) is a special case of SBM, whose formal definition is given by:
 \begin{definition}[SSBM]
@@ -230,10 +219,10 @@ decreasing of error probability $P_e$. Under some parameter configurations speci
 the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2$
 exactly describes the error rate for the exact recovery problem of SBMSI.
 
-In addition, when $p_0=p_1$
+In addition, when $p_0=p_1$,
 Theorem \ref{thm:Pe} gives the error rate of maximum likelihood for SSBM. This corollary is
 summarized as follows:
-\begin{corollary}
+\begin{corollary}\label{eq:cor}
 If the condition
 \begin{equation}
 (\sqrt{a}-\sqrt{b})^2-2 > 3a^{1/3}b^{1/3}(a^{1/6}-b^{1/6})^2
@@ -242,6 +231,10 @@ is satisfied,
  and we consider $\SSBM(n, 2, \frac{a\log n}{n}, \frac{b \log n}{n})$. For ML algorithms, the exact recovery error rate $P_e$ satisfies
 $\lim_{n\to \infty} \frac{\log P_e}{\log n} =2-(\sqrt{a} - \sqrt{b})^2$.
 \end{corollary}
+Using similar proof techniques, we can show that for SBM with equal probability, the error rate of ML is $n^{1-(\sqrt{a} - \sqrt{b})^2/2}$
+as long as $\sqrt{a} -\sqrt{b} > \sqrt{2}$,
+which converges slower than that given in \eqref{eq:cor}. This difference comes from whether we are considering a pair of nodes whose labels are wrongly
+classified or only a single node.
 \section{Experiment}
 \section{Conclusion}\label{s:conclusion}
 In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
@@ -329,10 +322,25 @@ in.
 \begin{lemma}\label{lem:single_lower}
 For event $E$ specified in \eqref{eq:ein} with $k=1$, the following estimation holds
 \begin{equation}
-P(E) \geq \exp(-(D_{1/2}(p_0||p_1) + (\sqrt{a}-\sqrt{b})^2 + o(1))\log n )
+P(E) \geq \exp(-(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a}-\sqrt{b})^2 + o(1))\log n )
 \end{equation}
 \end{lemma}
-
+\begin{proof}
+	When $k=1$, the left hand side of \eqref{eq:ein} can be expressed as
+	\begin{align*}
+	\epsilon\triangleq&m\cdot [(D(P_{\widetilde{X}^{i_1}} || P_0) - D(P_{\widetilde{X}^{i_1}} || P_1)) \\
+	&+(D(P_{\widetilde{X}^{i_2}} || P_1) - D(P_{\widetilde{X}^{i_2}} || P_0))],
+	\end{align*}
+	where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. Let $P_{\widetilde{X}^{i_1}}$ and $P_{\widetilde{X}^{i_2}}$ follow the distribution
+	$P(X=x)=\frac{\sqrt{p_0(x)p_1(x)}}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}} $.
+	Then we have that $\epsilon =0$. Using Sanov's theorem and Lemma 4 from \cite{abbe2015exact}, we have that
+	\begin{align*}
+	&P(E)\\
+	\geq &\frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1)) \\
+	&\cdot\exp(- (\sqrt{a} - \sqrt{b})^2\log n+o(\log n) ) \\
+	& = \exp(-\log n (\gamma D_{1/2}(P_0||P_1) + (\sqrt{a} - \sqrt{b})^2+ o(1))),
+	\end{align*}
+\end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:Pe}]
 Below we use Chernoff inequality to give an upper bound of \eqref{eq:ein}.
 $P(A) \leq n^{-k\theta^*_k}$ where $\theta^*_k=\gamma D_{1/2}(p_0||p_1)+(1-\frac{2k}{n})(\sqrt{a}-\sqrt{b})^2$.
