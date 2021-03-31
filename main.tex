@@ -218,7 +218,7 @@ P_e \leq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2
 If the following condition
 \begin{align}
 &(\sqrt{a}-\sqrt{b})^2-2 + \gamma \min \{D_{\frac{2}{3}}(p_0||p_1), D_{\frac{2}{3}}(p_1||p_0) \} \notag \\
-&> 3a^{1/3}b^{1/3}(a^{1/6}-b^{1/6})^2 + \gamma D_{1/2}(p_0||p_1)\label{eq:two_conditions}
+&> 3a^{1/3}b^{1/3}(a^{1/6}-b^{1/6})^2 + \gamma D_{1/2}(p_0||p_1)\label{eq:oneC}
 \end{align}
 is satisfied, then we can show that $P_e$ is lower bounded by
 \begin{equation}\label{eq:PeMainL}
@@ -226,7 +226,7 @@ P_e \geq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2
 \end{equation}
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
-decreasing of error probability $P_e$. Under some parameter configurations specified in \eqref{eq:two_conditions},
+decreasing of error probability $P_e$. Under some parameter configurations specified in \eqref{eq:oneC},
 the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2$
 exactly describes the error rate for the exact recovery problem of SBMSI.
 
@@ -333,8 +333,8 @@ P(A_k) &\leq \mathbb{E}[\exp \left( s\sum_{i=1}^{km}
 \left( \log \frac{p_1(x_{1i})}{p_0(x_{2i})}
 + \log \frac{p_0(x_{2i})}{p_1(x_{2i})} \right) \right)]\\
 &\cdot \mathbb{E}[\exp\left(s\log \frac{a}{b}\sum_{i=1}^{k(n-2k)} (z'_i - z_i )\right)] \\
-& \stackrel{(a)}{=} (\sum_{x\in \mathcal{X}} p_0^{1-s}p_1^{s})^{km} (\sum_{x\in \mathcal{X}} p_1^{1-s}p_0^{s})^{km} \\
-& \cdot \exp\left(k\log n (1-\frac{2k}{n})(-a-b+a^sb^{1-s}+b^sa^{1-s} +o(1))\right)
+& \stackrel{(a)}{=} (\sum_{x\in \mathcal{X}} p_0^{1-s}p_1^{s})^{km} (\sum_{x\in \mathcal{X}} p_1^{1-s}p_0^{s})^{km}\cdot \exp (k\log n \\
+& \cdot (1-\frac{2k}{n})(-a-b+a^sb^{1-s}+b^sa^{1-s} +o(1)) )
 \end{align*}
 where $(a)$ follows from independence. Choosing $s=\frac{1}{2}$ we then have 
 $P(A_k) \leq  n^{-k(\theta^*_k+o(1))}$.
@@ -362,7 +362,52 @@ P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + o(1)
 \end{align*}
 Therefore, \eqref{eq:PeMain} is established.
 
+To prove the lower bound \ref{eq:PeMainL}, we first
+define the event $A_{ij}$ as $\{p(x,z|y) > p(x,z|y^*),y_s=-y^*_s, s=i,j \textrm{ and } \dist(y,y^*)=2  \}$.
+It follows that $\cup_{1\leq i < j\leq n} A_{ij} \subset F$ where $F$ denotes the event when ML fails to recover the community labels exactly.
+By Bonferroni inequality,
+$P(\cup_{1\leq i < j\leq n} A_{ij}) \geq \sum_{1\leq i < j\leq n} P(A_{ij}) - \sum_{(i,j) < (r,s) } P(A_{ij} \cap A_{rs})$.
+We first deal with $P(A_{ij})$, which is lower bounded by $n^{-\gamma D_{1/2}(p_0 || p_1)-(\sqrt{a} - \sqrt{b})^2 +o(1)}$. Since $|\{1\leq i < j\leq n\}|=\binom{n}{2}$, the term $\sum_{1\leq i < j\leq n} P(A_{ij})$ is of order $\frac{1}{2}n^{-\mu+o(1)}$.
+Next we give upper bound of $P(A_{ij} \cap A_{rs})$ according to two cases.
+Firstly is the case when $|\{i,j,r,s\}|=4$. Then $A_{ij} \cap A_{rs}$ implies the event
+$A_{ijrs}: \{p(x,z|y^{(1)})p(x,z|y^{(2)}) > p^2(x,z|y^*)\}$ where $y^{(1)}(y^{(2)})$ differs from $y^*$ at position $i,j(r,s)$.
+After taking the $\log$ on both sides and simplification, the inequality in $A_{ijrs}$ becomes \eqref{eq:ein}  with $k=2$.
+Therefore, $P(A_{ij} \cap A_{rs}) \leq n^{-2(\theta^*_2 + o(1))} $. There are
+$\binom{n}{4} \leq n^4$ terms. Therefore, the probability sum
+is bounded by $n^{-2\mu +o(1)}$ which has smaller order than $n^{-\mu+o(1)}$ since $\mu > 0$.
 
+Another case happens when $|\{i,j,r,s\}|=3$. Under such case, we also suppose $y^{(1)}_i = y^{(2)}_r = 1$, then
+\begin{align}
+A_{ijrs}: &\, 2\sum_{i=1}^m  \log \frac{p_1(x_{1i})}{p_0(x_{2i})}
++ \sum_{i=1}^{2m} \log \frac{p_0(x_{2i})}{p_1(x_{2i})} \\
+& +\log\frac{a}{b}\left(
+\sum_{i=1}^{n} (z'_i - z_i) + 2\sum_{i=n+1}^{3n/2} (z'_i - z_i)\right)  \geq 0\notag
+\end{align}
+Using Chernoff inequality, we can write an upper bound of $P(A_{ijrs})$ as
+\begin{align*}
+&P(A_{ijrs}) \leq  (\sum_{x\in \mathcal{X}} p_0^{1-2s}p_1^{2s})^m (\sum_{x\in \mathcal{X}} p_1^{1-s}p_0^{s})^{2m} \cdot \\
+&\exp(\log n (-\frac{3}{2}(a+b)+a\exp(-s\log \frac{a}{b})+b\exp(s\log \frac{a}{b}) \\
+&+ \frac{a}{2}\exp(-2s\log \frac{a}{b})+\frac{b}{2}\exp(2s\log \frac{a}{b})))
+\end{align*}
+Let $s=\frac{1}{3}$ we then have
+\begin{align*}
+&P(A_{ijrs})\leq  (\sum_{x\in \mathcal{X}} p_0^{1/3}(x)p_1^{2/3}(x))^{3m}\\
+& \cdot \exp(\frac{3}{2}\log n (-a-b+a^{1/3}b^{2/3}+a^{2/3}b^{1/3})) \\
+&=  \exp(-n(\gamma D_{2/3}(p_1 || p_0) + \frac{3}{2} (-a-b+a^{1/3}b^{2/3}+a^{2/3}b^{1/3})))
+\end{align*}
+From the condition mentioned in \eqref{eq:oneC},
+it follows that
+$$
+P(A_{ijrs}) \leq n^{-\mu'-1-(\gamma \cdot D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2)}
+$$
+where $\mu'>0$ is the difference of two sides in \eqref{eq:oneC}. 
+There are at most $n^3$ such terms, then the summation is bounded by
+$n^{-\mu'-\mu }$,
+which has smaller order than $n^{-\mu}$.
+
+If $y^{(1)}_i = y^{(2)}_r = -1$, similar deduction can be made, and $D_{2/3}(p_0||p_1)$ is used.
+We conclude that $P(F) \geq P(\cup_{1\leq i < j\leq n} A_{ij}) \geq
+(1+o(1))n^{-\mu}$.
 \end{proof}
 
 
