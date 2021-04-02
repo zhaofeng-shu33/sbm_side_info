@@ -105,7 +105,7 @@ The two-community symmetric stochastic block model (SSBM) is a special case of S
 \begin{definition}[SSBM]
 	Let $0\leq q<p\leq 1$ and $V=[n]$. The random vector $Y=(Y_1,\dots,Y_n)\in \{\pm 1\}^n$ and random graph $G$ are drawn under $\SSBM(n,p,q)$ if
 	\begin{enumerate}
-		\item $Y$ is drawn uniformly with the constraint that $Y_1 + \dots, + Y_n = 0$ for $Y_i \in \{\pm 1 \}$;
+		\item $Y$ is drawn uniformly with the constraint that $Y_1 + \dots  + Y_n = 0$ for $Y_i \in \{\pm 1 \}$;
 		
 		\item There is an edge of $G$ between the vertices $i$ and $j$ with probability $p$ if $Y_i=Y_j$ and with probability $q$ if $Y_i \neq Y_j$; the existence of each edge is independent with each other.
 	\end{enumerate}
@@ -140,7 +140,8 @@ $Y$:
     s.t.\, & y_i \in \{\pm 1\}, \sum_{i=1}^n y_i=0 \label{eq:mle}
 \end{align}
 The estimator $\hat{Y}$, given by \eqref{eq:mle}, is a ML estimator in restricted parameter space.
-In contract, ML estimator for $y\in \{ \pm 1 \}^n$ (unrestricted parameter space) in considered in \cite{abbe17sideinfo}.
+In contract, ML estimator for $y\in \{ \pm 1 \}^n$ (unrestricted parameter space) in considered in \cite{abbe17sideinfo} if the prior distribution
+of each $Y_i \sim Binom(\frac{1}{2})$.
 To introduce the notion of exact recovery, we use $\mathcal{F}(n,m,p,q)$ to represent the joint distribution
 of $Y,Z, X$.
 Then the formal definition of exact
@@ -190,7 +191,7 @@ When $\gamma=0$, Theorem \ref{thm:constant} says $D_{1/2}(\Bern(p)||\Bern(q))$
 is the error exponent for exact recovery. Since weak recovery differs from exact recovery by a polynomial factor, $D_{1/2}(\Bern(p)||\Bern(q))$ is also the exponent for weak recovery, which has been obtained
 in \cite{zhang2016}. Besides, when $p,q$ are constant, for side information to take effects, the sample complexity $m$ should be of order $O(n)$. When $m=\omega(n)$, the side information dominates and the edge information is neglectable.
 
-For the second case when the graph is sparse, there is the phase transition phenomenon. This result
+The result for the second case of sparse graph
 is summarized
 in the following theorem:
 \begin{theorem}\label{thm:Pe}
@@ -228,16 +229,16 @@ If the condition
 (\sqrt{a}-\sqrt{b})^2-2 > 3a^{1/3}b^{1/3}(a^{1/6}-b^{1/6})^2
 \end{equation}
 is satisfied,
- and we consider $\SSBM(n, 2, \frac{a\log n}{n}, \frac{b \log n}{n})$. For ML algorithms, the exact recovery error rate $P_e$ satisfies
+ and we consider $\SSBM(n,\frac{a\log n}{n}, \frac{b \log n}{n})$. For ML algorithms, the exact recovery error rate $P_e$ satisfies
 $\lim_{n\to \infty} \frac{\log P_e}{\log n} =2-(\sqrt{a} - \sqrt{b})^2$.
 \end{corollary}
 Using similar proof techniques, we can show that for SBM with equal probability, the error rate of ML is $n^{1-(\sqrt{a} - \sqrt{b})^2/2}$
 as long as $\sqrt{a} -\sqrt{b} > \sqrt{2}$,
 which converges slower than that given in \eqref{eq:cor}. This difference comes from whether we are considering a pair of nodes whose labels are wrongly
 classified or only a single node.
-\section{Experiment}
+
 \section{Conclusion}\label{s:conclusion}
-In this paper, we obtain a close-form exact recovery condition for a two-community SBM with side information. This condition
+In this paper, we obtain a close-form exact recovery error rate for a two-community SBM with side information. This rate
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
 our result shares insight on sample complexities of node features.
 \section{Proofs}\label{s:proof}
