@@ -24,7 +24,7 @@
 
 \newcommand{\A}{\frac{a \log(n)}{n}}
 \newcommand{\B}{\frac{b \log(n)}{n}}
-\title{Exact Recovery Error Rate of Stochastic Block Model with Symmetric Side Information}
+\title{On the Optimal Error Rate of Stochastic Block Model with Symmetric Side Information}
 \author[1]{\textbf{Feng Zhao}}
 \author[2]{\textbf{Jin Sima}}
 \author[3]{\textbf{Shao-Lun Huang}}
@@ -53,19 +53,23 @@ In addition to edge information, extra node features are often available in real
 noisy labels \cite{mossel2016local}, or
 feature vectors \cite{zhang2016community}. Combining the edge and node information, it is expected that better
 accuracy can be achieved for community detection problems. Within this context, a central problem 
-is to investigate the gain that extra information brings to the detection problem, compared to the case when only edge observation is available.
+is to investigate the gain that extra information brings to the detection problem, compared to the case where only edge observation is available.
 
-	% first paragraph: short intro to SBM and Ising model
-To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than between different communities \cite{holland1983stochastic}. For the sole presence of SBM, the condition on exact recovery of community labels has been studied extensively and the phase transition property has been established \cite{abbe2015community, mossel2016}. For a special case of two community model,
-the recovery condition is summarized as $\sqrt{a} - \sqrt{b} > \sqrt{2}$ when $a,b$ are parameters of SBM.
+	% first paragraph: short intro to SBM 
+To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than that between different communities \cite{holland1983stochastic}. For the sole presence of SBM, as the size of community grows, the error rate decreases in both the exact recovery and weak recovery metric. For a special case of two community model,
+the weak recovery error rate has been obtained as $n^{-(\sqrt{a} - \sqrt{b})^2/2}$ where $a,b$ are parameters of SBM \cite{zhang2016}.
 
 With the presence of extra node information, the condition of exact recovery is improved
-and generalized \cite{saad2018community, abbe17sideinfo}. However, previous study does not exactly quantify the error rate of SBM with side information. In contrast, this paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. We have obtained that
+and generalized \cite{saad2018community}. However, previous study does not exactly quantify the error rate of SBM with side information. 
+The error rate, achieved by maximum likelihood method, is the fundamental limit of recovery algorithms. It is known that many algorithms like variants of SDP relaxation and
+spectral clustering can achieve exact recovery but their error rate may not achieve the fundamental limit. The study of error rate provides a unified way to compare
+different algorithms at least in experiment level.
+This paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. We have obtained that
 the exact recovery error decreases polynomially in a rate $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 -2$
 where the contribution of side information is coded in Rényi divergence.
 
 
-This paper is organized as follows. In Section \ref{s:rw}, we review the previous works which are closely related with ours.
+This paper is organized as follows. In Section \ref{s:rw}, we review the previous works which are related with ours.
 In Section \ref{s:model}, we introduce the model and present our main results.
 Then the article concludes in Section \ref{s:conclusion} and
 detailed proofs are provided in Section \ref{s:proof}.
@@ -92,8 +96,10 @@ in \cite{abbe17sideinfo} and the exact recovery condition is obtained, which inv
 We emphasize that the SBM in Theorem 4 of \cite{abbe17sideinfo}
 assumes that the node labels are independently generated  from $\Bern(\frac{1}{2})$ while the model
 in this paper requires uniform distribution over the space $\sum_{i=1}^n Y_i = 0$ where $Y_i \in \{\pm 1 \}$ is the label of the $i$-th node.
-To distinguish the two models, we call the former SBM with equal probability and the latter the SBM with equal community size.
-The exact recovery condition of these two settings are equivalent but their error rate differs.
+To distinguish the two models, we call the former SBM with equal probability and the latter the SBM with equal community size. The exact recovery condition of these two settings are equivalent but their error rate differs.
+
+In previous studies, the recovery condition is extensively studied, in which the error rate converges
+to zero \cite{abbe2015exact}. 
 For SBM model with side information, we find the error rate of SBM with equal community size constraint allows close-form solution while SBM with
 equal probability does not have such good property.
 
@@ -146,22 +152,17 @@ To introduce the notion of exact recovery, we use $\mathcal{F}(n,m,p,q)$ to repr
 of $Y,Z, X$.
 Then the formal definition of exact
 recovery is given as:
-\begin{definition}[Exact Recovery for SSBM with side information]
+\begin{definition}[Error Rate of Exact Recovery for SSBM with side information]
 		Let $(Y,Z,X) \sim \mathcal{F}(n,m,p,q)$.
-		We say that exact recovery is solvable if there is an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that
-		$$
-		P(\hat{Y} \neq Y) \to 0
-		\text{~~~as~} n\to\infty
-		$$
-		and we call $P_e:=P(\hat{Y} \neq Y)$ the error probability of the recovery algorithm.
+		We define the error rate of exact recovery for an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ as
+		$P_e:=P(\hat{Y} \neq Y)$.
 \end{definition}
 The above definition is slightly different with that for SBM as the latter uses $\hat{Y} \neq \pm Y$.
 When no side information is available, we can only expect a recovery up to a global sign. However,
 since $p_0 \neq p_1$, the sign of $Y$ can be determined when side information is in hand.
 
 We make another remark that exact recovery metric imposes stricter requirement on the recovery algorithm than its weak recovery
-counterpart, which uses $\dist(\hat{Y}, Y)/n$ to measure the recovery error.
-
+counterpart, which uses $\dist(\hat{Y}, Y)/n$ as the error rate.
 Below we analyze the exact recovery error of the maximum likelihood estimator $\hat{Y}$
 given by \eqref{eq:mle}.
 Without edge observations, the estimation is decomposed into $n$
