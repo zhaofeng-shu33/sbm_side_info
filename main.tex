@@ -40,10 +40,9 @@
 \maketitle
 \begin{abstract}
     Side information improves the accuracy in community detection problems.
-    While experimental results demonstrates the superior performance of detection
-    based on both the node attributes and graph structure, theoretical exploration
-    remains open.
-    In this paper, we obtain asymptotic error rate of the 
+    While experimental results demonstrate the superior performance of many detection methods
+    based on both the node attributes and graph structure, the question of fundamental limit of the error rate remains open.
+    In this paper, we obtain asymptotic optimal error rate in the sense of 
     exact recovery for a special two-community symmetric stochastic block model (SSBM) with side information consisting multiple features.
     Our result shares insight on the sample complexity of node features and of node numbers in the graph.
 \end{abstract}
@@ -53,11 +52,11 @@ In addition to edge information, extra node features are often available in real
 noisy labels \cite{mossel2016local}, or
 feature vectors \cite{zhang2016community}. Combining the edge and node information, it is expected that better
 accuracy can be achieved for community detection problems. Within this context, a central problem 
-is to investigate the gain that extra information brings to the detection problem, compared to the case where only edge observation is available.
+is to investigate the gain that the extra information brings to the detection problem, compared to the case where only edge observation is available.
 
 	% first paragraph: short intro to SBM 
-To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than that between different communities \cite{holland1983stochastic}. For the sole presence of SBM, as the size of community grows, the error rate decreases in both the exact recovery and weak recovery metric. For a special case of two community model,
-the weak recovery error rate has been obtained as $n^{-(\sqrt{a} - \sqrt{b})^2/2}$ where $a,b$ are parameters of SBM \cite{zhang2016}.
+To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than that between different communities \cite{holland1983stochastic}. For the sole presence of SBM, as the size of community grows, the error rate of many algorithms decreases to zero in both the exact recovery and weak recovery metric \cite{yun2014accurate,fei2019achieving}. For a special case of two community model,
+the optimal error rate for weak recovery has been obtained as $n^{-(\sqrt{a} - \sqrt{b})^2/2}$ where $a,b$ are parameters of SBM \cite{zhang2016}.
 
 With the presence of extra node information, the condition of exact recovery is improved
 and generalized \cite{saad2018community}. However, previous study does not exactly quantify the error rate of SBM with side information. 
@@ -103,7 +102,8 @@ to zero \cite{abbe2015exact}.
 For SBM model with side information, we find the error rate of SBM with equal community size constraint allows close-form solution while SBM with
 equal probability does not have such good property.
 
-Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the weak recovery error rate. Both the dense and sparse graph are considered. In this paper, we consider the exact recovery metric and obtain similar results containing
+Rényi divergence has been used in SBM in \cite{zhang2016} to characterize the optimal error rate in weak
+recovery sense. Both the dense and sparse graph are considered. In this paper, we consider the optimal error rate in exact recovery metric and obtain similar results containing
 Rényi divergence
 in both the two types of graphs for SBM with side information.
 \section{Mathematical Models}\label{s:model}
