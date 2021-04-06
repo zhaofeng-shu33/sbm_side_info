@@ -13,6 +13,7 @@
 \newtheorem{remark}{Remark}
 \newtheorem{corollary}{Corollary}
 \DeclareMathOperator{\SSBM}{SSBM}
+\DeclareMathOperator{\SBMSI}{SBMSI}
 \DeclareMathOperator{\SDP}{SDP}
 \DeclareMathOperator{\Tr}{Tr}
 \DeclareMathOperator{\E}{\mathbb{E}}
@@ -55,17 +56,17 @@ accuracy can be achieved for community detection problems. Within this context, 
 is to investigate the gain that the extra information brings to the detection problem, compared to the case where only edge observation is available.
 
 	% first paragraph: short intro to SBM 
-To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than that between different communities \cite{holland1983stochastic}. For the sole presence of SBM, as the size of community grows, the error rate of many algorithms decreases to zero in both the exact recovery and weak recovery metric \cite{yun2014accurate,fei2019achieving}. For a special case of two community model,
+To get theoretical insight into such a problem, it is often assumed that the graph is generated from a simple probabilistic model called Stochastic Block Model (SBM), in which the probability of edge existence is higher within the community than that between different communities \cite{holland1983stochastic}. For the sole presence of SBM, as the size of community grows, the error rate of many algorithms decreases to zero in both the exact recovery and weak recovery metric \cite{yun2014accurate,fei2019achieving}. For the special case of a two-community model,
 the optimal error rate for weak recovery has been obtained as $n^{-(\sqrt{a} - \sqrt{b})^2/2}$ where $a,b$ are parameters of SBM \cite{zhang2016}.
 
 With the presence of extra node information, the condition of exact recovery is improved
-and generalized \cite{saad2018community}. However, previous study does not exactly quantify the error rate of SBM with side information. 
-The error rate, achieved by maximum likelihood method, is the fundamental limit of recovery algorithms. It is known that many algorithms like variants of SDP relaxation and
-spectral clustering can achieve exact recovery but their error rate may not achieve the fundamental limit. The study of error rate provides a unified way to compare
-different algorithms at least in experiment level.
-This paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. We have obtained that
+and generalized \cite{saad2018community}. However, previous study does not exactly quantify the optimal error rate of SBM with side information. This paper will fill the gap by considering a model of two-community SBM with extra node feature vectors. We have obtained that
 the exact recovery error decreases polynomially in a rate $\gamma D_{1/2}(p_0 || p_1) + (\sqrt{a} - \sqrt{b})^2 -2$
 where the contribution of side information is coded in Rényi divergence.
+The optimal error rate on the extended model is achieved by maximum likelihood method, which is only theoretically justified and can not be applied directly in practical problems without approximation. For many other implementable algorithms like variants of SDP relaxation and
+spectral clustering, their error rate decreases to zero but may not achieve the fundamental limit given in this paper. Nevertheless, the study of optimal error rate provides a unified way to compare
+different algorithms in experiment level.
+
 
 
 This paper is organized as follows. In Section \ref{s:rw}, we review the previous works which are related with ours.
@@ -107,7 +108,7 @@ recovery sense. Both the dense and sparse graph are considered. In this paper, w
 Rényi divergence
 in both the two types of graphs for SBM with side information.
 \section{Mathematical Models}\label{s:model}
-The two-community symmetric stochastic block model (SSBM) is a special case of SBM, whose formal definition is given by:
+The two-community symmetric stochastic block model (SSBM) is a special case of SBM, and we give the formal definition of SSBM as follows:
 \begin{definition}[SSBM]
 	Let $0\leq q<p\leq 1$ and $V=[n]$. The random vector $Y=(Y_1,\dots,Y_n)\in \{\pm 1\}^n$ and random graph $G$ are drawn under $\SSBM(n,p,q)$ if
 	\begin{enumerate}
@@ -116,11 +117,11 @@ The two-community symmetric stochastic block model (SSBM) is a special case of S
 		\item There is an edge of $G$ between the vertices $i$ and $j$ with probability $p$ if $Y_i=Y_j$ and with probability $q$ if $Y_i \neq Y_j$; the existence of each edge is independent with each other.
 	\end{enumerate}
 \end{definition}
-Sampling from SSBM, we can get a pair $(Y,G)$ where each label $Y$ has a probability $ 1/ \binom{n}{n/2}$.
-From Bayesian point of view, the community detection task is to infer $Y$ from $G$.
-For this setting, the graph $G$ can be regarded as observations of edges. When
-additional node observations $X$ are added, we expect that better inference accuracy of $Y$ is achieved using $(G,X)$.
-The additional node observation is called side information, and we define it formally in the following way:
+Sampling from SSBM, we can get a pair $(Y,G)$ where each feasible label $Y=y$ has probability $ 1/ \binom{n}{n/2}$.
+Within this probabilistic setting, the community detection task is to infer $Y$ from $G$.
+When
+additional node observations $X$ are added, we expect that better inference accuracy of $Y$ is achieved using $(Y,X)$.
+The additional node observation is called side information, and we define it formally in the following model:
 \begin{definition}[SBMSI]
 	Let $(Y,G)$ be sampled from $\SSBM(n,p,q)$, $X_{i1}, \dots, X_{im}$ are i.i.d. random variables for $i \in [n]$,
 	whose probability density function $p(x)$ is determined by $Y_i$ as
@@ -130,39 +131,37 @@ The additional node observation is called side information, and we define it for
 	p_1(x) & Y_i = -1
 	\end{cases}
 	\end{equation}
-	We call the above generative model as SSBM with symmetric side information (SBMSI) with parameter $(n,p,q,p_0,p_1)$.
+	We call the above generative model as SSBM with symmetric side information (SBMSI) with parameter $(n,m,p,q,p_0,p_1)$.
 \end{definition}
-The node observations can be written concisely as $\{X_{ij} | i \in [n], j \in [m]\}$.
-We can denote the edge observations in a similar way by using $Z_{ij}:=\mathbbm{1}[\{i,j\} \in E(G)]$.
-Using $X_{ij}$ and $Z_{ij}$, the (posterior) likelihood function for $Y$ is
+The node observations can be written concisely as $\{X_{ij} | i \in [n], j \in [m]\}$. Besides, the graph $G$ can be regarded as observations of edges, and
+we can denote the edge observations in a similar way by using $Z_{ij}:=\mathbbm{1}[\{i,j\} \in E(G)]$.
+Using $X_{ij}$ and $Z_{ij}$, the likelihood function for $Y$ is
 \begin{equation}\label{eq:lh}
     p(x, z| Y=y) = p(z|y)\prod_{i=1}^n \prod_{j=1}^m p^{\sigma_i}_0(x_{ij})p^{1-\sigma_i}_1(x_{ij}) 
 \end{equation}
 where $p(z|y)$ is the likelihood function for $\SSBM$ and $\sigma_i = (1+y_i)/2$.
-Based on \eqref{eq:lh}, we can use maximum likelihood (ML) method to estimate
+Based on \eqref{eq:lh}, we can use the maximum likelihood (ML) method to estimate
 $Y$:
 \begin{align}
     \hat{Y} &= \arg\max_y p(x,z|Y=y) \notag \\
     s.t.\, & y_i \in \{\pm 1\}, \sum_{i=1}^n y_i=0 \label{eq:mle}
 \end{align}
 The estimator $\hat{Y}$, given by \eqref{eq:mle}, is a ML estimator in restricted parameter space.
-In contract, ML estimator for $y\in \{ \pm 1 \}^n$ (unrestricted parameter space) in considered in \cite{abbe17sideinfo} if the prior distribution
-of each $Y_i \sim Binom(\frac{1}{2})$.
-To introduce the notion of exact recovery, we use $\mathcal{F}(n,m,p,q)$ to represent the joint distribution
-of $Y,Z, X$.
-Then the formal definition of exact
-recovery is given as:
+In contract, ML estimator for $y\in \{ \pm 1 \}^n$ (unrestricted parameter space) is considered in \cite{abbe17sideinfo} for SBM with equal probability.
+To study the performance of the ML estimator, we need a metric of error rate,
+whose formal definition is given as:
 \begin{definition}[Error Rate of Exact Recovery for SSBM with side information]
-		Let $(Y,Z,X) \sim \mathcal{F}(n,m,p,q)$.
+		Let $(Y,Z,X)$ be sampled from $\SBMSI(n,m,p,q,p_0, p_1)$.
 		We define the error rate of exact recovery for an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ as
 		$P_e:=P(\hat{Y} \neq Y)$.
 \end{definition}
-The above definition is slightly different with that for SBM as the latter uses $\hat{Y} \neq \pm Y$.
+The above definition is slightly different from that of SBM as the latter uses $\hat{Y} \neq \pm Y$.
 When no side information is available, we can only expect a recovery up to a global sign. However,
-since $p_0 \neq p_1$, the sign of $Y$ can be determined when side information is in hand.
+since $p_0 \neq p_1$, the sign of $Y$ can also be determined when side information is in hand.
 
 We make another remark that exact recovery metric imposes stricter requirement on the recovery algorithm than its weak recovery
-counterpart, which uses $\dist(\hat{Y}, Y)/n$ as the error rate.
+counterpart, which uses $\mathbb{E}[\dist(\hat{Y}, Y)]/n$ as the error rate.
+
 Below we analyze the exact recovery error of the maximum likelihood estimator $\hat{Y}$
 given by \eqref{eq:mle}.
 Without edge observations, the estimation is decomposed into $n$
@@ -176,13 +175,13 @@ D_{1/2}(p_0 || p_1) = -2\log(\sum_{x \in \mathcal{X}} \sqrt{p_0(x)p_1(x)} )
 With node observations, we divide our discussion between two cases:
 \begin{enumerate}
 \item $p,q$ are constant values;
-\item $p = a \log n /n$ and $q = b \log n / b$.
+\item $p = a \log n /n$ and $q = b \log n / n$.
 \end{enumerate}
 The recovery error rate for the first case is given in Theorem \ref{thm:constant} while
 the latter case is analyzed in Theorem \ref{thm:Pe}.
 \begin{theorem}\label{thm:constant}
 	Let $\gamma = \frac{m}{n} = O(1)$. If $p,q$ are constant, using maximum likelihood estimator \eqref{eq:mle},
-	the error exponent of exact recovery error is given by:
+	the error exponent of exact recovery is given by:
 	\begin{equation}
 	-\lim_{n\to \infty} \frac{1}{n}\log P_e =  \gamma D_{1/2}(p_0 || p_1) + D_{1/2}(\Bern(p)||\Bern(q))
 	\end{equation} 
@@ -192,11 +191,11 @@ When $\gamma=0$, Theorem \ref{thm:constant} says $D_{1/2}(\Bern(p)||\Bern(q))$
 is the error exponent for exact recovery. Since weak recovery differs from exact recovery by a polynomial factor, $D_{1/2}(\Bern(p)||\Bern(q))$ is also the exponent for weak recovery, which has been obtained
 in \cite{zhang2016}. Besides, when $p,q$ are constant, for side information to take effects, the sample complexity $m$ should be of order $O(n)$. When $m=\omega(n)$, the side information dominates and the edge information is neglectable.
 
-The result for the second case of sparse graph
+In the above we have discussed the dense graph while the result for the sparse graph
 is summarized
 in the following theorem:
 \begin{theorem}\label{thm:Pe}
-Let $\gamma = \frac{\log m}{n}$, if $p = a \log n /n$ and $q = b \log n / n$, using maximum likelihood estimator \eqref{eq:mle},
+Let $\gamma = \frac{\log m}{n}$ be a constant. If $p = a \log n /n$ and $q = b \log n / n$, using maximum likelihood estimator \eqref{eq:mle},
 if
 \begin{equation}\label{eq:positive_condition}
 \gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 > 0
@@ -217,21 +216,24 @@ P_e \geq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2
 \end{equation}
 \end{theorem}
 Theorem \ref{thm:Pe} tells us that the side information $X$ accelerates the
-decreasing of error probability $P_e$. Under some parameter configurations specified in \eqref{eq:oneC},
+decreasing of error probability $P_e$ quantified by $\gamma D_{1/2}(p_0||p_1)$.
+Under some parameter configurations specified in \eqref{eq:oneC},
 the quantity $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2$
 exactly describes the error rate for the exact recovery problem of SBMSI.
 
 In addition, when $p_0=p_1$,
 Theorem \ref{thm:Pe} gives the error rate of maximum likelihood for SSBM. This corollary is
 summarized as follows:
-\begin{corollary}\label{eq:cor}
+\begin{corollary}
 If the condition
 \begin{equation}
 (\sqrt{a}-\sqrt{b})^2-2 > 3a^{1/3}b^{1/3}(a^{1/6}-b^{1/6})^2
 \end{equation}
 is satisfied,
  and we consider $\SSBM(n,\frac{a\log n}{n}, \frac{b \log n}{n})$. For ML algorithms, the exact recovery error rate $P_e$ satisfies
-$\lim_{n\to \infty} \frac{\log P_e}{\log n} =2-(\sqrt{a} - \sqrt{b})^2$.
+\begin{equation}\label{eq:cor}
+\lim_{n\to \infty} \frac{\log P_e}{\log n} =2-(\sqrt{a} - \sqrt{b})^2
+\end{equation}
 \end{corollary}
 Using similar proof techniques, we can show that for SBM with equal probability, the error rate of ML is $n^{1-(\sqrt{a} - \sqrt{b})^2/2}$
 as long as $\sqrt{a} -\sqrt{b} > \sqrt{2}$,
