@@ -203,7 +203,7 @@ if
 then the error probability
 of exact recovery is bounded by
 \begin{equation}\label{eq:PeMain}
-P_e \leq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2\right)}
+P_e \leq (1+o(1)) n^{-\left(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2-2 + o(1)\right) }
 \end{equation}
 If the following condition
 \begin{align}
@@ -241,7 +241,7 @@ which converges slower than that given in \eqref{eq:cor}. This difference comes 
 classified or only a single node.
 
 \section{Conclusion}\label{s:conclusion}
-In this paper, we obtain a close-form exact recovery error rate for a two-community SBM with side information. This rate
+In this paper, we obtain a close-form exact recovery error rate for a two-community SBM with side information. Our result
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
 our result shares insight on sample complexities of node features.
 \section{Proofs}\label{s:proof}
@@ -252,8 +252,8 @@ From type theory, the set of possible types
 for $m$ samples with alphabet $\mathcal{X}$ is denoted as $\mathcal{P}_m$; For any $P\in \mathcal{P}_m$, the probability of the type
 class $T(P)$ under distribution $p_i$ is denoted as $Q_i^{m}(T(P))$.
 \begin{proof}[Proof of Theorem \ref{thm:constant}]
-Let $Y=y^*$ be the ground truth, if there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	,
-then the ML in \eqref{eq:mle} fails to exactly recover $y^*$. Let $F_k$ denote
+Let $Y=y^*$ be the ground truth.
+ML in \eqref{eq:mle} fails to exactly recover $y^*$ implies that there exists $y\neq y^*$ such that $p(x,z|y) > p(x,z|y^*)$	. Let $F_k$ denote
 the event when there are $k$ pairs difference between $y$ and $y^*$.
 \begin{equation}\label{eq:Fk}
 F_k:=\{\exists y \in \{\pm 1\}^n | \dist(y, y^*)=2k, p(x,z|y) > p(x,z|y^*) \}
@@ -288,9 +288,11 @@ The probability of the event $A_k$ given by \eqref{eq:mnk} can be estimated by S
 $-\frac{1}{kn}\log P(A_k) \to \theta^*_k$ where 
 \begin{align*}
 \theta^*_k &= \min \gamma (D(\widetilde{X}_1||p_0) + D(\widetilde{X}_2||p_1)) + \\
-&(1-\frac{2k}{n})D(\widetilde{Z}||\Bern(p)) + D(\widetilde{Z}'||\Bern(q)) 
+&(1-\frac{2k}{n})D(\widetilde{Z}||\Bern(p)) + D(\widetilde{Z}'||\Bern(q))  \\
+& (\widetilde{X}_1, \widetilde{X}_2, \widetilde{Z}, \widetilde{Z}')
+\textrm{ satisfy } \eqref{eq:mnk}
 \end{align*}
-while \eqref{eq:mnk} is satisfied for these distributions. Using the Lagrange multiplier, we can get
+Using the Lagrange multiplier, we can get
 \begin{align*}
 p_{\widetilde{X}_1}(x) = c_1 p_0^{1-\lambda}(x)p_1^{\lambda}(x)\quad & p_{\widetilde{X}_2}(x) = c_2 p_1^{1-\lambda}(x)p_0^{\lambda}(x) \\
 p_{\widetilde{Z}}(z) = c_3 p_{B_p}^{1-\lambda}(x)p_{B_q}^{\lambda}(z)\quad &
@@ -298,7 +300,7 @@ p_{\widetilde{Z}'}(z) = c_4 p_{B_q}^{1-\lambda}(x)p_{B_p}^{\lambda}(z)
 \end{align*}
 where $c_1, \dots, c_4$ are normalization coefficients for these distributions.
 The parameter $\lambda$ is chosen such that \eqref{eq:mnk} becomes equality, which leads to $\lambda=\frac{1}{2}$.
-Therefore, $\theta^*_k = \gamma D_{1/2}(p_0 || p_1) +(1-\frac{2k}{n}) D_{1/2}(\Bern(p)||\Bern(q))$
+Therefore, $\theta^*_k = \gamma D_{1/2}(p_0 || p_1) +(1-\frac{2k}{n}) D_{1/2}(\Bern(p)||\Bern(q))$.
 Denoting $C_1=\gamma D_{1/2}(p_0 || p_1), C_2=D_{1/2}(\Bern(p)||\Bern(q))$ for short,
 then $
 P(A_k) \leq \exp(-knC_1-k(n-2k) C_2)
@@ -313,29 +315,30 @@ P_e & \leq \sum_{k=1}^{n/4} \binom{n/2}{k}^2 P(A_k) \\
 \end{align*}
 where $f(k) = \frac{2k}{n}\log \frac{2k}{ne} + k(C_1+C_2) - \frac{2k^2}{n}C_2$.
 By computing $f'(x)= \frac{2}{n} \log \frac{2x}{n} + C_1+C_2 - \frac{4C_2x}{n}$, $1\leq x \leq \frac{n}{4}$.
-$f'(1) > 0 , f'(\frac{n}{4}) > 0$. Therefore, $f(x)$ increases in the interval $[1, \frac{n}{4}]$.
-Therefore, $f(k) \geq f(1)$ for $1\leq k \leq \frac{n}{4}$.
+$f'(1) > 0 , f'(\frac{n}{4}) > 0 \Rightarrow f'(x) > 0$ for $1\leq x \leq \frac{n}{4}$.
+Therefore, $f(x)$ increases in the interval $[1, \frac{n}{4}]$, and $f(k) \geq f(1)$ for $1\leq k \leq \frac{n}{4}$.
 \begin{equation}
 P_e \leq \frac{n}{4}\exp(-nf(1)) = \exp(-n (C_1+C_2+o(1)))
 \end{equation}
 On the other hand $P_e \geq P(A_1) = \exp(-n(C_1+C_2+o(1)))$.
 Finally we have $-\frac{1}{n} \lim_{n \to \infty} \log P_e = C_1+C_2$.
 \end{proof}
-Before proof of theorem \ref{thm:Pe}, we introduce the following lemma, whose proof can follow
-in.
+Before the proof of Theorem \ref{thm:Pe}, we introduce the following lemma, which gives the lower bound
+of $P(A_1)$ for sparse graph.
 \begin{lemma}\label{lem:single_lower}
 For event $E$ specified in \eqref{eq:ein} with $k=1$, the following estimation holds
 \begin{equation}
 P(E) \geq \exp(-(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a}-\sqrt{b})^2 + o(1))\log n )
 \end{equation}
 \end{lemma}
-\begin{proof}
-	When $k=1$, the left hand side of \eqref{eq:ein} can be expressed as
+\begin{proof}[Proof of Lemma \ref{lem:single_lower}] 
+	When $k=1$, the left-hand side of \eqref{eq:ein} can be rewritten as $P(\sum_{i=1}^{n-2} (z'_i - z_i) \geq \epsilon)$
+	where
 	\begin{align*}
-	\epsilon\triangleq&m\cdot [(D(P_{\widetilde{X}^{i_1}} || P_0) - D(P_{\widetilde{X}^{i_1}} || P_1)) \\
-	&+(D(P_{\widetilde{X}^{i_2}} || P_1) - D(P_{\widetilde{X}^{i_2}} || P_0))],
+	\epsilon\triangleq&\frac{m}{\log a/b}\cdot [(D(P_{\widetilde{X}^{1}} || P_1) - D(P_{\widetilde{X}^{1}} || P_0)) \\
+	&+(D(P_{\widetilde{X}^{2}} || P_0) - D(P_{\widetilde{X}^{2}} || P_1))],
 	\end{align*}
-	where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. Let $P_{\widetilde{X}^{i_1}}$ and $P_{\widetilde{X}^{i_2}}$ follow the distribution
+	Let $P_{\widetilde{X}^{i_1}}$ and $P_{\widetilde{X}^{i_2}}$ follow the distribution
 	$P(X=x)=\frac{\sqrt{p_0(x)p_1(x)}}{ \sum_{x\in \mathcal{X}} \sqrt{p_0(x) p_1(x)}} $.
 	Then we have that $\epsilon =0$. Using Sanov's theorem and Lemma 4 from \cite{abbe2015exact}, we have that
 	\begin{align*}
@@ -346,43 +349,39 @@ P(E) \geq \exp(-(\gamma D_{1/2}(p_0||p_1) + (\sqrt{a}-\sqrt{b})^2 + o(1))\log n 
 	\end{align*}
 \end{proof}
 \begin{proof}[Proof of Theorem \ref{thm:Pe}]
-Below we use Chernoff inequality to give an upper bound of \eqref{eq:ein}.
+Below we use Chernoff inequality to give an upper bound of \eqref{eq:ein}:
 $P(A) \leq n^{-k\theta^*_k}$ where $\theta^*_k=\gamma D_{1/2}(p_0||p_1)+(1-\frac{2k}{n})(\sqrt{a}-\sqrt{b})^2$.
 \begin{align*}
 P(A_k) &\leq \mathbb{E}[\exp \left( s\sum_{i=1}^{km}
 \left( \log \frac{p_1(x_{1i})}{p_0(x_{2i})}
 + \log \frac{p_0(x_{2i})}{p_1(x_{2i})} \right) \right)]\\
-&\cdot \mathbb{E}[\exp\left(s\log \frac{a}{b}\sum_{i=1}^{k(n-2k)} (z'_i - z_i )\right)] \\
-& \stackrel{(a)}{=} (\sum_{x\in \mathcal{X}} p_0^{1-s}p_1^{s})^{km} (\sum_{x\in \mathcal{X}} p_1^{1-s}p_0^{s})^{km}\cdot \exp (k\log n \\
-& \cdot (1-\frac{2k}{n})(-a-b+a^sb^{1-s}+b^sa^{1-s} +o(1)) )
+& \cdot \mathbb{E}[\exp\left(s\log \frac{a}{b}\sum_{i=1}^{k(n-2k)} (z'_i - z_i )\right)] \\
+& \stackrel{(a)}{=} (\sum_{x\in \mathcal{X}} p_0^{1-s}(x)p_1^{s}(x))^{km} (\sum_{x\in \mathcal{X}} p_1^{1-s}(x)p_0^{s}(x))^{km} \\
+& \cdot \exp (k\log n (1-\frac{2k}{n})(-a-b+a^sb^{1-s}+b^sa^{1-s} +o(1)) )
 \end{align*}
-where $(a)$ follows from independence. Choosing $s=\frac{1}{2}$ we then have 
+where $(a)$ follows from independence condition. Choosing $s=\frac{1}{2}$ we then have 
 $P(A_k) \leq  n^{-k(\theta^*_k+o(1))}$.
 
-Using the union bound, we can control $P(F_k)$ by
-$$
-P(F_k) \leq \binom{n/2}{k}^2 P(A_k)
-$$
 When $k \geq \frac{n}{\sqrt{\log n}}$, using Lemma 8 of \cite{feng2021},
 $P(F_k)$ decreases exponentially. The error probability for $k < \frac{n}{\sqrt{\log n}}$
 is analyzed using \eqref{eq:FAk}.
 \begin{align*}
-&P_e \leq (1+o(1))\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) \leq (1+o(1)) \cdot \\
-&\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
+&P_e \leq (1+o(1))\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) \leq (1+o(1))\\
+& \cdot \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
 \end{align*}
 where $\mu = (\sqrt{a} - \sqrt{b})^2-2 + \gamma D_{1/2}(p_0||p_1) > 0$.
 Using the inequality
 $$
-\frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq \frac{\mu}{2} C\sqrt{\log n}
+\frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq  C\sqrt{\log n}
 $$
 for $1\leq k \leq \frac{n}{\sqrt{\log n}}$, we can obtain
 \begin{align*}
-P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + o(1))) \\
-& =(1+o(1)) \frac{n^{-\mu}}{1-n^{-\mu }} = (1+o(1))n^{-\mu}
+P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k((-\mu + o(1)) \log n )) \\
+& =(1+o(1)) \frac{n^{-\mu + o(1)}}{1-n^{-\mu + o(1)}} = (1+o(1))n^{-\mu + o(1)}
 \end{align*}
 Therefore, \eqref{eq:PeMain} is established.
 
-To prove the lower bound \ref{eq:PeMainL}, we first
+To prove the lower bound \eqref{eq:PeMainL}, we first
 define the event $A_{ij}$ as $\{p(x,z|y) > p(x,z|y^*),y_s=-y^*_s, s=i,j \textrm{ and } \dist(y,y^*)=2  \}$.
 It follows that $\cup_{1\leq i < j\leq n} A_{ij} \subset F$ where $F$ denotes the event when ML fails to recover the community labels exactly.
 By Bonferroni inequality,
