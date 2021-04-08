@@ -241,7 +241,7 @@ which converges slower than that given in \eqref{eq:cor}. This difference comes 
 classified or only a single node.
 
 \section{Conclusion}\label{s:conclusion}
-In this paper, we obtain a close-form exact recovery error rate for a two-community SBM with side information. Our result
+In this paper, we obtain the optimal error rate in the sense of exact recovery for a two-community SBM with side information. Our result
 shows that the detection error can be characterized by Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
 our result shares insight on sample complexities of node features.
 \section{Proofs}\label{s:proof}
@@ -388,14 +388,14 @@ By Bonferroni inequality,
 $P(\cup_{1\leq i < j\leq n} A_{ij}) \geq \sum_{1\leq i < j\leq n} P(A_{ij}) - \sum_{(i,j) < (r,s) } P(A_{ij} \cap A_{rs})$.
 We first deal with $P(A_{ij})$. Notice that $A_{ij}$ is equivalent with \eqref{eq:ein} for $k=1$. By Lemma \ref{lem:single_lower}, $P(A_{ij})$ is lower bounded by $n^{-\gamma D_{1/2}(p_0 || p_1)-(\sqrt{a} - \sqrt{b})^2 +o(1)}$. Since $|\{1\leq i < j\leq n\}|=\binom{n}{2}$, the term $\sum_{1\leq i < j\leq n} P(A_{ij})$ is of order $\frac{1}{2}n^{-\mu+o(1)}$.
 Next we give upper bound of $P(A_{ij} \cap A_{rs})$ according to two cases.
-Firstly is the case when $|\{i,j,r,s\}|=4$. Then $A_{ij} \cap A_{rs}$ implies the event
+First is the case when $|\{i,j,r,s\}|=4$. Then $A_{ij} \cap A_{rs}$ implies the event
 $A_{ijrs}: \{p(x,z|y^{(1)})p(x,z|y^{(2)}) > p^2(x,z|y^*)\}$ where $y^{(1)}(y^{(2)})$ differs from $y^*$ at position $i,j(r,s)$.
 After taking the $\log$ on both sides and simplification, the inequality in $A_{ijrs}$ becomes \eqref{eq:ein}  with $k=2$.
 Therefore, $P(A_{ij} \cap A_{rs}) \leq n^{-2(\theta^*_2 + o(1))} $. There are
 $\binom{n}{4} \leq n^4$ terms. Therefore, the probability sum
-is bounded by $n^{-2\mu +o(1)}$ which has smaller order than $n^{-\mu+o(1)}$ since $\mu > 0$.
+is bounded by $n^{-2\mu +o(1)}$, which has smaller order than $n^{-\mu+o(1)}$ since $\mu > 0$.
 
-Another case happens when $|\{i,j,r,s\}|=3$. Under such case, we also suppose $y^{(1)}_i = y^{(2)}_r = 1$, then
+Another case happens when $|\{i,j,r,s\}|=3$. Under such case, we first suppose $i=r, y^{(1)}_i = y^{(2)}_r = 1$, then
 \begin{align}
 A_{ijrs}: &\, 2\sum_{i=1}^m  \log \frac{p_1(x_{1i})}{p_0(x_{2i})}
 + \sum_{i=1}^{2m} \log \frac{p_0(x_{2i})}{p_1(x_{2i})} \\
@@ -408,25 +408,26 @@ Using Chernoff inequality, we can write an upper bound of $P(A_{ijrs})$ as
 &\exp(\log n (-\frac{3}{2}(a+b)+a\exp(-s\log \frac{a}{b})+b\exp(s\log \frac{a}{b}) \\
 &+ \frac{a}{2}\exp(-2s\log \frac{a}{b})+\frac{b}{2}\exp(2s\log \frac{a}{b})))
 \end{align*}
-Let $s=\frac{1}{3}$ we then have
+Let $s=\frac{1}{3}$. We then have
 \begin{align*}
 &P(A_{ijrs})\leq  (\sum_{x\in \mathcal{X}} p_0^{1/3}(x)p_1^{2/3}(x))^{3m}\\
 & \cdot \exp(\frac{3}{2}\log n (-a-b+a^{1/3}b^{2/3}+a^{2/3}b^{1/3})) \\
-&=  \exp(-n(\gamma D_{2/3}(p_1 || p_0) + \frac{3}{2} (a+b-a^{1/3}b^{2/3}-a^{2/3}b^{1/3})))
+&=  \exp(-\log n(\gamma D_{2/3}(p_1 || p_0) + \frac{3}{2} (a+b-a^{1/3}b^{2/3}-a^{2/3}b^{1/3})))
 \end{align*}
 From the condition mentioned in \eqref{eq:oneC},
 it follows that
 $$
-P(A_{ijrs}) \leq n^{-\mu'-1-(\gamma \cdot D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2)}
+P(A_{ijrs}) \leq n^{-\mu'/2-1-(\gamma  D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2)}
 $$
 where $\mu'>0$ is the difference of two sides in \eqref{eq:oneC}. 
 There are at most $n^3$ such terms, then the summation is bounded by
-$n^{-\mu'-\mu }$,
+$n^{-\mu'/2-\mu }$,
 which has smaller order than $n^{-\mu}$.
 
-If $y^{(1)}_i = y^{(2)}_r = -1$, similar deduction can be made, and $D_{2/3}(p_0||p_1)$ is used.
+If $i=r, y^{(1)}_i = y^{(2)}_r = -1$, similar deduction can be made, and $D_{2/3}(p_0||p_1)$ is used
+instead.
 We conclude that $P(F) \geq P(\cup_{1\leq i < j\leq n} A_{ij}) \geq
-(1+o(1))n^{-\mu}$.
+(1+o(1))n^{-\mu + o(1)}$.
 \end{proof}
 
 
