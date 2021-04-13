@@ -327,30 +327,27 @@
 		with high probability.
 				Instead of considering the above property directly, we split \eqref{eq:G1ij} into two parts
 		\begin{align}
-			\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}
-			\geq & \log \frac{p(1-q)}{q(1-p)}(\frac{\log n}{\log\log n} + 1 + \notag\\
-			& E(i_1, S_1 \backslash H_1) - E(i_1, S_2)) \label{eq:single_side_Gi}\\
-			\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}
-			\geq &  \log \frac{p(1-q)}{q(1-p)}(\frac{\log n}{\log\log n} + 1 + \notag \\
-			& E(i_2, S_2 \backslash H_2)  - E(i_2, S_1))\label{eq:single_side_Gai}
+			&\frac{1}{2}(\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})})
+			   \notag\\
+			& \geq\log \frac{p(1-q)}{q(1-p)}(\frac{\log n}{\log\log n} + 1 + E(i_1, S_1 \backslash H_1) - E(i_2, S_1)) \label{eq:single_side_Gi}\\
+			&\frac{1}{2}(\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})})
+			 \notag \\
+			& \geq   \log \frac{p(1-q)}{q(1-p)}(\frac{\log n}{\log\log n} + 1 +E(i_2, S_2 \backslash H_2)  - E(i_1, S_2))\label{eq:single_side_Gai}
 		\end{align}
-		
-		Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$,
-		$G(i_1)$(or $G'(i_2)$) be the event that \eqref{eq:single_side_Gi} (or \eqref{eq:single_side_Gai}) holds for any $i_1 \in H_1$(or $i_2 \in H_2$).
-		Since $P(\cup_{i_1\in H_1, i_2\in H_2} G(i_1,i_2)) \le P(\cup_{i_1\in H_1, i_2\in H_2} F(i_1,i_2))$, we only need to show $P(\cup_{i_1\in H_1, i_2\in H_2} G(i_1,i_2))\to 1$, which
-		implies $P(\cup_{i_1\in H_1, i_2\in H_2} F(i_1,i_2)) \to 1$.
-		Notice that the intersection of the event $\cup_{i_1 \in H_1} G(i_1)$
-		and $\cup_{i_2 \in H_2} G'(i_2)$ implies $\cup_{i_1\in H_1, i_2\in H_2} G(i_1,i_2)$.
-		The probability of this intersection event is further lower bounded by
-		$P(\cup_{i_1 \in H_1} G(i_1)) + P(\cup_{i_2 \in H_2} G'(i_2)) - 1$. Therefore,
-		we only need to show $P(\cup_{i_1 \in H_1} G(i_1)) \to 1$ to finish the proof.
+		where $x$ is a constant to be determined.
+		Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for some $i_1\in H_1$ and $i_2\in H_2$,
+		$\widetilde{G}(i_1,i_2)$(or $G'(i_1, i_2)$) be the event that \eqref{eq:single_side_Gi} (or \eqref{eq:single_side_Gai}) holds for some $i_1 \in H_1$ and $i_2 \in H_2$.
+		Since $P(\cup_{i_1 \in H_1, i_2 \in H_2} \widetilde{G}(i_1) \cap G'(i_2) )\leq  P(\cup_{i_1\in H_1, i_2\in H_2} G(i_1,i_2)) \le P(\cup_{i_1\in H_1, i_2\in H_2} F(i_1,i_2)) \leq P(F)$, we only need to show $P(\cup_{i_1 \in H_1, i_2 \in H_2} \widetilde{G}(i_1) \cap G'(i_2) )\to 1$.
+		We consider to show that its complement event $P(\cap_{i_1 \in H_1, i_2 \in H_2} \widetilde{G}^c(i_1) \cup G'^c(i_2) )\to 0$.
 		Suppose that
-		the probability of $G(i_1)$ is lower bounded by $\frac{1}{n^{-1+\mu}}$ for some positive constant $\mu$, then we have that 
+		the probability of $\widetilde{G}(i_1,i_2)$ is lower bounded by $\frac{1}{n^{-1+\mu}}$ for some positive constant $\mu$.
+		By the same argument $P(G'(i_1,i_2)) \geq \frac{1}{n^{-1+\mu}}$.
+		Then we have that 
 		\begin{align}
-			& P(\cap_{i_1 \in H_1} G^c(i_1))= (1 - P(G(i_1,i_2)))^{|H_1|}\nonumber\\
-			& \leq (1-n^{-1+u})^{n/\log^3 n} \leq \exp(-n^{\mu+ o(1)}) \to 0, \label{eq:boundg}
+			& P(\cap_{i_1 \in H_1, i_2 \in H_2}\widetilde{G}^c(i_1) \cup G'^c(i_2) ) \leq (1 - P(\widetilde{G}(i_1,i_2)))^{|H_1|}\nonumber\\
+			& \leq (1-n^{-1+u_1})^{n/\log^3 n} \leq \exp(-n^{\mu+ o(1)}), \label{eq:boundg}
 		\end{align}
-		where  $G^c(i_1)$ is the complement of the event $G(i_1)$. Eq. \eqref{eq:boundg} implies that with high probability $G(i_1)$ occurs for some $i_1 \in H_1$, and hence the failure occurs.
+		Eq. \eqref{eq:boundg} implies that with high probability $G(i_1)$ occurs for some $i_1 \in H_1$, and hence the failure occurs.
 		
 		Below we prove $P(G(i_1)) \geq \frac{1}{n^{-1+\mu}}$. Note that the right hand side of \eqref{eq:single_side_Gi} is upper bounded by $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2+o(\log n))$, where $Z_1\sim \Binom(\frac{n}{2}-1,\frac{a\log n}{n})$ and $Z_2\sim \Binom(\frac{n}{2},\frac{b\log n}{n})$ 
 		follow binomial distributions. A binomial distribution $\Binom(s,r)$ is the probability distribution of the sum of $s$ independent Bernoulli random variables, each equals $1$ with probability $r$.
