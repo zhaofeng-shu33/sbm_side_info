@@ -307,7 +307,7 @@
 		The achievability part can be proved by our SDP algorithm, the details of which will be given in  Section \ref{s:sdp}.
 		In the following we show that exact recovery is not possible if $\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 < 2$. Most parts of the arguments follow a similar manner to those in \cite{abbe2015exact}. Those similar arguments are briefly stated due to space limitation. 
 		
-		Let $S_1$ and $S_2$ be the set of nodes with labels $1$ and $-1$, respectively. Let $H_1$ be a subset of $S_1$ of size $\frac{n}{\log^3 n}$. It was shown in \cite{abbe2015exact} that in the SBM, with probability at least $\frac{9}{10}$, no node in $H_1$ is connected to more than $\frac{\log n}{\log\log n}$ edges in $H_1$. Similarly, let $H_2$ be a subset of $S_2$ of size $\frac{n}{\log^3 n}$. Then, with high probability $H_2$ satisfies the same property as $H_1$ does. 
+		Let $S_1$ and $S_2$ be the set of nodes with labels $1$ and $-1$, respectively. Let $H_1$ be a subset of $S_1$ of size $\frac{n}{\log^3 n}$. It was shown in \cite{abbe2015exact} that in the SBM, with probability at least $\frac{9}{10}$, no node in $H_1$ is connected to more than $\frac{\log n}{\log\log n}$ nodes in $H_1$. Similarly, let $H_2$ be a subset of $S_2$ of size $\frac{n}{\log^3 n}$. Then, with high probability $H_2$ satisfies the same property as $H_1$ does. 
 		
 		For any $i_1\in H_1$ and $i_2\in H_2$, let $F(i_1,i_2)$ be the event that the likelihood $P(X,Z|(Y_1,\ldots,Y_n))$ (defined in \eqref{eq:lh}) with $Y_{i_1}=-1,Y_{i_2}=1$ is larger than the likelihood $P(X,Z|(Y_1,\ldots,Y_n))$ with $Y_{i_1}=1,Y_{i_2}=-1$, which results in  recovery failure because the maximum likelihood estimate is equivalent to maximum a posteriori probability estimate when $Y$ is uniformly distributed. For a node $i$ and a node set $S\subset\{1,\ldots,n\}, $let $E(i,S)$ be the number of edges between $i$ and nodes in $S$. Then, according to \eqref{eq:lh}, the event $F(i_1,i_2)$ is equivalent to  
 		the following 
@@ -388,12 +388,12 @@
 	%However, we find that
 	%the maximal solution is unchanged when $\kappa$ takes other values as long as $\kappa > b\frac{\log %n}{n}$.
 	
-	Let $v^*$ be the optimal solution to \eqref{eq:matrix_mle} and $V=(1,v^*)(1,v^*)^T$, where $(1,v^*)$ is a $(n+1)$-dimensional  vector obtained by concatenating $1$ and $v^*$.
-	Then, the optimal value of \eqref{eq:matrix_mle} equals $\frac{1}{2}Tr(\widetilde{B}V)$, where
+	Let $v^*$ be the optimal solution to \eqref{eq:matrix_mle} and $V^*=(1,v^*)(1,v^*)^T$, where $(1,v^*)$ is a $(n+1)$-dimensional  vector obtained by concatenating $1$ and $v^*$.
+	Then, the optimal value of \eqref{eq:matrix_mle} equals $\frac{1}{2}Tr(\widetilde{B}V^*)$, where
 	\begin{equation}\label{eq:B_lambda_def}
 		\widetilde{B} = \begin{pmatrix} 0 & h^T  \\ h  & \frac{1}{2}B \end{pmatrix}.
 	\end{equation}
-	We wish to show that $V$ is the unique optimal solution to the following problem.
+	We wish to show that $V^*$ is the unique optimal solution to the following problem.
 	\begin{align}
 		\max_V\, Tr(\tilde{B}V)  &\notag\\
 		s.t.\, V_{ii} &= 1, \notag\\
