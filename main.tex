@@ -65,7 +65,7 @@
 	Yet, 
 	the difference between the balanced assumption in this paper and the equal probability assumption in \cite{abbe17sideinfo},  along with the contributions of this paper, are as follows. 
 	
-	
+
 	Firstly, while no closed form expression of the exact recovery threshold can be established in \cite{abbe17sideinfo} for  the binary symmetric SBM, in this paper, we derived a sharp and closed form threshold when balanced assumption is considered. Note that the result in \cite{abbe17sideinfo} does not imply our threshold. Our threshold indicates a separation between the side information and the graph data. Such separation provides an insight that the graph data and the side information can be designed and collected independently to achieve exact recovery. 
 	Secondly, we proposed an SDP based algorithm that achieves the threshold with high probability, while an SDP algorithm is not available in \cite{abbe17sideinfo}. Note that the admissibility of an SDP algorithm normally requires a balanced assumption \cite{abbe2015exact},
 	\cite{esmaeili2019community} or other assumptions that the community sizes are fixed \cite{Hajek16}. Our SDP algorithm is a generalization of the SDP in \cite{abbe2015exact} where side information is included. To this end, we added more linear constraints to the SDP problem and the proof is more involved.
@@ -325,7 +325,7 @@
 			\ge &\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, S_1 \backslash H_1) + E(i_2, S_2 \backslash H_2)\nonumber\\
 			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:G1ij}.
 		\end{align}
-		with high probability. Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$.
+		Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$.
 		In the next, we show that
 		the probability of $G(i_1,i_2)$ is lower bounded by $\frac{1}{n^{-2+\mu}}$ for some positive constant $\mu$. Then we have that 
 		\begin{align}
@@ -511,8 +511,8 @@
 	$$
 	\frac{1}{\sqrt{n}} g^T \Xi_n g^{\perp} \geq -\sqrt{\frac{\norm{\tilde{h}}^2}{n} - (\frac{1}{n}\tilde{h}^Tg)^2} = O(\sqrt{\log n})
 	$$
-	
-	
+ 
+ 
 	
 	
 	
