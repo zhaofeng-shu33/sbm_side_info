@@ -316,7 +316,8 @@
 			+\sum_{j=1}^{m} \log \frac{P_0(x^{i_2}_{j})}{P_1(x^{i_2}_{j})}\nonumber\\
 			\ge &\log \frac{p(1-q)}{q(1-p)}(E(i_1, S_1 \backslash \{i_1\}) + E(i_2, S_2 \backslash \{i_2\})\nonumber\\
 			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:F1ij}.
-		\end{align}		
+		\end{align}
+		
 		By the definition and property of $H_1$ and $H_2$ mentioned above, the probability of \eqref{eq:F1ij} is lower bounded by the probability of
 		\begin{align}
 			&\sum_{j=1}^{m} \log \frac{P_1(x^{i_1}_{j})}{P_0(x^{i_1}_{j})}
@@ -324,24 +325,25 @@
 			\ge &\log \frac{p(1-q)}{q(1-p)}(2\frac{\log n}{\log\log n}+E(i_1, S_1 \backslash H_1) + E(i_2, S_2 \backslash H_2)\nonumber\\
 			&- E(i_1, S_2 \backslash \{i_2\}) - E(i_2, S_1 \backslash \{i_1\})) \label{eq:G1ij}.
 		\end{align}
-
 		with high probability. Let $G(i_1,i_2)$ be the event that \eqref{eq:G1ij} holds for any $i_1\in H_1$ and $i_2\in H_2$.
-		No
 		In the next, we show that
 		the probability of $G(i_1,i_2)$ is lower bounded by $\frac{1}{n^{-2+\mu}}$ for some positive constant $\mu$. Then we have that 
 		\begin{align}
-			& P(\cap_{i_1 \in H_1} G^c(i_1))= (1 - P(G(i_1,i_2)))^{|H_1|}\nonumber\\
-			& \leq (1-n^{-1+u})^{n/\log^3 n} \leq \exp(-n^{\mu+ o(1)}) \to 0, \label{eq:boundg}
+			& P(\cap_{i_1\in S_1, i_2\in S_2} F^c(i_1,i_2)) \le P(\cap_{i_1\in H_1, i_2\in H_2} G^c(i_1,i_2)) \nonumber\\
+			& = (1 - P(G(i_1,i_2)))^{|H_1|\cdot|H_2|}\nonumber\\
+			& \leq (1-n^{-2+u})^{n^2/\log^6 n} \nonumber\\
+			& \leq \exp(-n^{\mu+ o(1)}) \to 0, \label{eq:boundg}
 		\end{align}
-		where  $G^c(i_1)$ is the complement of the event $G(i_1)$. Eq. \eqref{eq:boundg} implies that with high probability $G(i_1)$ occurs for some $i_1 \in H_1$, and hence the failure occurs.
+		where $F^c(i_1,i_2)$ and $G^c(i_1,i_2)$ are the events that $F(i_1,i_2)$ and $G(i_1,i_2)$ do not occur,respectively. Eq. \eqref{eq:boundg} implies that with high probability $F(i_1,i_2)$ occurs for some $i_1\in S_1$ and $i_2\in S_2$, and hence the failure occurs.
 		
-		Below we prove $P(G(i_1)) \geq \frac{1}{n^{-1+\mu}}$. Note that the right hand side of \eqref{eq:single_side_Gi} is upper bounded by $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2+o(\log n))$, where $Z_1\sim \Binom(\frac{n}{2}-1,\frac{a\log n}{n})$ and $Z_2\sim \Binom(\frac{n}{2},\frac{b\log n}{n})$ 
+		Note that the right hand side of \eqref{eq:G1ij} is upper bounded by $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2+o(\log n))$, where $Z_1\sim \Binom(n-2,\frac{a\log n}{n})$ and $Z_2\sim \Binom(n-2,\frac{b\log n}{n})$ 
 		follow binomial distributions. A binomial distribution $\Binom(s,r)$ is the probability distribution of the sum of $s$ independent Bernoulli random variables, each equals $1$ with probability $r$.
 		The left hand side can be expressed as
 		\begin{align*}
-			\epsilon\triangleq m\log^{-1}( a /b)\cdot [(D(P_{\widetilde{X}^{i_1}} || P_0) - D(P_{\widetilde{X}^{i_1}} || P_1))]
+			\epsilon\triangleq&m\log^{-1}( a /b)\cdot [(D(P_{\widetilde{X}^{i_1}} || P_0) - D(P_{\widetilde{X}^{i_1}} || P_1)) \\
+			&+(D(P_{\widetilde{X}^{i_2}} || P_1) - D(P_{\widetilde{X}^{i_2}} || P_0))],
 		\end{align*}
-		where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. Let $P_{\widetilde{X}^{i_1}}$ follow the distribution specified in \eqref{eq:p012}. Then we have that $\epsilon =0$. Using Sanov's theorem and Lemma 4 from \cite{abbe2015exact}, we have that
+		where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. Let $P_{\widetilde{X}^{i_1}}$ and $P_{\widetilde{X}^{i_2}}$ follow the distribution specified in \eqref{eq:p012}. Then we have that $\epsilon =0$. Using Sanov's theorem and Lemma 4 from \cite{abbe2015exact}, we have that
 		\begin{align*}
 			&P(G(i_1,i_2))\\
 			\geq &\frac{1}{(m+1)^{2|\mathcal{X}|}} \exp(-m(D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1)) \\
