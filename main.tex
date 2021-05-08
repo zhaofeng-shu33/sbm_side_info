@@ -26,7 +26,7 @@
 \DeclareMathOperator{\Bern}{Bern}
 \DeclareMathOperator{\Binom}{Binom}
 \DeclareMathOperator{\KL}{KL}
-
+\renewcommand{\baselinestretch}{0.98}
 \newcommand{\A}{\frac{a \log(n)}{n}}
 \newcommand{\B}{\frac{b \log(n)}{n}}
 \title{Exact Recovery in the Balanced Stochastic Block Model with Side Information}
@@ -166,38 +166,34 @@
 		$(Z=\{Z_{i,j}\}_{1\le i<j\le n},Y,X=\{X^i_{j}\}_{1\le i\le n,1\le j\le m})$ be a graph $Z$, node labels $Y$, and node data samples $X$ be drawn from the distribution defined by $\SBMSI(n,m,p,q,P_0,P_1)$.
 		Exact recovery is solvable if there exists an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that the error probability $P_e:=P(\hat{Y} \neq Y)$ goes to $0$ as $n$ increases.
 	\end{definition}
-	The following definition will be used throughout this paper and is a special case of the definition in \cite{abbe17sideinfo}. Define $I_+$ to be 
-	\begin{align}\label{equation:I+}
-    I_+ &=\frac{\lambda}{2} (a^{1-\lambda}b^{\lambda} -
-    b^{1-\lambda}a^{\lambda})\log\frac{b}{a}+\frac{a+b}{2}\notag \\
-    &-\frac{1}{2}(a^{1-\lambda}b^{\lambda} +
-    b^{1-\lambda}a^{\lambda})+\gamma D_{\mathrm{KL}}(p_{\lambda}||p_0) 
-	\end{align}
-	where $\lambda$ is chosen to
-	minimize
-	\begin{equation}\label{eq:lambda}
-     a^{1-\lambda}b^{\lambda} +
-    b^{1-\lambda}a^{\lambda} + 2\gamma \log(\sum_{x\in \mathcal{X}}p^{1-\lambda}_0(x) p^{\lambda}_1(x))
-\end{equation}
-	In addition, we need another definition from \cite{abbe2015exact}.
-	For a real number $\epsilon$, let 
-	\begin{align}\label{equation:g}
-	   g(a,b,\epsilon) \triangleq a + b - \sqrt{\epsilon^2 + 4ab} + \epsilon \log \frac{\epsilon + \sqrt{\epsilon^2 + 4ab}}{2b}. 
-	\end{align}
+	The following definition will be used throughout this paper and is a special case of the definition in \cite{abbe17sideinfo}. Define $I_+$ to be the Chernoff information
+	between $\textrm{Pois}(\frac{a}{2},\frac{b}{2})\times P_0$ and $\textrm{Pois}(\frac{b}{2}, \frac{a}{2})\times P_1$ where $\textrm{Pois}(\cdot,\cdot)$ represents the bivariant Poisson distribution. 
+	
 % 	The function $g(a,b,\epsilon)$ was defined in \cite{abbe2015exact} and characterizes the exponent of the probability that a sum of $\frac{n}{2}$ Bernouli random variables with probability $\frac{b\log n}{n}$ is larger than another sum of $\frac{n}{2}$ Bernouli random variables with by $\epsilon \log n$
 	By computing the Karush–Kuhn–Tucker (KKT) conditions, we have the following lemma, the proof of which can be found at the end of Section \ref{s:sdp}.  
 	\begin{lemma}\label{lem:p0p12}
 		For an $\SBMSI(n,m,p,q,P_0,P_1)$, let
 		\begin{align}
 			I_1=\min_{P_{\widetilde{X}_1}} \gamma D(p_{\widetilde{X}_1}|| P_0)+ \frac{1}{2} g(a,b, 2\epsilon),\text{ where}\nonumber\\
-			\epsilon = \gamma \frac{D(P_{\widetilde{X}_1} || P_1) - D(P_{\widetilde{X}_1} || P_0) }{\log a /b}\label{eq:I1}
+			\epsilon = \gamma \frac{D(P_{\widetilde{X}_1} || P_1) - D(P_{\widetilde{X}_1} || P_0) }{\log a /b}\label{eq:I1}\\
+	   g(a,b,\epsilon) \triangleq a + b - \sqrt{\epsilon^2 + 4ab} + \epsilon \log \frac{\epsilon + \sqrt{\epsilon^2 + 4ab}}{2b}\label{equation:g}
 		\end{align}
 		and
 		\begin{align}
 			I_2=\min_{P_{\widetilde{X}_2}} \gamma D(p_{\widetilde{X}_2}|| P_1)+ \frac{1}{2} g(a,b, 2\epsilon),\text{ where}\nonumber\\
 			\epsilon = \gamma \frac{D(p_{\widetilde{X}_2} || P_0) - D(P_{\widetilde{X}_2} || P_1) }{\log a /b}.\label{eq:I2}
 		\end{align}
-		Then, we have that $I_1=I_2=I_+$.
+		Then, we have that $I_1=I_2=I_+$. If $p_0,p_1$
+		satisfies
+		\begin{equation}\label{eq:p0p1extra}
+		    \sum_{x\in \mathcal{X}} \sqrt{p_0(x)p_1(x)}\log\frac{p_0(x)}{p_1(x)}=0
+		\end{equation}
+		$I_+$ has closed-form solution given by
+		\begin{equation}\label{eq:IplusSpecial}
+		    I_+=\frac{\gamma D_{1/2}(p_0||p_1) + (\sqrt{a}-\sqrt{b})^2}{2}
+		\end{equation}
+		where $D_{1/2}(p_0||p_1):=-2\log(\sum_{x\in\mathcal{X}} \sqrt{p_0(x)p_1(x)})$ is the Rényi divergence with order $\frac{1}{2}$
+		between $p_0$ and $p_1$.
 	\end{lemma}
 	\section{Sharp Threshold for Balanced SBMSI}\label{s:sharp}
 	In this section we present a sharp closed form threshold for exact recovery in the balanced SBMSI. The threshold coincides with the result in \cite{abbe17sideinfo} for SBMSI without balanced constraints.  %We first provide the threshold, that comes from
@@ -619,6 +615,24 @@
  	    \label{fig:my_label}
  	\end{figure}
 \begin{proof}[Proof of Lemma \ref{lem:p0p12}]
+Using the results from Section 3 of \cite{abbe17sideinfo}, we can write $I_+$
+explicitly as follows
+\begin{align}\label{equation:I+}
+    I_+ &=\frac{\lambda}{2} (a^{1-\lambda}b^{\lambda} -
+    b^{1-\lambda}a^{\lambda})\log\frac{b}{a}+\frac{a+b}{2}\notag \\
+    &-\frac{1}{2}(a^{1-\lambda}b^{\lambda} +
+    b^{1-\lambda}a^{\lambda})+\gamma D_{\mathrm{KL}}(p_{\lambda}||p_0) 
+	\end{align}
+	where $\lambda$ is chosen to
+	minimize
+	\begin{equation}\label{eq:lambda}
+     a^{1-\lambda}b^{\lambda} +
+    b^{1-\lambda}a^{\lambda} + 2\gamma \log(\sum_{x\in \mathcal{X}}p^{1-\lambda}_0(x) p^{\lambda}_1(x))
+\end{equation}
+and $p_{\lambda}$ is defined as
+\begin{equation}\label{eq:p12}
+p_{\lambda}= \frac{p_0^{1-\lambda}(x)p_1^{\lambda}(x)}{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)}.
+\end{equation}
 We show that $I_1=I_+$ as an example.
 The other part $I_2=I_+$ can be proved
 similarly.
@@ -633,10 +647,7 @@ D(p_{\widetilde{X}_1} || P_1) + \gamma D(p_{\widetilde{X}_1} || P_0))
 It is equivalent to minimize
 $(1-\lambda)D(p_{\widetilde{X}_1} || P_0) +
 \lambda D(p_{\widetilde{X}_1} || P_1) $, from
-which we get
-\begin{equation}\label{eq:p12}
-p_{\widetilde{X}_1}(x) = \frac{p_0^{1-\lambda}(x)p_1^{\lambda}(x)}{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)}.
-\end{equation}
+which we get $p_{\widetilde{X}_1}(x) = p_{\lambda}(x)$.
 From $\frac{\partial L(p_{\widetilde{X}_1},\epsilon, \lambda)}{\partial \epsilon}=0$ and taking \eqref{eq:p12}
 into \eqref{eq:I1}, we get
 \begin{align*}
@@ -649,15 +660,17 @@ After cancelling $\epsilon$
 from the above two equations, we can get a single equation
 for $\lambda$:
 \begin{align*}
-    &\frac{1}{2}\log\frac{a}{b}
+    \frac{\log\frac{a}{b}}{2}
     (a^{\lambda} b^{1-\lambda}
     -a^{1-\lambda} b^{\lambda})
-    + \gamma \frac{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)\log \frac{p_1(x)}{p_0(x)}}{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)}\\
-    &=0
+    + \gamma \frac{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)\log \frac{p_1(x)}{p_0(x)}}{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)}
+    =0
 \end{align*}
 which is the derivative of \eqref{eq:lambda}.
 Then by simple computation we have
-$I_+ = I_1$.
+$I_+ = I_1$. Furthermore,  if \eqref{eq:p0p1extra} is satisfied, $\lambda=\frac{1}{2}$
+is a solution of the above equation, and \eqref{eq:IplusSpecial} follows from
+\eqref{equation:I+} by letting $\lambda=\frac{1}{2}$.
 \end{proof}
 	\section{Conclusion}\label{s:conclusion}In this paper, we obtained a sharp close-form exact recovery condition for a balanced two-community symmetric SBM with side information. %This condition
 	%shows that the detection error can be %characterized by a separation of Rényi divergence and the parameters of SBM. To control the recovery error within a given level,
