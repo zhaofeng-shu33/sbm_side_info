@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Run a one-line script
-      uses: docker://zhaofengshu33/mini-latex:latest
+      uses: docker://zhaofengshu33/debian-latex:latest
       with:
         entrypoint: make
     - name: Archive paper pdf
