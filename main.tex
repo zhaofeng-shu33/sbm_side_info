@@ -451,7 +451,10 @@ $I_+ = I_1$.
 	
 	\section{SDP Relaxation}\label{s:sdp}
 	In this section, we propose a semi-definite programming based relaxation to find the maximum likelihood estimate of the labels $Y$. Note that
-	the ML estimate of the labels $Y$ is NP-hard. 
+	the ML estimate of the labels $Y$ is NP-hard while
+	SDP formulation can be implemented efficiently using
+	interior point method
+	or alternating direction method \cite{boyd2011distributed}.
 	Our SDP algorithm finds the true label $Y^*$ with probability approaching $1$, if
 	$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
 	The SDP problem can be solved using various efficient iterative schemes.
