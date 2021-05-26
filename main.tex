@@ -26,7 +26,7 @@
 \DeclareMathOperator{\Bern}{Bern}
 \DeclareMathOperator{\Binom}{Binom}
 \DeclareMathOperator{\KL}{KL}
-\renewcommand{\baselinestretch}{0.98}
+%\renewcommand{\baselinestretch}{0.98}
 \newcommand{\A}{\frac{a \log(n)}{n}}
 \newcommand{\B}{\frac{b \log(n)}{n}}
 \title{Exact Recovery in the Balanced Stochastic Block Model with Side Information}
@@ -66,14 +66,14 @@
 	
 	The contributions of this paper are as follows. 
 	First, we derived a sharp threshold for the balanced SBM with side information. It turns out that the threshold in this paper coincides with that of \cite{abbe17sideinfo} for the special case of SBM with side information and without balanced constraint. 
-	The second and our major contribution is an SDP based algorithm that achieves the threshold with high probability. Different from the SDP algorithms proposed in \cite{esmaeili2019exact,esmaeili2019b,esmaeili2020a}, where the side information consists of a constant number of samples, our SDP algorithm deals with cases where the number of samples is of order $O(\log n)$. Our SDP algorithm is a nontrivial generalization of the SDP algorithm in \cite{abbe2015exact} where a set of row and column constraints are imposed, to deal with the scaling of the number of samples. This poses challenges in analyzing the optimality of the proposed SDP algorithm, since the dual problem of the SDP relaxation becomes more complex.    
+	Our major contribution is an SDP based algorithm that achieves the threshold with high probability. Different from the SDP algorithms proposed in \cite{esmaeili2019exact,esmaeili2019b,esmaeili2020a}, where the side information consists of a constant number of samples, our SDP algorithm deals with cases where the number of samples is of order $O(\log n)$. Our SDP algorithm is a nontrivial generalization of the SDP algorithm in \cite{abbe2015exact} where a set of row and column constraints are imposed, to deal with the scaling of the number of samples. This poses challenges in analyzing the optimality of the proposed SDP algorithm, since the dual problem of the SDP relaxation becomes more complex.    
 	%The latter cases pose challenges different from the former cases, and the algorithms in \cite{esmaeili2019exact,esmaeili2019b,esmaeili2020a} do not work in such cases.
 	
 	%Note that the admissibility of an SDP algorithm normally requires a balanced assumption \cite{abbe2015exact},
 	%\cite{esmaeili2019community} or other assumptions that the community sizes are fixed \cite{Hajek16}.  To this end, we added more linear constraints to the SDP problem and the proof is more involved.
 	
 	The paper is organized as follows. 
-	In Section \ref{s:model}, we introduce the model and present some definitions and lemmas needed throughout the paper. Section \ref{s:sharp} presents a sharp bound on exact recovery. In Section \ref{s:sdp}, we provide an SDP algorithm that achives the optimal threshold. Section \ref{section:experim} provides simulation results for the SDP algorithm. Section \ref{s:conclusion} concludes the paper.
+	In Section \ref{s:model}, we introduce the model and present some definitions and lemmas needed throughout the paper. Section \ref{s:sharp} presents a sharp bound on exact recovery. In Section \ref{s:sdp}, we provide an SDP algorithm that achives the optimal threshold. Section \ref{section:experiment} provides simulation results for the SDP algorithm. Section \ref{s:conclusion} concludes the paper.
 	
 	
 %	\newpage
@@ -491,8 +491,7 @@ $I_+ = I_1$.
 		\max_V\, Tr(\tilde{B}V)  &\notag\\
 		s.t.\, V_{ii} &= 1, \notag\\
 		V &\succeq 0, \notag\\
-		\sum_{j=2}^{n+1} (V_{1j} + V_{j1})& = 0,\notag\\
-		\sum_{j=2}^{n+1} (V_{ij} + V_{ji})& = 0,~\forall i\in\{2,\ldots,n+1\}. \label{eq:sdp}
+\sum_{j=2}^{n+1} (V_{ij} + V_{ji})& = 0,~\forall i\in\{1,\ldots,n+1\}. \label{eq:sdp}
 	\end{align}
 	Note that here we use $n+1$ constraints in the last two lines of \eqref{eq:sdp} to describe the balanced property of the labels. This is important in deriving the optimality and uniqueness of $V$, which will be proved in the following theorem. The theorem shows that our SDP relaxation achieves exact recovery with high probability, as long as the recovery condition is met.
 	%When $m=0$ and $\kappa=1$,
@@ -668,7 +667,7 @@ $I_+ = I_1$.
  	by the number of trials, we obtain the empirical probability of success with respect to
  	the exact recovery metric. The blue curve corresponds to the threshold $\sqrt{a}-\sqrt{b}=\sqrt{2}$ while the red curve  corresponds to the threshold $I_+ > 1$. It can be seen
  	from the figure that the recovery threshold
- 	for SBM with side information matches red line $I_+ > 1$.
+ 	for SBM with side information matches the red line $I_+ > 1$.
  	\begin{figure}
  	    \centering
  	    \includegraphics[width=0.5\textwidth]{sim.eps}
