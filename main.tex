@@ -168,10 +168,11 @@
 		Exact recovery is solvable if there exists an algorithm that takes $(Z,X)$ as inputs and outputs $\hat{Y}=\hat{Y}(Z,X)$ such that the error probability $P_e:=P(\hat{Y} \neq Y)$ goes to $0$ as $n$ increases.
 	\end{definition}
 	The following definition will be used throughout this paper and is a special case of the definition in \cite{abbe17sideinfo}. Define $I_+$ to be the Chernoff information
-	between $\textrm{Pois}(\frac{a}{2},\frac{b}{2})\times P_0$ and $\textrm{Pois}(\frac{b}{2}, \frac{a}{2})\times P_1$ where $\textrm{Pois}(\cdot,\cdot)$ represents the bivariant Poisson distribution. 
+	between $\textrm{Pois}(\frac{a}{2},\frac{b}{2})\times \underbrace{P_0 \times \dots \times P_0}_{\gamma}$
+	and $\textrm{Pois}(\frac{b}{2}, \frac{a}{2})\times \underbrace{P_1 \times \dots \times P_1}_{\gamma}$ where $\textrm{Pois}(\cdot,\cdot)$ represents the bivariant Poisson distribution. 
 	
 % 	The function $g(a,b,\epsilon)$ was defined in \cite{abbe2015exact} and characterizes the exponent of the probability that a sum of $\frac{n}{2}$ Bernouli random variables with probability $\frac{b\log n}{n}$ is larger than another sum of $\frac{n}{2}$ Bernouli random variables with by $\epsilon \log n$
-	By computing the Karush–Kuhn–Tucker (KKT) conditions, we have the following lemma, the proof of which can be found at the end of Section \ref{s:sdp}.  
+	By computing the Karush–Kuhn–Tucker (KKT) conditions, we have the following lemma. %the proof of which can be found at the end of Section \ref{s:sdp}.  
 	\begin{lemma}\label{lem:p0p12}
 		For an $\SBMSI(n,m,p,q,P_0,P_1)$, let
 		\begin{align}
@@ -270,6 +271,9 @@ $I_+ = I_1$.
 %	\end{equation*}
 		and is not solvable if $I_+ < 1$, in which case, the error probability $P_e$ goes to $1$.
 	\end{theorem}
+	\begin{remark}
+	From Lemma \ref{lem:p0p12} it can be seen that when $\gamma$ increases, in which case the number of samples becomes larger, $I_+$ increases. Hence, more samples facilitate the recovery of communities. 
+	\end{remark}
 % 	\begin{remark}
 % 	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernoulli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve the exact recovery. 
 % 	\end{remark}
