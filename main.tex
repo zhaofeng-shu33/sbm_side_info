@@ -6,6 +6,7 @@
 \usepackage{algorithm,algorithmic}
 \usepackage{url}
 \usepackage{authblk}
+\usepackage{xcolor}
 \usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{graphicx}
@@ -272,7 +273,11 @@ $I_+ = I_1$.
 		and is not solvable if $I_+ < 1$, in which case, the error probability $P_e$ goes to $1$.
 	\end{theorem}
 	\begin{remark}
-	From Lemma \ref{lem:p0p12} it can be seen that when $\gamma$ increases, in which case the number of samples becomes larger, $I_+$ increases. Hence, more samples facilitate the recovery of communities. 
+	From Lemma \ref{lem:p0p12}, 
+	we can obtain $I_+ \geq \frac{1}{2}
+	(\sqrt{a} - \sqrt{b})^2 +
+	\frac{\gamma}{2} D_{\frac{1}{2}}(P_0||P_1)$.
+	it can be seen that when $\gamma$ increases, in which case the number of samples becomes larger, a lower bound of $I_+$ increases. Hence, more samples facilitate the recovery of communities. 
 	\end{remark}
 % 	\begin{remark}
 % 	Theorem \ref{thm:Pe} implies a separation of graph observation and side information, in the sense that the left part of \eqref{eq:positive_condition} is exactly the sum of the terms that appear in the exact recovery threshold in SBM  when there is graph observation only \cite{abbe2015exact} and when there is side information only, respectively. This separation is in contrast to the case in \cite{abbe17sideinfo}, where side information $X$ and graph observation $Z$ are coupled and a joint optimization in both $Z$ and $X$ with no closed form solution is needed. In Fig. \ref{fig:my_label} we show a comparison of our threshold and the one from \cite{abbe17sideinfo} when $P_0$ and $P_1$ are Bernoulli random variables with probability $ 0.05$ and $0.5$, respectively and $\gamma=5$.  It can be seen that there is a slight difference between the results in \cite{abbe17sideinfo} and in this paper.		We note that when such difference is small, our threshold can be used as an approximation to the threshold in \cite{abbe17sideinfo}, which is easily computable and provides insight to design the system. For example, when the parameters $a$ and $b$ are fixed in the graph, one can easily find the number of samples $m=\gamma\log n$ needed to achieve the exact recovery. 
@@ -280,102 +285,101 @@ $I_+ = I_1$.
 
 	\subsection{Proof of Theorem \ref{thm:Pe}}
 	%\begin{proof}[Proof of Theorem \ref{thm:Pe}]
-%	The proof of Theorem \ref{thm:Pe} follows similar arguments to those in \cite{abbe2015exact}. We first show the first part of Theorem \ref{thm:Pe}, i.e., the achievability of exact recovery when \eqref{eq:positive_condition} holds. For any label $Y=(Y_1,\ldots,Y_n)$ satisfying $\sum^n_{i=1}Y_i=0$, let $A(Y)=\{i:Y_i=1\}$ and $B(Y)=\{i:Y_i=-1\}$ be the sets of nodes with labels $1$ and $-1$, respectively.  
-%	Let $Y^*=(y^*_1,\ldots,y^*_n)$ be the true labels of the nodes. We prove that with high probability, $Y^*$ is the output of an MAP (maximum a posteriori probability) estimator, which is equivalent to an ML (maximum likelihood) estimator since $Y$ is uniformly distributed over the space $\{Y:\sum^n_{i=1}Y_i=0\}$.
-%	Let $F_k$ be the event that there exists a labeling $Y'$ satisfying $|A(Y')\backslash A(Y)|=|B(Y')\backslash B(Y)|=k$. Then, by the union bound, it suffices to show that the probability $P(F_k)$ of the event $F_k$ is upper bounded by $o(\frac{1}{n})$ for anly $k\in\{1,\ldots,n\}$.
-%	
-%	Let $P_k$ be the maximum probability that 
-%	the likelihood $P(X,X| (Y^*_1,\ldots,Y^*_n)$ is smaller than the likelihood $P(X,Z| (Y'_1,\ldots,Y'_n))$, 
-%	over all labeling $Y'=(Y'_1,\ldots,Y'_n)$ satisfying $|A(Y')\backslash A(Y)|=|B(Y')\backslash B(Y)|=k$, where the likelihood $P(X,Z| (Y_1,\ldots,Y_n)$ is defined in \eqref{eq:lh}. Then by the union bound, we have that 
-%	\begin{equation}\label{eq:FAk}
-%		P(F_k) \leq \binom{n/2}{k}^2 P_k
-%	\end{equation}
-%	It remains to derive an upper bouond on $P_k$. 
-%	According to \eqref{eq:lh}, $P_k$ is the probability that
-%	\begin{align}\label{eq:ein}
-%		&\sum^m_{j=1}(\sum_{i\in A(Y^*)\backslash A(Y')} \log \frac{P_1(X^i_{j})}{P_0(X^i_{j})}
-%		+\sum_{i\in A(Y')\backslash A(Y^*)} \log \frac{P_0(X^i_{j})}{P_1(X^i_{j})})\nonumber\\
-%		\ge & \log \frac{p(1-q)}{q(1-p)} (\sum_{i\in A(Y^*)\backslash A(Y'),j\in A(Y^*)\cap A(Y')}z_{i,j}\nonumber\\
-%		&+\sum_{i\in A(Y')\backslash A(Y^*),j\in B(Y^*)\cap B(Y')}Z_{i,j}\nonumber\\
-%		&-\sum_{i\in A(Y^*)\backslash A(Y'),j\in B(Y^*)\cap B(Y')}Z_{i,j}\nonumber\\
-%		&-\sum_{i\in A(Y')\backslash A(Y^*),j\in A(Y^*)\cap A(Y')}Z_{i,j})
-%	\end{align}
-%	Note that the right hand side of \eqref{eq:lh} can be written as $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2)$, where $Z_1\sim Binom(k(n-2k),\frac{a\log n}{n})$ and $Z_2\sim Binom(k(n-2k),\frac{b\log n}{n})$ 
-%	follow binomial distributions, where a binomial distribution $Binom(s,r)$ is the probability distribution of the sum of $s$ independent Bernouli random variables, each equals $1$ with probability $r$.
-%	The left hand side can be expressed as
-%	\begin{align*}
-%		\epsilon\triangleq&\log^{-1}( a /b)\cdot [\sum_{i\in A(Y^*)\backslash A(Y')}(D(P_{\widetilde{X}^i} || P_0) - D(p_{\widetilde{X}^i} || P_1)) \\
-%		&+ \sum_{i\in A(Y')\backslash A(Y^*)}(D(p_{\widetilde{X}^i} || P_1) - D(p_{\widetilde{X}^i} || P_0))],
-%	\end{align*}
-%	where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. 
-%	
+% \color{red}
+% 	The proof of Theorem \ref{thm:Pe} follows similar arguments to those in \cite{abbe2015exact}. We first show the first part of Theorem \ref{thm:Pe}, i.e., the achievability of exact recovery when \eqref{eq:positive_condition} holds. For any label $Y=(Y_1,\ldots,Y_n)$ satisfying $\sum^n_{i=1}Y_i=0$, let $A(Y)=\{i:Y_i=1\}$ and $B(Y)=\{i:Y_i=-1\}$ be the sets of nodes with labels $1$ and $-1$, respectively.  
+% 	Let $Y^*=(y^*_1,\ldots,y^*_n)$ be the true labels of the nodes. We prove that with high probability, $Y^*$ is the output of an MAP (maximum a posteriori probability) estimator, which is equivalent to an ML (maximum likelihood) estimator since $Y$ is uniformly distributed over the space $\{Y:\sum^n_{i=1}Y_i=0\}$.
+% 	Let $F_k$ be the event that there exists a labeling $Y'$ satisfying $|A(Y')\backslash A(Y)|=|B(Y')\backslash B(Y)|=k$. Then, by the union bound, it suffices to show that the probability $P(F_k)$ of the event $F_k$ is upper bounded by $o(\frac{1}{n})$ for anly $k\in\{1,\ldots,n\}$.
 	
+% 	Let $P_k$ be the maximum probability that 
+% 	the likelihood $P(X,X| (Y^*_1,\ldots,Y^*_n)$ is smaller than the likelihood $P(X,Z| (Y'_1,\ldots,Y'_n))$, 
+% 	over all labeling $Y'=(Y'_1,\ldots,Y'_n)$ satisfying $|A(Y')\backslash A(Y)|=|B(Y')\backslash B(Y)|=k$, where the likelihood $P(X,Z| (Y_1,\ldots,Y_n)$ is defined in \eqref{eq:lh}. Then by the union bound, we have that 
+% 	\begin{equation}\label{eq:FAk}
+% 		P(F_k) \leq \binom{n/2}{k}^2 P_k
+% 	\end{equation}
+% 	It remains to derive an upper bouond on $P_k$. 
+% 	According to \eqref{eq:lh}, $P_k$ is the probability that
+% 	\begin{align}\label{eq:ein}
+% 		&\sum^m_{j=1}(\sum_{i\in A(Y^*)\backslash A(Y')} \log \frac{P_1(X^i_{j})}{P_0(X^i_{j})}
+% 		+\sum_{i\in A(Y')\backslash A(Y^*)} \log \frac{P_0(X^i_{j})}{P_1(X^i_{j})})\nonumber\\
+% 		\ge & \log \frac{p(1-q)}{q(1-p)} (\sum_{i\in A(Y^*)\backslash A(Y'),j\in A(Y^*)\cap A(Y')}z_{i,j}\nonumber\\
+% 		&+\sum_{i\in A(Y')\backslash A(Y^*),j\in B(Y^*)\cap B(Y')}Z_{i,j}\nonumber\\
+% 		&-\sum_{i\in A(Y^*)\backslash A(Y'),j\in B(Y^*)\cap B(Y')}Z_{i,j}\nonumber\\
+% 		&-\sum_{i\in A(Y')\backslash A(Y^*),j\in A(Y^*)\cap A(Y')}Z_{i,j})
+% 	\end{align}
+% 	Note that the right hand side of \eqref{eq:lh} can be written as $\log \frac{p(1-q)}{q(1-p)}(Z_1-Z_2)$, where $Z_1\sim Binom(k(n-2k),\frac{a\log n}{n})$ and $Z_2\sim Binom(k(n-2k),\frac{b\log n}{n})$ 
+% 	follow binomial distributions, where a binomial distribution $Binom(s,r)$ is the probability distribution of the sum of $s$ independent Bernouli random variables, each equals $1$ with probability $r$.
+% 	The left hand side can be expressed as
+% 	\begin{align*}
+% 		\epsilon\triangleq&\log^{-1}( a /b)\cdot [\sum_{i\in A(Y^*)\backslash A(Y')}(D(P_{\widetilde{X}^i} || P_0) - D(p_{\widetilde{X}^i} || P_1)) \\
+% 		&+ \sum_{i\in A(Y')\backslash A(Y^*)}(D(p_{\widetilde{X}^i} || P_1) - D(p_{\widetilde{X}^i} || P_0))],
+% 	\end{align*}
+% 	where $P_{\widetilde{X}^i}$ is the empirical distribution of samples $\{x^i_j\}^m_{j=1}$ at node $i$. 
 	
-	
-%	\begin{proof}[Proof of Theorem \ref{thm:Pe}]
-%		We start from \eqref{eq:ein}.
-%		Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \sim
-%		-km D(p_0 || p_1)$, which is of order $O(\log n)$.
-%		Let $\epsilon$ be defined as follows:
-%		
-%		
-%		Then \eqref{eq:ein} is equivalent to
-%		\begin{equation}\label{eq:zeps}
-%			\sum_{i=1}^{k(n-2k)}(z'_{i} - z_{i}) \geq \epsilon \log n
-%		\end{equation}
-%		Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
-%		\begin{align}
-%			P(A_k) & =  \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{km}(T(P^{(2)}))\notag \\
-%			& \cdot P(\sum_{i=1}^{k(n-2k)} (z'_{i} - z_{i} \geq \epsilon(P^{(1)}, P^{(2)})  \log n ))\label{eq:decomp} 
-%		\end{align}
-%		Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
-%		\begin{align*}
-%			&P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1))) \\
-%			& \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot (g(a, b, \frac{n}{k(n-2k)}\epsilon) + o(1))) \\
-%			&\leq |\mathcal{P}_{km}|^2 \exp(-k\log n \cdot (\theta^*_k + o(1))) 
-%		\end{align*}
-%		where
-%		\begin{align}
-%			\theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(p_{\widetilde{X}_1}|| p_0) + D(p_{\widetilde{X}_2} || p_1)) \notag \\
-%			&\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
-%		\end{align}
-%		
-%		By Lemma \ref{lem:p0p12}, we can get
-%		\begin{align}
-%			\theta^*_k &\geq (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
-%			+ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_1}||p_0) + D(p_{\widetilde{X}_1}||p_1)) \notag \\
-%			&+ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_2}||p_0) + D(p_{\widetilde{X}_2}||p_1))\notag \\
-%			&=  (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2 - 2 \gamma\log(\sum_{x\in\mathcal{X}}\sqrt{p_0(x)p_1(x)}) 
-%			\label{eq:theta_star_lower_bound}
-%		\end{align}
-%		Next, we show that the lower bound is achievable.
-%		When the probability distribution of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
-%		$\epsilon = 0$, and $\theta^*_k$ in \eqref{eq:theta_star} is exactly the lower bound \eqref{eq:theta_star_lower_bound}.
-%		Since $\theta^*_k>0$,
-%		and $|\mathcal{P}_{km}|\leq (km+1)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-k(\theta^*_k+o(1))}$.
-%		
-%		Using the union bound, we can control $P(F_k)$ by
-%		$$
-%		P(F_k) \leq \binom{n/2}{k}^2 P(A_k)
-%		$$
-%		When $k \geq \frac{n}{\sqrt{\log n}}$, using Lemma 8 of \cite{feng2021},
-%		$P(F_k)$ decreases exponentially. The error probability for $k < \frac{n}{\sqrt{\log n}}$
-%		is analyzed using \eqref{eq:FAk}.
-%		\begin{align*}
-%			&P_e \leq (1+o(1))\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) \leq (1+o(1)) \cdot \\
-%			&\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
-%		\end{align*}
-%		where $\mu = (\sqrt{a} - \sqrt{b})^2-2 + \gamma D_{1/2}(p_0||p_1) > 0$.
-%		Using the inequality
-%		$$
-%		\frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq \frac{\mu}{2} \log n
-%		$$
-%		for $1\leq k \leq \frac{n}{\sqrt{\log n}}$, we can obtain
-%		\begin{align*}
-%			P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
-%			& =(1+o(1)) \frac{n^{-\mu / 2}}{1-n^{-\mu / 2}} = (1+o(1))n^{-\mu / 2}
-%		\end{align*}
-%		Therefore, \eqref{eq:PeMain} is established.
+
+% 		We start from \eqref{eq:ein}.
+% 		Since $m=\gamma \log n$, $\sum_{i=1}^{km} \log \frac{p_1(x_{1i})}{p_0(x_{1i})} \sim
+% 		-km D(p_0 || p_1)$, which is of order $O(\log n)$.
+% 		Let $\epsilon$ be defined as follows:
+		
+		
+% 		Then \eqref{eq:ein} is equivalent to
+% 		\begin{equation}\label{eq:zeps}
+% 			\sum_{i=1}^{k(n-2k)}(z'_{i} - z_{i}) \geq \epsilon \log n
+% 		\end{equation}
+% 		Using the type theory (11.1 of \cite{cover1999elements}), we can estimate the probability of the event $A_k$ given by \eqref{eq:zeps}.
+% 		\begin{align}
+% 			P(A_k) & =  \sum_{P^{(1)},P^{(2)}\in \mathcal{P}_{km}} Q_0^{km}(T(P^{(1)}))Q_1^{km}(T(P^{(2)}))\notag \\
+% 			& \cdot P(\sum_{i=1}^{k(n-2k)} (z'_{i} - z_{i} \geq \epsilon(P^{(1)}, P^{(2)})  \log n ))\label{eq:decomp} 
+% 		\end{align}
+% 		Then using Theorem 11.1.4 of \cite{cover1999elements} and Lemma \ref{lem:zxt} 
+% 		\begin{align*}
+% 			&P(A_k)  \leq \sum_{P \in P_n} \exp(-km (D(p_{\widetilde{X}_1} || p_0) + D(p_{\widetilde{X}_2} || p_1))) \\
+% 			& \cdot \exp(-\log n \frac{k(n-2k)}{n}\cdot (g(a, b, \frac{n}{k(n-2k)}\epsilon) + o(1))) \\
+% 			&\leq |\mathcal{P}_{km}|^2 \exp(-k\log n \cdot (\theta^*_k + o(1))) 
+% 		\end{align*}
+% 		where
+% 		\begin{align}
+% 			\theta^*_k &= \min_{\widetilde{X}_1,\widetilde{X}_2} \gamma (D(p_{\widetilde{X}_1}|| p_0) + D(p_{\widetilde{X}_2} || p_1)) \notag \\
+% 			&\quad + (1-\frac{2k}{n}) g(a,b, \frac{n}{k(n-2k)}\epsilon) \label{eq:theta_star}
+% 		\end{align}
+		
+% 		By Lemma \ref{lem:p0p12}, we can get
+% 		\begin{align}
+% 			\theta^*_k &\geq (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2
+% 			+ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_1}||p_0) + D(p_{\widetilde{X}_1}||p_1)) \notag \\
+% 			&+ \frac{ \gamma}{2}\min (D(p_{\widetilde{X}_2}||p_0) + D(p_{\widetilde{X}_2}||p_1))\notag \\
+% 			&=  (1-\frac{2k}{n})(\sqrt{a} - \sqrt{b})^2 - 2 \gamma\log(\sum_{x\in\mathcal{X}}\sqrt{p_0(x)p_1(x)}) 
+% 			\label{eq:theta_star_lower_bound}
+% 		\end{align}
+% 		Next, we show that the lower bound is achievable.
+% 		When the probability distribution of $\widetilde{X}_1, \widetilde{X}_2$ takes the form given by \eqref{eq:p012},
+% 		$\epsilon = 0$, and $\theta^*_k$ in \eqref{eq:theta_star} is exactly the lower bound \eqref{eq:theta_star_lower_bound}.
+% 		Since $\theta^*_k>0$,
+% 		and $|\mathcal{P}_{km}|\leq (km+1)^{|\mathcal{X}|} $, we have $P(A_k) \leq n^{-k(\theta^*_k+o(1))}$.
+		
+% 		Using the union bound, we can control $P(F_k)$ by
+% 		$$
+% 		P(F_k) \leq \binom{n/2}{k}^2 P(A_k)
+% 		$$
+% 		When $k \geq \frac{n}{\sqrt{\log n}}$, using Lemma 8 of \cite{feng2021},
+% 		$P(F_k)$ decreases exponentially. The error probability for $k < \frac{n}{\sqrt{\log n}}$
+% 		is analyzed using \eqref{eq:FAk}.
+% 		\begin{align*}
+% 			&P_e \leq (1+o(1))\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} P(F_k) \leq (1+o(1)) \cdot \\
+% 			&\sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n + \frac{2k}{n} \log n(\sqrt{a} - \sqrt{b})^2 - 2\log 2k + 2))
+% 		\end{align*}
+% 		where $\mu = (\sqrt{a} - \sqrt{b})^2-2 + \gamma D_{1/2}(p_0||p_1) > 0$.
+% 		Using the inequality
+% 		$$
+% 		\frac{2k}{n}(\sqrt{a} - \sqrt{b})^2\log n -2\log2k+2\leq \frac{\mu}{2} \log n
+% 		$$
+% 		for $1\leq k \leq \frac{n}{\sqrt{\log n}}$, we can obtain
+% 		\begin{align*}
+% 			P_e &\leq(1+o(1)) \sum_{k=1}^{\frac{n}{\sqrt{\log n}}} \exp(k(-\mu \log n/2)) \\
+% 			& =(1+o(1)) \frac{n^{-\mu / 2}}{1-n^{-\mu / 2}} = (1+o(1))n^{-\mu / 2}
+% 		\end{align*}
+% 		Therefore, \eqref{eq:PeMain} is established.
+% \color{black}
 %		\newpage
 		The achievability part can be proved by our SDP algorithm, the details of which will be given in  Section \ref{s:sdp}.
 		We show that exact recovery is not possible if $I_+ < 1$. %Most parts of the arguments follow a similar manner to those in \cite{abbe2015exact}.
