@@ -462,15 +462,15 @@ $I_+ = I_1$.
 	the ML estimate of the labels $Y$ is NP-hard while
 	SDP formulation can be implemented efficiently using
 	interior point method
-	or alternating direction method \cite{boyd2011distributed}.
+	or alternating direction method of multipliers \cite{boyd2011distributed}.
 	Our SDP algorithm finds the true label $Y^*$ with probability approaching $1$, if
-	$\gamma D_{1/2}(p_0||p_1) + (\sqrt{a} - \sqrt{b})^2 > 2$.
+	$I_+ > 1$.
 	The SDP problem can be solved using various efficient iterative schemes.
 	
 	Let $S_1(Y)$ and $S_2(Y)$ be the sets of nodes with label $1$ and $-1$, respectively, given $Y$.
 	According to \eqref{eq:lh}, the log likelihood of $Y$ is given by
 	\begin{align}\label{eq:loglh}
-		&\sum^m_{j=1}[\sum_{i\in S_1(Y)} \log P_1(X^i_{j})+\sum_{i\in S_2(Y)} \log P_0(X^i_{j})]\nonumber\\
+		&\sum^m_{j=1}[\sum_{i\in S_1(Y)} \log P_0(X^i_{j})+\sum_{i\in S_2(Y)} \log P_1(X^i_{j})]\nonumber\\
 		&+\sum_{i,j\in S_1(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]\nonumber\\
 		&+\sum_{i,j\in S_2(Y),i<j}[z_{i,j}\log p+(1-z_{i,j})\log (1-p)]
 		\nonumber\\
