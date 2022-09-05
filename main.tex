@@ -177,13 +177,13 @@
 	\begin{lemma}\label{lem:p0p12}
 		For an $\SBMSI(n,m,p,q,P_0,P_1)$, let
 		\begin{align}
-			I_1=\min_{P_{\widetilde{X}_1}} \gamma D(p_{\widetilde{X}_1}|| P_0)+ \frac{1}{2} g(a,b, 2\epsilon),\text{ where}\nonumber\\
+			I_1=\min_{P_{\widetilde{X}_1}} \gamma D(P_{\widetilde{X}_1}|| P_0)+ \frac{1}{2} g(a,b, 2\epsilon),\text{ where}\nonumber\\
 			\epsilon = \gamma \frac{D(P_{\widetilde{X}_1} || P_1) - D(P_{\widetilde{X}_1} || P_0) }{\log a /b}\label{eq:I1}\\
 	   g(a,b,\epsilon) \triangleq a + b - \sqrt{\epsilon^2 + 4ab} + \epsilon \log \frac{\epsilon + \sqrt{\epsilon^2 + 4ab}}{2b}\label{equation:g}
 		\end{align}
 		and
 		\begin{align}
-			I_2=\min_{P_{\widetilde{X}_2}} \gamma D(p_{\widetilde{X}_2}|| P_1)+ \frac{1}{2} g(a,b, 2\epsilon),\text{ where}\nonumber\\
+			I_2=\min_{P_{\widetilde{X}_2}} \gamma D(P_{\widetilde{X}_2}|| P_1)+ \frac{1}{2} g(a,b, 2\epsilon),\text{ where}\nonumber\\
 			\epsilon = \gamma \frac{D(p_{\widetilde{X}_2} || P_0) - D(P_{\widetilde{X}_2} || P_1) }{\log a /b}.\label{eq:I2}
 		\end{align}
  		Then, we have that $I_1=I_2=I_+$. 
@@ -216,7 +216,7 @@ explicitly as follows
 \end{equation}
 and $p_{\lambda}$ is defined as
 \begin{equation}\label{eq:p12}
-p_{\lambda}= \frac{p_0^{1-\lambda}(x)p_1^{\lambda}(x)}{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)}.
+p_{\lambda}(x)= \frac{p_0^{1-\lambda}(x)p_1^{\lambda}(x)}{\sum_{x \in \mathcal{X}}p_0^{1-\lambda}(x) p_1^{\lambda} (x)}.
 \end{equation}
 We show that $I_1=I_+$ as an example.
 The other part $I_2=I_+$ can be proved
