@@ -384,7 +384,8 @@ $I_+ = I_1$.
 		The achievability part can be proved by our SDP algorithm, the details of which will be given in  Section \ref{s:sdp}.
 		We show that exact recovery is not possible if $I_+ < 1$. %Most parts of the arguments follow a similar manner to those in \cite{abbe2015exact}.
 		
-		Let $S_1$ and $S_2$ be the set of nodes with labels $1$ and $-1$, respectively. For a node $i$ and a node set $S\subset\{1,\ldots,n\}, $let $E(i,S)$ be the number of edges between $i$ and nodes in $S$.
+		Let $S_1$ and $S_2$ be the set of nodes with labels $1$ and $-1$, respectively. For a node $i$ and a node set $S\subset\{1,\ldots,n\}$,
+		let $E(i,S)$ be the number of edges between $i$ and nodes in $S$.
 		By similar arguments to the ones in \cite{abbe2015exact}, it can be shown that with high probability, there exists a subset
 		 $H_1\subset S_1$ of size $\frac{n}{\log^3 n}$ and a node $i_1\in H_1$, such that  
 		\begin{align}
@@ -603,7 +604,7 @@ $I_+ = I_1$.
 	Using Chebyshev's inequality, we have that
 	\begin{align*}
 		P(\Big| \frac{\sum_{i\in S_j} h_i^2}{n} - \frac{1}{2}(m \bar{D}_j + m^2D_j^2) \Big| \geq \log n) & \leq \frac{m^4 \bar{C}_j}{2n\log^2 n} \\
-		P(\Big| \frac{h^T \hat{g}_j}{n} - \frac{m}{2}D_j\Big| \geq \log^{-1} n) & \leq \frac{m \log^{2} n\bar{D}_j}{2n}
+		P(\Big| \frac{h^T \hat{g}_j}{n} - \frac{m}{2}D_j\Big| \geq \log^{-1} n) & \leq \frac{\bar{D}_j m \log^{2} n}{2n}
 	\end{align*}
 	for $j\in\{1,2\}$. Hence, with probability $1-n^{-1-o(1)}$, 
 	\begin{align*}
@@ -676,9 +677,9 @@ $I_+ = I_1$.
  	for the SBM with side information. We fix $n=300$ and the number of trials to be 20. The number of samples is chosen as $m=10$ for $\Bern(0.2)$ versus $\Bern(0.8)$. Then
  	at each trial and for fixed $a$ and $b$, we check how many times each method succeeds. Dividing
  	by the number of trials, we obtain the empirical probability of success with respect to
- 	the exact recovery metric. The blue curve corresponds to the threshold $\sqrt{a}-\sqrt{b}=\sqrt{2}$ while the red curve  corresponds to the threshold $I_+ > 1$. It can be seen
+ 	the exact recovery metric. The blue curve corresponds to the threshold $\sqrt{a}-\sqrt{b}=\sqrt{2}$ while the red curve  corresponds to the threshold $I_+ = 1$. It can be seen
  	from the figure that the recovery threshold
- 	for SBM with side information matches the red line $I_+ > 1$.
+ 	for SBM with side information matches the red line $I_+ = 1$.
  	\begin{figure}
  	    \centering
  	    \includegraphics[width=0.5\textwidth]{new_results.eps}
