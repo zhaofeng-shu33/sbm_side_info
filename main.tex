@@ -635,7 +635,7 @@ $I_+ = I_1$.
 	By Theorem 5.2 of \cite{lei2015consistency},
 	with probability $1-n^{-r}$, $\lambda_{\max}(A-\mathbb{E}[A]) \leq c\sqrt{\log n}$ for some positive constant $r$ and $c$. Hence, we have that
 	\begin{align}\label{eq:lastterm}
-		(g^{\perp})^T \Xi_n g^{\perp} \geq \min_i\{(-\lambda + h_i) g_i+\lambda + g_i (Ag)_i \} - c \sqrt{\log n}
+		(g^{\perp})^T \Xi_n g^{\perp} \geq \min_i\{(-\lambda + h_i) g_i+  g_i (Ag)_i \} - c \sqrt{\log n}
 	\end{align}
 	% The error probability is then bounded by
 	% \begin{align*}
@@ -643,7 +643,7 @@ $I_+ = I_1$.
 	% \end{align*}
 	We now show that with high probability,
 	\begin{align}\label{eq:nodei}
-		(-\lambda + h_i) g_i+\lambda + g_i (Ag)_i  - c \sqrt{\log n}\ge 0
+		(-\lambda + h_i) g_i+  g_i (Ag)_i  - c \sqrt{\log n}\ge 0
 	\end{align}
 	for $i\in\{1,\ldots,n\}$. For $g_i=1$,
 	the term $g_i(Ag)_i$ can be written as 
