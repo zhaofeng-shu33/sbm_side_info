@@ -532,7 +532,7 @@ $I_+ = I_1$.
 	Let $g=y^*=(1,\ldots,1,-1,\ldots,-1)$ be the true labels of the nodes, i.e., the first and second half of the nodes are labeled by $1$ and $-1$, respectively. As similarly mentioned in \cite{abbe2015exact},
 	the optimality and uniqueness of the solution $(1,g)(1,g)^T$ to \eqref{eq:sdp} is guaranteed by the following conditions: 
 	\begin{enumerate}
-		\item[(a)] $(1,g)(1,g)^T$ is a feasible solution to the primal problem \eqref{eq:matrix_mle}.
+		\item[(a)] $(1,g)(1,g)^T$ is a feasible solution to the primal problem \eqref{eq:sdp}.
 		\item[(b)] There exists a feasible solution $(a_1,\ldots,a_{n+1},$ $\lambda_1,\ldots,\lambda_{n+1})$ to \eqref{eq:dual}, such that $\sum_{i=1}^{n+1} a_i=Tr((1,g)(1,g)^T\widetilde{B})$.
 		\item[(c)] $(\diag\{a_1, \dots, a_{n+1}\} + \Xi - \widetilde{B})(1,g)=0$.
 		\item[(d)] The second smallest eigenvalue of $\diag\{a_1, \dots, a_{n+1}\} + \Xi - \widetilde{B}$ is greater than $0$. 
